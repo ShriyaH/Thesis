@@ -1,0 +1,62 @@
+function [rho,vel,q_BI,v_new,z_B,y_B,x_B,q_AI,q_BA,v1_new] = Orient_poly(Asteroid,SC,Traj)
+
+y = Traj.y;
+t = Traj.t;
+
+for i = 1:length(y)
+    for j = 1:length(y{i})
+            rho{i}(j,1) = norm(y{i}(j,1:3));  %range of SC
+            z_B{i}(j,:) = -y{i}(j,1:3)./rho{i}(j,1);
+            
+            vel{i}(j,1) = norm(y{i}(j,4:6));   %velocity magnitude of SC
+            v_B{i}(j,:) = y{i}(j,4:6)./vel{i}(j,1);
+        
+            y_B{i}(j,:) = cross(v_B{i}(j,:),z_B{i}(j,:),2);
+            y_B{i}(j,:) = y_B{i}(j,:)./norm(y_B{i}(j,:));
+                  
+            x_B{i}(j,:) = cross(z_B{i}(j,:),y_B{i}(j,:),2);
+            nx{i}(j,:) = norm(x_B{i}(j,:)); 
+            
+            k{i}(j,:) = [y{i}(j,1) y{i}(j,2) 0];
+            l{i}(j,1) = norm(k{i}(j,:));
+            theta{i}(j,:) = acos(y{i}(j,1)/l{i}(j,1));
+            
+            m{i}(j,:) = [norm(y{1}(2,1),y{1}(2,2)) 0 y{1}(2,3)];
+            n{i}(j,1) = norm(m{i}(j,:));
+            phi{i}(j,:) = acos(y{i}(j,3)/n{i}(j,1));
+            
+            q_BI{i}(j,:) = Eul2Q([-pi/2 pi-phi{i}(j,:) -theta{i}(j,:)],'ZYZ');
+            nq{i}(j,:) = norm(q_BI{i}(j,:));
+    end
+end
+
+
+v = SC.Polyhedron.Vertices;
+v = [v zeros(length(v),1)];
+v1 = Asteroid.Polyhedron.Vertices;
+v1 = [v1 zeros(length(v1),1)];
+
+for i = 1:1:length(t)
+    for j = 1:length(t{i})
+        
+        for k = 1:length(v)
+            v_new{i}{j}(k,:) = cross_quat(q_BI{i}(j,:)',cross_quat(v(k,:)',conj_quat(q_BI{i}(j,:)')));    
+        end
+        
+        q_AI{i}(1:4,j) = [0; 0; sin(Asteroid.w_AI(3)*t{i}(j)/2); cos(Asteroid.w_AI(3)*t{i}(j)/2)];
+        for l = 1:length(v1)
+            v1_new{i}{j}(l,:) = cross_quat(q_AI{i}(:,j),cross_quat(v1(l,:)',conj_quat(q_AI{i}(:,j))));
+        end
+        
+        q_BA{i}(:,j) = cross_quat(q_BI{i}(j,:)',conj_quat(q_AI{i}(:,j)));
+        
+        v_new{i}{j} = 1000*v_new{i}{j}(:,1:3) + y{i}(j,1:3);       
+        v1_new{i}{j} = v1_new{i}{j}(:,1:3);
+    end
+end
+
+Orient.rho = rho;
+Orient.vel = vel;
+Orient
+
+end

@@ -1,0 +1,1 @@
+function  [Mc] = Mission_Completion(n_f,t_obs,t_min)

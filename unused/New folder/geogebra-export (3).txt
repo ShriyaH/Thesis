@@ -1,0 +1,31 @@
+\documentclass[10pt]{article}
+\usepackage{pgf,tikz,pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\pagestyle{empty}
+\begin{document}
+\definecolor{ccqqqq}{rgb}{0.8,0,0}
+\definecolor{qqqqff}{rgb}{0,0,1}
+\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=1cm,y=1cm]
+\begin{axis}[
+x=1cm,y=1cm,
+axis lines=middle,
+ymajorgrids=true,
+xmajorgrids=true,
+xmin=-5.0432,
+xmax=11.501087794432544,
+ymin=-150.29327181818172,
+ymax=250.00000999999997,
+xtick={-5,-4,...,11},
+ytick={-140,-120,...,240},]
+\clip(-5.0432,-150.29327181818172) rectangle (11.501087794432544,250.00001);
+\draw[line width=2pt,color=qqqqff,smooth,samples=100,domain=-5.0432:11.501087794432544] plot(\x,{2*(\x)^(4)});
+\draw[line width=2pt,color=ccqqqq,smooth,samples=100,domain=-5.0432:11.501087794432544] plot(\x,{8*(\x)-6});
+\begin{scriptsize}
+\draw[color=qqqqff] (-3.3801319057815844,214.58945045454544) node {$f1$};
+\draw[color=ccqqqq] (-4.0388796573875805,-48.90030318181812) node {$f2$};
+\end{scriptsize}
+\end{axis}
+\end{tikzpicture}
+\end{document}
