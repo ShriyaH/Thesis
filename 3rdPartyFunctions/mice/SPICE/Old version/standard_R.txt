@@ -1,0 +1,74 @@
+\begintext
+   
+   Several code examples mention use of a SPICE meta kernel 'standard.tm'. 
+   Consider this as shorthand for any meta kernel that lists an SPK kernel, 
+   PCK kernel, and a current leapseconds kernel.
+   
+   The names and contents of the kernels referenced by this meta-kernel 
+   are as follows:
+
+            File name                     Contents
+            ---------                     --------
+            de414.bsp                     Planetary ephemeris
+
+            pck00008.tpc                  Planet orientation and
+                                          radii
+
+            naif0009.tls                  Leapseconds
+
+
+   Load the three kernel: 
+
+
+   \begindata
+
+     KERNELS_TO_LOAD = ( 'ROSETTA/kernels/lsk/NAIF0011.TLS',
+			 'ROSETTA/kernels/pck/PCK00010.TPC',
+			 'ROSETTA/kernels/pck/DE403-MASSES.TPC',
+			 'ROSETTA/kernels/pck/EARTH_000101_160221_151130.BPC',
+			 'ROSETTA/kernels/pck/ROS_CGS_RSOC_V03.TPC',
+			 'ROSETTA/kernels/fk/ROS_CHURYUMOV_V01.TF',
+			 'ROSETTA/kernels/fk/ROS_V24.TF',
+			 'ROSETTA/kernels/fk/RSSD0002.TF',
+			 'ROSETTA/kernels/fk/EARTH_TOPO_050714.TF',
+			 'ROSETTA/kernels/fk/EARTHFIXEDIAU.TF',
+			 'ROSETTA/kernels/fk/EARTHFIXEDITRF93.TF',
+			 'ROSETTA/kernels/fk/ESTRACK_V01.TF',
+			 'ROSETTA/kernels/fk/NEW_NORCIA_TOPO.TF',
+			 'ROSETTA/kernels/spk/DE405.BSP',
+			 'ROSETTA/kernels/spk/EARTHSTNS_FX_050714.BSP',
+			 'ROSETTA/kernels/spk/EARTHSTNS_ITRF93_050714.BSP',
+			 'ROSETTA/kernels/spk/67P-Chury_Geras_2004_2016.bsp',
+			 'ROSETTA/kernels/spk/ESTRACK_V01.BSP',
+             'ROSETTA/kernels/spk/ORHW_______________00122.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_001_02____A__00002.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_001_02____B__00002.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_001_02____C__00002.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_002_01____B__00043.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_002_01____C__00045.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_002_02____A__00040.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_003_01____A__00067.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_003_01____C__00068.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_004_01____H__00076.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_004_01____P__00076.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_005_02____H__00116.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_005_02____P__00114.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_005_03____H__00137.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_005_03____P__00136.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_005_04____P__00167.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_006_01____H__00156.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_006_01____P__00166.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_006_02____P__00176.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_006_03____P__00194.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_007_01____P__00206.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_007_02____P__00220.BSP',
+			 'ROSETTA/kernels/spk/CORL_DL_008_01____P__00230.BSP',
+			 'ROSETTA/kernels/spk/RORL_DL_001_02____A__00002.BSP',
+			 'ROSETTA/kernels/spk/OUTERPLANETS_V0002.BSP',
+			 'ROSETTA/kernels/ck/CATT_DV_164_01_______00237.BC',
+			 'ROSETTA/kernels/ck/ATNR_P040302093352_00127.BC',
+			 'ROSETTA/kernels/spk/RORB_DV_164_01_______00237.BSP',
+			 'ROSETTA/kernels/sclk/ros_triv.tsc',
+			 'ROSETTA/kernels/sclk/ROS_151124_STEP.TSC',
+			 'ROSETTA/kernels/spk/CORB_DV_164_01_______00237.BSP')
+   \begintext

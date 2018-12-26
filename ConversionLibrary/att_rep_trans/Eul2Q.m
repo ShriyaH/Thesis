@@ -1,0 +1,38 @@
+function [Q_rot] = Eul2Q(euler_angle,sequence)
+%% This function is to calculate the quaternion for a particular rotation sequence with known Euler angles.
+% % Author: Shriya Hazra
+
+% Specify sequence as 'XYZ', 'ZYZ', 'ZZZ' and so on. Specify the array for Euler
+% angles as per sequence, so for the case 'ZXY' first angle for Z axis
+% then X and then Y. (specify angles in radians)
+%%--------------------------------------------------------------------------------- 
+order = [];
+for i=1:3
+    if sequence(i) == 'X'
+        order(1,i) = 1;
+    elseif sequence(i) == 'Y'
+        order(1,i) = 2;
+    elseif sequence(i) == 'Z'
+        order(1,i) = 3;
+end  
+end
+
+R = [];
+for j =1:3
+    if order(j) == 1
+        R{j} = [sin(euler_angle(j)/2); 0; 0; cos(euler_angle(j)/2)];
+    elseif order(j) == 2
+        R{j} = [0; sin(euler_angle(j)/2); 0; cos(euler_angle(j)/2)];
+    elseif order(j) == 3
+        R{j} = [0; 0; sin(euler_angle(j)/2); cos(euler_angle(j)/2)]; 
+    end
+end
+
+
+q1 = R{1};
+q2 = R{2};
+q3 = R{3};
+
+Q_rot = cross_quat(q3,cross_quat(q2,q1));
+
+end

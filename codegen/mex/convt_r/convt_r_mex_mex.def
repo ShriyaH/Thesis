@@ -1,0 +1,8 @@
+LIBRARY convt_r_mex.mexw64
+EXPORTS
+mexFunction
+emlrtMexFcnProperties
+convt_r
+convt_r_initialize
+convt_r_terminate
+convt_r_atexit

@@ -1,0 +1,52 @@
+\begintext
+   
+   Several code examples mention use of a SPICE meta kernel 'standard.tm'. 
+   Consider this as shorthand for any meta kernel that lists an SPK kernel, 
+   PCK kernel, and a current leapseconds kernel.
+   
+   The names and contents of the kernels referenced by this meta-kernel 
+   are as follows:
+
+            File name                     Contents
+            ---------                     --------
+            de414.bsp                     Planetary ephemeris
+
+            pck00008.tpc                  Planet orientation and
+                                          radii
+
+            naif0009.tls                  Leapseconds
+
+
+   Load the three kernel: 
+
+
+   \begindata
+
+     KERNELS_TO_LOAD = ( 'ROSETTA/kernels/lsk/NAIF0011.TLS',
+			 'ROSETTA/kernels/kleopatra_1900_2100.bsp',
+			 'ROSETTA/kernels/codes_300ast_20100725.bsp',
+			 'ROSETTA/kernels/pck/PCK00010.TPC',
+			 'ROSETTA/kernels/pck/DE403-MASSES.TPC',
+			 'ROSETTA/kernels/pck/EARTH_000101_160221_151130.BPC',
+			 'ROSETTA/kernels/pck/ROS_CGS_RSOC_V03.TPC',
+			 'ROSETTA/kernels/fk/ROS_CHURYUMOV_V01.TF',
+			 'ROSETTA/kernels/fk/ROS_V24.TF',
+			 'ROSETTA/kernels/fk/RSSD0002.TF',
+			 'ROSETTA/kernels/spk/DE405.BSP',
+			 'ROSETTA/kernels/spk/OUTERPLANETS_V0002.BSP',
+			 'ROSETTA/kernels/ck/ROS_SA_2014_V0047.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_001_01_______00001.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_159_01_______00232.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_160_01_______00233.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_161_01_______00234.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_162_01_______00235.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_163_01_______00236.BC',
+			 'ROSETTA/kernels/ck/CATT_DV_164_01_______00237.BC',
+			 'ROSETTA/kernels/ck/ATNR_P040302093352_00127.BC',
+			 'ROSETTA/kernels/ck/RATM_DM_001_01____A__00004.BC',
+			 'ROSETTA/kernels/ck/RATT_DV_164_01_01____00237.BC',
+			 'ROSETTA/kernels/ck/RATT_DV_109_01_01____00177.BC',
+			 'ROSETTA/kernels/spk/CORB_DV_109_01_______00177.BSP',
+			 'ROSETTA/kernels/sclk/ROS_151124_STEP.TSC',
+			 'ROSETTA/kernels/spk/RORB_DV_109_01_______00177.BSP')
+   \begintext
