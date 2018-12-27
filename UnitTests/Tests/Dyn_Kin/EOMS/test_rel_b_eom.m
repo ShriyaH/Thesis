@@ -1,4 +1,4 @@
-function [t,y,r_B] = test_rel_b_eom(T_D,w_AI,x,v,w,q)
+function [t,y,r_B] = test_rel_b_eom(w_AI,x,v,w,q)
 global Sun SC Kleopatra Switch
 
 %% Initial Values

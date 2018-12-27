@@ -1,394 +1,140 @@
-%% Dynamics and Kinematics block check (Inertial, Relative in A, Relative in B, Relative in B with DQ)
+%% Dynamics and Kinematics block check 
+%Inertial, Relative in A, Relative in B, Relative in B with DQ, 6dof with
+%and without controls
 clear data
 clc
-
-global G Sun  SC I m mu w_AI Kleopatra 
+global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-% Initialize_models;
-% I = SC.I.I_total;
-% m_sc = SC.mass.m_i;
-% m = 2.618e18;
-% G = 6.67e-11;
-% mu = G*m; %Gravitational parameter
+Initialize_models;
 
-
-%Kleopatra
-% m = Kleopatra.mass;
-% mu = Kleopatra.mu;
-
-% w_AI = [0 0 3e-04];
-% W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-% W_AI2 = omega_tensor(w_AI,2);
+w_AI = Kleopatra.w_AI;
+W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+W_AI2 = omega_tensor(w_AI,2);
 
 %For dynamic block check
-% x_I = [0 10e3+50e3 0];
-% v_I = [53.964 0 0];
+x_I = [0 60e3 0];
+v_I = [53.964 0 0];
 
 %For SRP check and 3BP check
 % x_I = [0 0 100e3];
 % v_I = [0 55.648657 0];
 
-% w_BI = [0 0 0];
-% q_BI = [0 0 0 1];
-% q_AI = [0 0 0 1];
-% 
-% C_AI = Q2DCM(q_AI);
+w_BI = [0 0 0];
+q_BI = [0 0 0 1];
+q_AI = [0 0 0 1];
+
+C_AI = Q2DCM(q_AI);
 
 %% Select Integrator 
-Q = 0;
-DQ = 0;
-DOF6 = 1;
-DOF6_lin = 1;
-rel = 0;
+Switch.Razgus = 1;
+Switch.Q = 1;
+Switch.rel = 1;
+Switch.DQ = 0;
+Switch.DOF6 = 0;
+Switch.DOF6_lin = 0;
+
 
 %% Plot
-q_inert = 1;
-convert_q = 0;
-kepler_el = 0;
-dq_rel = 0;
+Switch.q_inert = 1;
+Switch.convert_q = 1;
+Switch.kepler_el = 0;
+Switch.kepler_n= 0;
+Switch.err = 0;
+Switch.dq_rel = 0;
 
 
 %% Inertial Dynamics and Kinematics
-if Q == 1
-    [t,y] = test_inert_eom(Sun,SC,I,mu,x_I,v_I,w_BI,q_BI,q_AI,W_AI2,q_inert);
+if Switch.Q 
+    [Var.t,Var.y] = test_inert_eom(x_I,v_I,w_BI,q_BI,q_AI,W_AI2); %integrate for inertial frame (Cartesian and Quaternions)
 
-    if kepler_el == 1
-        for i = 1:length(y)
-            [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(y(i,1:3),y(i,4:6),mu);
-        end
-        figure()
-        goodplot
-        hold on
-        plot (t,Kepler_deg(:,1),'Linewidth',2)
-        xlabel('Time (secs)');
-        ylabel('Metres');
-        grid on
-
-        figure()
-        plot (t,Kepler_deg(:,3),'Linewidth',2)
-        hold on
-        goodplot
-        plot (t,-Kepler_deg(:,4),'Linewidth',2)
-        xlabel('Time (secs)');
-        ylabel('Degrees');
-        legend('i','\Omega','Location','northeastoutside');
-        grid on
-    end
-
-%% Convert to relative frame 
-
-    for i = 1:length(y)
-        norm_y(i) = norm(y(i,1:3));
+%Convert to relative frame 
+    for i = 1:length(Var.y)
+        norm_y(i) = norm(Var.y(i,1:3));
         
-        q_IA(:,i) = conj_quat(y(i,14:17)');
-        C_AIt(3*i-2:3*i,:) = Q2DCM(y(i,14:17)');
+        q_IA(:,i) = conj_quat(Var.y(i,14:17)');
+        C_AIt(3*i-2:3*i,:) = Q2DCM(Var.y(i,14:17)');
 
-        C_BIt(3*i-2:3*i,:) = Q2DCM(y(i,10:13)');
+        C_BIt(3*i-2:3*i,:) = Q2DCM(Var.y(i,10:13)');
 
-        q_BAt(1:4,i) = cross_quat(y(i,10:13)',q_IA(:,i));
-        C_BAt(3*i-2:3*i,:) = Q2DCM(q_BAt(1:4,i));
+        Var.q_BAt(1:4,i) = cross_quat(Var.y(i,10:13)',q_IA(:,i));
+        C_BAt(3*i-2:3*i,:) = Q2DCM(Var.q_BAt(1:4,i));
 
-        r_At(:,i) = C_AIt(3*i-2:3*i,:)*y(i,1:3)';
-        r_Bt(:,i) = C_BAt(3*i-2:3*i,:)*r_At(:,i);
+        Var.r_At(:,i) = C_AIt(3*i-2:3*i,:)*Var.y(i,1:3)';
+        Var.r_Bt(:,i) = C_BAt(3*i-2:3*i,:)*Var.r_At(:,i);
 
-        v_At(:,i) = C_AIt(3*i-2:3*i,:)*y(i,4:6)'- W_AI1*r_At(:,i);
-        v_Bt(:,i) = C_BAt(3*i-2:3*i,:)*v_At(:,i);
+        Var.v_At(:,i) = C_AIt(3*i-2:3*i,:)*Var.y(i,4:6)'- W_AI1*Var.r_At(:,i);
+        Var.v_Bt(:,i) = C_BAt(3*i-2:3*i,:)*Var.v_At(:,i);
 
-        w_BA_b(:,i) = y(i,7:9)'- C_BAt(3*i-2:3*i,:)*w_AI';
-        w_BA_a(:,i) = C_BAt(3*i-2:3*i,:)'*w_BA_b(:,i);
+        Var.w_BA_b(:,i) = Var.y(i,7:9)'- C_BAt(3*i-2:3*i,:)*w_AI';
+        Var.w_BA_a(:,i) = C_BAt(3*i-2:3*i,:)'*Var.w_BA_b(:,i);
         
-        w_AI_B(:,i) = C_BAt(3*i-2:3*i,:)*w_AI';
-
-    end
-
-    if convert_q == 1
-        figure()
-        comet3(r_Bt(1,:),r_Bt(2,:),r_Bt(3,:));
-        hold on
-        xlabel('X (m)');
-        ylabel('Y (m)');
-        zlabel('Z (m)');
-        grid on
-
-        % figure()
-        % comet3(r_At(1,:),r_At(2,:),r_At(3,:));
-        % hold on
-        % xlabel('X (m)');
-        % ylabel('Y (m)');
-        % zlabel('Z (m)');
-        % grid on
-        % print -depsc orbrel
-
-        figure()
-        plot(t,r_At(1,:),'Linewidth',2); 
-        hold on 
-        goodplot
-        plot(t,r_At(2,:),'Linewidth',2); 
-        plot(t,r_At(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Position (m)');
-        legend('X_x','X_y','X_z','Location','northeastoutside');
-        title('r^A (Q-Integrator)');
-        grid on
-        print -depsc relpos
-
-        figure()
-        plot(t,r_Bt(1,:),'Linewidth',2); 
-        hold on 
-        goodplot
-        plot(t,r_Bt(2,:),'Linewidth',2); 
-        plot(t,r_Bt(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Position (m)');
-        legend('X_x','X_y','X_z','Location','northeastoutside');
-        title('r^B (Q-Integrator)');
-        grid on
-        print -depsc relposb
-
-        figure()
-        plot(t,w_BA_b(1,:),'Linewidth',2); 
-        hold on
-        goodplot
-        plot(t,w_BA_b(2,:),'Linewidth',2); 
-        plot(t,w_BA_b(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Omega (rad/s)');
-        legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-        title('\omega_{B/A}^B (Q-Integrator)');
-        grid on
-        print -depsc relomegab
-
-        figure()
-        plot(t,w_BA_a(1,:),'Linewidth',2); 
-        hold on
-        goodplot
-        plot(t,w_BA_a(2,:),'Linewidth',2); 
-        plot(t,w_BA_a(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Omega (rad/s)');
-        legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-        title('\omega_{B/A}^A (Q-Integrator)');
-        grid on
-        print -depsc relomegaa
-
-        figure()
-        plot(t,v_At(1,:),'Linewidth',2); 
-        hold on
-        goodplot
-        plot(t,v_At(2,:),'Linewidth',2); 
-        plot(t,v_At(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Velocity (m/s)');
-        legend('v_x','v_y','v_z','Location','northeastoutside');
-        title('v_{B/A}^A (Q-Integrator)');
-        grid on
-        print -depsc relvela
-
-        figure()
-        plot(t,v_Bt(1,:),'Linewidth',2); 
-        hold on
-        goodplot
-        plot(t,v_Bt(2,:),'Linewidth',2); 
-        plot(t,v_Bt(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Velocity (m/s)');
-        legend('v_x','v_y','v_z','Location','northeastoutside');
-        title('v_{B/A}^B (Q-Integrator)');
-        grid on
-        print -depsc relvelb
-
-        figure()
-        plot(t,q_BAt(1,:),'Linewidth',2); 
-        hold on
-        goodplot()
-        plot(t,q_BAt(2,:),'Linewidth',2); 
-        plot(t,q_BAt(3,:),'Linewidth',2);
-        plot(t,q_BAt(4,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Quat. Components');
-        legend('q_1','q_2','q_3','q_4','Location','northeastoutside');
-        title('q_{B/A} (Q-Integrator)');
-        grid on
-        print -depsc qBA
-        
-        figure()
-        plot(t,w_AI_B(1,:),'Linewidth',2); 
-        hold on
-        goodplot
-        plot(t,w_AI_B(2,:),'Linewidth',2); 
-        plot(t,w_AI_B(3,:),'Linewidth',2);
-        xlabel('Time (s)');
-        ylabel('Omega (rad/s)');
-        legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-        title('\omega_{A/I}^B (Q-Integrator)');
-        grid on
-        print -depsc relomegab
+        Var.w_AI_B(:,i) = C_BAt(3*i-2:3*i,:)*w_AI';
     end
 end
 
 %% Relative Dynamics and Kinematics: Dual Quaternions %%
+%Relative frame Initialisation
+x_A = (C_AI*x_I');
+v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
+q_BA = cross_quat(q_BI',q_AI');
+C_BA = Q2DCM(q_BA);
 
-if DQ == 1
-    %convert initial values to relative frame
-    x_A = (C_AI*x_I');
-    v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
-    q_BA = cross_quat(q_BI',q_AI');
-    C_BA = Q2DCM(q_BA);
+v_BA_B = C_BA*v_BA_A;
+w_AI_B = (C_BA*w_AI');
+w_BA_B = w_BI'-w_AI_B;
 
-    V_BA_B = C_BA*v_BA_A;
-    w_AI_B = (C_BA*w_AI');
-    w_BA_B = w_BI'-w_AI_B;
+if Switch.rel    
+    [Var.t2,Var.y2,Var.r_B] = test_rel_b_eom(w_AI,x_A',v_BA_B',w_BA_B',q_BA');
+end
 
+if Switch.DQ 
     %change to DQ format
-    dI = dq_inertia(m_sc,I);
-    dw_BA = [w_BA_B' 0 V_BA_B' 0];
+    dI = dq_inertia(SC.mass.m_i,SC.I.I_total);
+    dw_BA = [w_BA_B' 0 v_BA_B' 0];
     dq_BA = Q2DQ(q_BA,x_A',2)';
 
     %warning('off','all')
 
-    [t3,y3,r_A,r_B] = test_rel_dq_eom(Sun,dI,mu,w_AI,dw_BA,dq_BA,dq_rel);
-
+    [Var.t3,Var.y3,Var.dqr_A,Var.dqr_B] = test_rel_dq_eom(dI,w_AI,dw_BA,dq_BA,dq_rel);
     
     for j = 1:length(y3)
-        norm_y2(j) = norm(r_A(j,1:3));
-        norm_y3(j) = norm(r_B(j,1:3));
+        norm_y2(j) = norm(Var.dqr_A(j,1:3));
+        norm_y3(j) = norm(Var.dqr_B(j,1:3));
         
-        C_BAtt(3*j-2:3*j,:) = Q2DCM(y3(j,1:4)');
+        C_BAtt(3*j-2:3*j,:) = Q2DCM(Var.y3(j,1:4)');
         C_ABtt(3*j-2:3*j,:) = C_BAtt(3*j-2:3*j,:)';
         
-        C_AI(3*j-2:3*j,:) = Q2DCM([0;0;sin((w_AI(3)*t3(j))/2);cos((w_AI(3)*t3(j))/2)]);
-        C_IA(3*j-2:3*j,:) = C_AI(3*j-2:3*j,:)';
-        r_I(j,1:3) = (C_IA(3*j-2:3*j,:) * r_A(j,1:3)')';
-        v_I(j,1:3) = (C_IA(3*j-2:3*j,:) * (C_ABtt(3*j-2:3*j,:)*y3(j,13:15)' + (W_AI1*r_A(j,1:3)')))';
+        C_AItt(3*j-2:3*j,:) = Q2DCM([0;0;sin((w_AI(3)*Var.t3(j))/2);cos((w_AI(3)*Var.t3(j))/2)]);
+        C_IAtt(3*j-2:3*j,:) = C_AItt(3*j-2:3*j,:)';
         
-        C_BAtt(3*j-2:3*j,:) = Q2DCM(y3(j,1:4)');
-        w_AI_Btt(:,j) = C_BAtt(3*j-2:3*j,:)*w_AI';
-    end
-    
-    
-%         figure()
-%         plot(t3,w_AI_Btt(1,:),'Linewidth',2); 
-%         hold on
-%         goodplot
-%         plot(t3,w_AI_Btt(2,:),'Linewidth',2); 
-%         plot(t3,w_AI_Btt(3,:),'Linewidth',2);
-%         xlabel('Time (s)');
-%         ylabel('Omega (rad/s)');
-%         legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-%         title('\omega_{A/I}^B (Q-Integrator)');
-%         grid on
-%         print -depsc relomegadai
+        Var.dqr_I(j,1:3) = (C_IAtt(3*j-2:3*j,:) * Var.dqr_A(j,1:3)')';
+        Var.dqv_I(j,1:3) = (C_IAtt(3*j-2:3*j,:) * (C_ABtt(3*j-2:3*j,:)*Var.y3(j,13:15)' + (W_AI1*Var.dqr_A(j,1:3)')))';
         
-    if kepler_el == 1
-        for k = 1:length(r_I)
-            [Kepler(k,:),Kepler_deg(k,:)] = cart2kep(r_I(k,1:3),v_I(k,1:3),mu);
-        end
-        figure()
-        plot (t3,Kepler_deg(:,1),'Linewidth',2)
-        hold on 
-        goodplot
-        xlabel('Time (secs)');
-        ylabel('Metres');
-        title('Semi-major Axis (DQ-Integrator)');
-        legend('a','Location','northeastoutside');
-        axis([0 2e4 99999 1.00001e5])
-        grid on
-        print -depsc kepa
-
-        figure()
-        plot (t3,Kepler_deg(:,3),'Linewidth',2)
-        hold on
-        goodplot
-        plot (t3,Kepler_deg(:,4),'Linewidth',2)
-        xlabel('Time (secs)');
-        ylabel('Degrees');
-        legend('i','\Omega','Location','northeastoutside');
-        title('Inclination and RAAN (DQ-Integrator)');
-        axis([0 2e4 89.9995 90.001])
-        grid on
-        print -depsc kepio
+        C_BAtt(3*j-2:3*j,:) = Q2DCM(Var.y3(j,1:4)');
+        Var.dqw_AI_B(:,j) = C_BAtt(3*j-2:3*j,:)*w_AI';
     end
-
-end
-% figure()
-% plot(t,norm_r)
-% hold on
-% goodplot
-% plot(t1,norm_y1,'Linewidth',2)
-% plot(t2,norm_y2,'Linewidth',2)
-% plot(t3,norm_y3,'Linewidth',2)
-% xlabel('Time (secs)')
-% ylabel('Distance (m)')
-% grid on
-
-% err = norm_y3 - norm_r; 
-% plot(err)
-% hold on
-% goodplot
-if rel == 1
-    T_D = [0 0 0];
-     x_A = (C_AI*x_I');
-    v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
-    q_BA = cross_quat(q_BI',q_AI');
-    C_BA = Q2DCM(q_BA);
-
-    v_BA_B = C_BA*v_BA_A;
-    w_AI_B = (C_BA*w_AI');
-    w_BA_B = w_BI'-w_AI_B;
-    
-    [t,y,r_B1] = test_rel_b_eom(T_D,I,mu,w_AI,x_A',v_BA_B',w_BA_B',q_BA');
 end
 
 %% Inertial Descent: Non-linear %%
- m_sc = 2;
-    g = [0;0;-1];
-    x_I = [1; 0; 2];
-    v_I = [0.2; 0; -1]; 
-    q_BI = [0; 0; 0; 1]; 
-    w_BI = [0; 0; 0.3]; 
-    Th_B = [0; 0; 2];
-    Th_dot_B = [0;0;0];
-    I = 0.5.*eye(3);
+m_sc = 2;
+g = [0;0;-1];
+x_I = [1; 0; 2];
+v_I = [0.2; 0; -1]; 
+q_BI = [0; 0; 0; 1]; 
+w_BI = [0; 0; 0.3]; 
+Th_B = [0; 0; 2];
+Th_dot_B = [0;0;0];
+I = 0.5.*eye(3);
     
-if DOF6 == 1   
+if Switch.DOF6    
     [t,y] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,q_inert);    
 end
 
 %% Inertial Descent: Linear %%
 
-if DOF6_lin == 1
+if Switch.DOF6_lin 
     [tspan,tode4,y1] = test_inert_lineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,t,y,q_inert);    
 end
 
-figure()
-hold on
-goodplot()
-plot(t,y(:,2),'Linewidth',2)
-plot(t,y(:,3),'Linewidth',2)
-plot(t,y(:,4),'Linewidth',2)
-plot(tspan,y1(:,2),'Linewidth',2)
-plot(tspan,y1(:,3),'Linewidth',2)
-plot(tspan,y1(:,4),'Linewidth',2)
-xlabel('Time (s)');
-ylabel('Position Components');
-legend('r_{n1}','r_{n2}','r_{n3}','r_{l1}','r_{l2}','r_{l3}','Location','northeastoutside');
-title('r^{I} (U_l)');
-grid on
-print -depsc err_p
-
-figure()
-hold on
-goodplot()
-plot(t,y(:,5),'Linewidth',2)
-plot(t,y(:,6),'Linewidth',2)
-plot(t,y(:,7),'Linewidth',2)
-plot(tspan,y1(:,5),'Linewidth',2)
-plot(tspan,y1(:,6),'Linewidth',2)
-plot(tspan,y1(:,7),'Linewidth',2)
-xlabel('Time (s)');
-ylabel('Velocity Components');
-legend('v_{n1}','v_{n2}','v_{n3}','v_{l1}','v_{l2}','v_{l3}','Location','northeastoutside');
-title('v^{I}_{B/I} (U_l/U_t)');
-grid on
-print -depsc err_v
+dyn_block_plots();

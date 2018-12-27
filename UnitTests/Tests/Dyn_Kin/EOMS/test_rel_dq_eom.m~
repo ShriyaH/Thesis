@@ -11,6 +11,9 @@ else
 end
 [U, S, V] = svd(dI);
 dI_inv = V*(S\U');
+% B = [eye(4) zeros(4,4)
+%     zeros(4,4) 2.*eye(4)]; 
+% B(8,8) = 1;
 w_AI = w_AI';
 
 %% Integrator
@@ -34,9 +37,10 @@ function dY = orb_int_dqin(T,Y)
     
     Y(1:8) = norm_dq(Y(1:8));
     
-    dW_om = omega_tensor(Y(9:16),3); %dq cross product matrix
-    dq_dot = 0.5*dW_om*Y(1:8); 
-
+    dq_W = omega_tensor(Y(9:16),3); %dq cross product matrix
+    dq_dot = 0.5*dq_W*Y(1:8); 
+    
+%     d_W = omega_tensor(Y(9:16),4); %dual number cross product matrix
     C_BA = Q2DCM(Y(1:4));
     
     w_AI_B = C_BA * w_AI; 
@@ -45,8 +49,13 @@ function dY = orb_int_dqin(T,Y)
     
     dw_BI_B = dw_AI_B + Y(9:16);
     W_BI = omega_tensor(dw_BI_B,4);
+    
+%     W_AI_B = omega_tensor(dq_w_AI_B,4);
+%     W_AI_B2 =  W_AI_B;
+%     W_AI_B2(1:4,1:4) = [w_AI_B(1) 0 0 0; 0 w_AI_B(2) 0 0; 0 0 w_AI_B(3) 0; 0 0 0 0];
 
     r_B = 2.*cross_quat(Y(5:8),conj_quat(Y(1:4)));
+    r = norm(r_B);
     
     C_AI = Q2DCM([0;0;sin((w_AI(3)*T)/2);cos((w_AI(3)*T)/2)]);
     rs_B = C_BA*C_AI*Sun.rs_I(1:3);

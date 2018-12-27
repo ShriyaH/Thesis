@@ -1,7 +1,7 @@
 function []= dyn_block_plots()
 global Switch Var
 
-if Switch.q_inert
+if Switch.Q
     figure()
     comet3(Var.y(:,1),Var.y(:,2),Var.y(:,3));
     hold on
@@ -87,7 +87,7 @@ if Switch.convert_q
         ylabel('Y (m)');
         zlabel('Z (m)');
         grid on
-        print -depsc relorbb
+        print -depsc relorbbc
 
         % figure()
         % comet3(Var.r_At(1,:),Var.r_At(2,:),Var.r_At(3,:));
@@ -96,7 +96,7 @@ if Switch.convert_q
         % ylabel('Y (m)');
         % zlabel('Z (m)');
         % grid on
-        % print -depsc relorba
+        % print -depsc relorbac
 
         figure()
         plot(Var.t,Var.r_At(1,:),'Linewidth',2); 
@@ -204,7 +204,7 @@ if Switch.convert_q
         print -depsc relomegaaic
 end
 
-if Switch.rel
+if Switch.Q_rel
     figure()
     comet3(Var.r_B(:,1),Var.r_B(:,2),Var.r_B(:,3));
     hold on
@@ -212,6 +212,7 @@ if Switch.rel
     ylabel('Y (m)');
     zlabel('Z (m)');
     grid on
+    print -depsc relorbb
 
     figure()
     comet3(Var.y2(:,1),Var.y2(:,2),Var.y2(:,3));
@@ -220,6 +221,7 @@ if Switch.rel
     ylabel('Y (m)');
     zlabel('Z (m)');
     grid on
+    print -depsc relorba
 
     figure()
     plot(Var.t2,Var.y2(:,1),'Linewidth',2); 
@@ -232,6 +234,7 @@ if Switch.rel
     legend('X_x','X_y','X_z','Location','northeastoutside');
     title('r^A (Rel_Q-Integrator)');
     grid on
+    print -depsc relposa
 
     figure()
     plot(Var.t2,Var.r_B(:,1),'Linewidth',2); 
@@ -287,27 +290,116 @@ if Switch.rel
     print -depsc relomegab
 end
 
+if Switch.DQ
+    figure()
+    comet3(Var.dqr_A(:,1),Var.dqr_A(:,2),Var.dqr_A(:,3));
+    hold on
+    xlabel('X (m)');
+    ylabel('Y (m)');
+    zlabel('Z (m)');
+    grid on
+    print -depsc dqorba
+
+    figure ()
+    comet3(Var.dqr_B(:,1),Var.dqr_B(:,2),Var.dqr_B(:,3));
+    hold on
+    xlabel('X (m)');
+    ylabel('Y (m)');
+    zlabel('Z (m)');
+    grid on
+    print -depsc dqorbb
+
+    figure()
+    plot(Var.t3,Var.dqr_A(:,1),'Linewidth',2); 
+    hold on
+    goodplot
+    plot(Var.t3,Var.dqr_A(:,2),'Linewidth',2); 
+    plot(Var.t3,Var.dqr_A(:,3),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Position (m)');
+    legend('X_x','X_y','X_z','Location','northeastoutside');
+    title('r^A (DQ-Integrator)');
+    print -depsc dqposda
+
+    figure()
+    plot(Var.t3,Var.dqr_B(:,1),'Linewidth',2); 
+    hold on
+    goodplot
+    plot(Var.t3,Var.dqr_B(:,2),'Linewidth',2); 
+    plot(Var.t3,Var.dqr_B(:,3),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Position (m)');
+    legend('X_x','X_y','X_z','Location','northeastoutside');
+    title('r^B (DQ-Integrator)');
+    print -depsc dqposdb
+
+    figure()
+    plot(Var.t3,Var.y3(:,1),'Linewidth',2); 
+    hold on
+    goodplot
+    plot(Var.t3,Var.y3(:,2),'Linewidth',2); 
+    plot(Var.t3,Var.y3(:,3),'Linewidth',2);
+    plot(Var.t3,Var.y3(:,4),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Quat. Components');
+    legend('q_1','q_2','q_3','q_4','Location','northeastoutside');
+    title('q_{B/A} (DQ-Integrator)');
+    grid on
+    print -depsc dqquatBA
+
+    figure()
+    plot(Var.t3,Var.y3(:,9),'Linewidth',2); 
+    hold on
+    goodplot
+    plot(Var.t3,Var.y3(:,10),'Linewidth',2); 
+    plot(Var.t3,Var.y3(:,11),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Omega (rad/s)');
+    legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
+    title('\omega_{B/A}^B (DQ-Integrator)');
+    grid on
+    print -depsc dqomegab
+
+    figure()
+    plot(Var.t3,Var.y3(:,13),'Linewidth',2); 
+    hold on
+    goodplot
+    plot(Var.t3,Var.y3(:,14),'Linewidth',2); 
+    plot(Var.t3,Var.y3(:,15),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Velocity (m/s)');
+    legend('v_x','v_y','v_z','Location','northeastoutside');
+    title('v_{B/A}^B (DQ-Integrator)');
+    grid on
+    print -depsc dqvelb
+end
+
 if Switch.kepler_n
-    for i = 1:length(y)
-        [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(y(i,1:3),y(i,4:6),mu);
+    for i = 1:length(Var.y)
+        [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(Var.y(i,1:3),Var.y(i,4:6),mu);
     end
     figure()
     goodplot
     hold on
-    plot (t,Kepler_deg(:,1),'Linewidth',2)
+    plot (Var.t,Kepler_deg(:,1),'Linewidth',2)
     xlabel('Time (secs)');
     ylabel('Metres');
+    title('Semi-major Axis (DQ-Integrator)');
+    legend('a','Location','northeastoutside');
     grid on
+    print -depsc kepa
 
     figure()
-    plot (t,Kepler_deg(:,3),'Linewidth',2)
+    plot (Var.t,Kepler_deg(:,3),'Linewidth',2)
     hold on
     goodplot
-    plot (t,-Kepler_deg(:,4),'Linewidth',2)
+    plot (Var.t,-Kepler_deg(:,4),'Linewidth',2)
     xlabel('Time (secs)');
     ylabel('Degrees');
     legend('i','\Omega','Location','northeastoutside');
+    title('Inclination and RAAN (DQ-Integrator)');
     grid on
+    print -depsc kepo
 end
 
 if Switch.kepler_el
@@ -352,134 +444,61 @@ end
 %         grid on
 %         print -depsc relomegadai
 
-% figure()
-% plot(t,norm_r)
-% hold on
-% goodplot
-% plot(t1,norm_y1,'Linewidth',2)
-% plot(t2,norm_y2,'Linewidth',2)
-% plot(t3,norm_y3,'Linewidth',2)
-% xlabel('Time (secs)')
-% ylabel('Distance (m)')
-% grid on
-
-% err = norm_y3 - norm_r; 
-% plot(err)
-% hold on
-% goodplot
-if Switch.dq_rel
-    figure()
-    plot3(r_At(:,1),r_At(:,2),r_At(:,3),'Linewidth',2);
-    hold on
-    xlabel('X (m)');
-    ylabel('Y (m)');
-    zlabel('Z (m)');
-    grid on
-
-    figure ()
-    plot3(r_Bt(:,1),r_Bt(:,2),r_Bt(:,3),'Linewidth',2);
-    hold on
-    xlabel('X (m)');
-    ylabel('Y (m)');
-    zlabel('Z (m)');
-    grid on
-
-    figure()
-    plot(t,r_At(:,1),'Linewidth',2); 
-    hold on
-    goodplot
-    plot(t,r_At(:,2),'Linewidth',2); 
-    plot(t,r_At(:,3),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Position (m)');
-    legend('X_x','X_y','X_z','Location','northeastoutside');
-    title('r^A (DQ-Integrator)');
-    print -depsc relposda
-
-    figure()
-    plot(t,r_Bt(:,1),'Linewidth',2); 
-    hold on
-    goodplot
-    plot(t,r_Bt(:,2),'Linewidth',2); 
-    plot(t,r_Bt(:,3),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Position (m)');
-    legend('X_x','X_y','X_z','Location','northeastoutside');
-    title('r^B (DQ-Integrator)');
-    print -depsc relposdb
-
-    figure()
-    plot(t,y(:,1),'Linewidth',2); 
-    hold on
-    goodplot
-    plot(t,y(:,2),'Linewidth',2); 
-    plot(t,y(:,3),'Linewidth',2);
-    plot(t,y(:,4),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Quat. Components');
-    legend('q_1','q_2','q_3','q_4','Location','northeastoutside');
-    title('q_{B/A} (DQ-Integrator)');
-    grid on
-    print -depsc relquatd
-
-    figure()
-    plot(t,y(:,9),'Linewidth',2); 
-    hold on
-    goodplot
-    plot(t,y(:,10),'Linewidth',2); 
-    plot(t,y(:,11),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Omega (rad/s)');
-    legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-    title('\omega_{B/A}^B (DQ-Integrator)');
-    grid on
-    print -depsc relomegadb
-
-    figure()
-    plot(t,y(:,13),'Linewidth',2); 
-    hold on
-    goodplot
-    plot(t,y(:,14),'Linewidth',2); 
-    plot(t,y(:,15),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Velocity (m/s)');
-    legend('v_x','v_y','v_z','Location','northeastoutside');
-    title('v_{B/A}^B (DQ-Integrator)');
-    grid on
-    print -depsc relveldb
-end
-
 if Switch.err
+%     figure()
+%     hold on
+%     goodplot()
+%     plot(t,y(:,2),'Linewidth',2)
+%     plot(t,y(:,3),'Linewidth',2)
+%     plot(t,y(:,4),'Linewidth',2)
+%     plot(tspan,y1(:,2),'Linewidth',2)
+%     plot(tspan,y1(:,3),'Linewidth',2)
+%     plot(tspan,y1(:,4),'Linewidth',2)
+%     xlabel('Time (s)');
+%     ylabel('Position Components');
+%     legend('r_{n1}','r_{n2}','r_{n3}','r_{l1}','r_{l2}','r_{l3}','Location','northeastoutside');
+%     title('r^{I} (U_l)');
+%     grid on
+%     print -depsc err_p
+% 
+%     figure()
+%     hold on
+%     goodplot()
+%     plot(t,y(:,5),'Linewidth',2)
+%     plot(t,y(:,6),'Linewidth',2)
+%     plot(t,y(:,7),'Linewidth',2)
+%     plot(tspan,y1(:,5),'Linewidth',2)
+%     plot(tspan,y1(:,6),'Linewidth',2)
+%     plot(tspan,y1(:,7),'Linewidth',2)
+%     xlabel('Time (s)');
+%     ylabel('Velocity Components');
+%     legend('v_{n1}','v_{n2}','v_{n3}','v_{l1}','v_{l2}','v_{l3}','Location','northeastoutside');
+%     title('v^{I}_{B/I} (U_l/U_t)');
+%     grid on
+%     print -depsc err_v
+    
     figure()
+    plot(Var.t2,Var.norm_rb,'Linewidth',2)
     hold on
-    goodplot()
-    plot(t,y(:,2),'Linewidth',2)
-    plot(t,y(:,3),'Linewidth',2)
-    plot(t,y(:,4),'Linewidth',2)
-    plot(tspan,y1(:,2),'Linewidth',2)
-    plot(tspan,y1(:,3),'Linewidth',2)
-    plot(tspan,y1(:,4),'Linewidth',2)
-    xlabel('Time (s)');
-    ylabel('Position Components');
-    legend('r_{n1}','r_{n2}','r_{n3}','r_{l1}','r_{l2}','r_{l3}','Location','northeastoutside');
-    title('r^{I} (U_l)');
+    goodplot
+    plot(Var.t3,Var.norm_dqrb,'Linewidth',2)
+    xlabel('Time (secs)')
+    ylabel('Distance (m)')
+    legend('r^B_Q','r^B_{DQ}','Location','northeastoutside');
+    title('r^B Comparison');
     grid on
-    print -depsc err_p
+    print -depsc posbcomp
 
     figure()
+    plot(Var.t2,Var.norm_ra,'Linewidth',2)
     hold on
-    goodplot()
-    plot(t,y(:,5),'Linewidth',2)
-    plot(t,y(:,6),'Linewidth',2)
-    plot(t,y(:,7),'Linewidth',2)
-    plot(tspan,y1(:,5),'Linewidth',2)
-    plot(tspan,y1(:,6),'Linewidth',2)
-    plot(tspan,y1(:,7),'Linewidth',2)
-    xlabel('Time (s)');
-    ylabel('Velocity Components');
-    legend('v_{n1}','v_{n2}','v_{n3}','v_{l1}','v_{l2}','v_{l3}','Location','northeastoutside');
-    title('v^{I}_{B/I} (U_l/U_t)');
+    goodplot
+    plot(Var.t3,Var.norm_dqra,'Linewidth',2)
+    xlabel('Time (secs)')
+    ylabel('Distance (m)')
+    legend('r^A_Q','r^A_{DQ}','Location','northeastoutside');
+    title('r^A Comparison');
     grid on
-    print -depsc err_v
+    print -depsc posacomp
 end
 end
