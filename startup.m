@@ -1,61 +1,61 @@
 function [] = startup()
-addpath ../Thesis_sh
-addpath ../Thesis_sh/3rdPartyFunctions
+addpath ../Thesis
+addpath ../Thesis/3rdPartyFunctions
 
-addpath ../Thesis_sh/3rdPartyFunctions/cvx
+addpath ../Thesis/3rdPartyFunctions/cvx
 
-addpath ../Thesis_sh/3rdPartyFunctions/cvx_mac
+addpath ../Thesis/3rdPartyFunctions/cvx_mac
 
-addpath ../Thesis_sh/3rdPartyFunctions/fixedstepintegrators
+addpath ../Thesis/3rdPartyFunctions/fixedstepintegrators
 
-addpath ../Thesis_sh/3rdPartyFunctions/mice/SPICE
+addpath ../Thesis/3rdPartyFunctions/mice/SPICE
 
-addpath ../Thesis_sh/3rdPartyFunctions/mice
+addpath ../Thesis/3rdPartyFunctions/mice
 
-addpath ../Thesis_sh/3rdPartyFunctions/mice/lib
+addpath ../Thesis/3rdPartyFunctions/mice/lib
 
-addpath ../Thesis_sh/3rdPartyFunctions/mice/src/mice
+addpath ../Thesis/3rdPartyFunctions/mice/src/mice
 
-addpath ../Thesis_sh/3rdPartyFunctions/ecos-matlab-bin-allPlatforms-2.0.4
+addpath ../Thesis/3rdPartyFunctions/ecos-matlab-bin-allPlatforms-2.0.4
 
-addpath ../Thesis_sh/3rdPartyFunctions/ecos-matlab-bin-allPlatforms-2.0.4/bin
+addpath ../Thesis/3rdPartyFunctions/ecos-matlab-bin-allPlatforms-2.0.4/bin
 
-addpath ../Thesis_sh/Asteroids
+addpath ../Thesis/Asteroids
 
-addpath ../Thesis_sh/Asteroids/AsteroidSetUp
+addpath ../Thesis/Asteroids/AsteroidSetUp
  
-addpath ../Thesis_sh/Asteroids/Polyhedronfiles
+addpath ../Thesis/Asteroids/Polyhedronfiles
 
-addpath ../Thesis_sh/ConversionLibrary
+addpath ../Thesis/ConversionLibrary
 
-addpath ../Thesis_sh/ConversionLibrary/att_rep_trans
+addpath ../Thesis/ConversionLibrary/att_rep_trans
 
-addpath ../Thesis_sh/ConversionLibrary/q_dq_operators
+addpath ../Thesis/ConversionLibrary/q_dq_operators
 
-addpath ../Thesis_sh/ConvexOptimisation
+addpath ../Thesis/ConvexOptimisation
 
-addpath ../Thesis_sh/ConvexOptimisation/SuccessiveConvexification/Tests/test2
+addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/test2
 
-% addpath ../Thesis_sh/ConvexOptimisation/SuccessiveConvexification
+% addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification
 
-addpath ../Thesis_sh/CubeExample
+addpath ../Thesis/CubeExample
 
-addpath ../Thesis_sh/Figures
+addpath ../Thesis/Figures
 
-addpath ../Thesis_sh/Models
+addpath ../Thesis/Models
 
-addpath ../Thesis_sh/Models/SCModel
+addpath ../Thesis/Models/SCModel
 
-addpath ../Thesis_sh/Models/ForceModels
+addpath ../Thesis/Models/ForceModels
 
-addpath ../Thesis_sh/Models/Dynamics
+addpath ../Thesis/Models/Dynamics
 
-addpath ../Thesis_sh/Models/Dynamics/DQ
+addpath ../Thesis/Models/Dynamics/DQ
 
-addpath ../Thesis_sh/MotionPlanning
+addpath ../Thesis/MotionPlanning
 
-addpath ../Thesis_sh/UnitTests
+addpath ../Thesis/UnitTests
 
-addpath ../Thesis_sh/UnitTests/Tests/Dyn_Kin/EOMS
-addpath ../Thesis_sh/UnitTests/Tests/Dyn_Kin/Lin_eom
+addpath ../Thesis/UnitTests/Tests/Dyn_Kin/EOMS
+addpath ../Thesis/UnitTests/Tests/Dyn_Kin/Lin_eom
 end

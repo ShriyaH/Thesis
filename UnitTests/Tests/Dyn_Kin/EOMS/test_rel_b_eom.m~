@@ -49,6 +49,7 @@ function dY = orb_int(T,Y)
     q_BA_dot = 0.5*W_BA2*q_BA; %q_BA dot
          
     r_B = C_BA*Y(1:3);
+    r2 = norm(r_B);
     
     C_AI = Q2DCM([0;0;sin((w_AI(3)*T)/2);cos((w_AI(3)*T)/2)]);
     rs_B = C_BA*C_AI*Sun.rs_I(1:3);

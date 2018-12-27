@@ -21,8 +21,8 @@ T = [0 20000];
 tic
 Opt = odeset('RelTol',1e-10,'AbsTol',1e-12);
 [t,y] = ode45(@orb_int, T, Y0,Opt); 
-
 toc
+
 %% Differential Function
 
 function dY = orb_int(T,Y)
@@ -48,8 +48,6 @@ function dY = orb_int(T,Y)
     
     a_D_I = quat_trans(conj_quat(q_BI),a_D,'n');
     
-%     r = sqrt(sum(Y(1:3).^2));
-%     dY = [Y(4:6); a_D_I(1:3)-mu.*Y(1:3)/r^3; wd; q_BI_dot; q_AI_dot];
     dY = [Y(4:6); a_D_I(1:3); wd; q_BI_dot; q_AI_dot];
 end
 
