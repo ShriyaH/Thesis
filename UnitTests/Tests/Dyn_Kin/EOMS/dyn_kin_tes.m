@@ -13,32 +13,33 @@ W_AI1 = omega_tensor(w_AI,1);
 W_AI2 = omega_tensor(w_AI,2);
 
 %For dynamic block check
-x_I = [0 60e3 0];
-v_I = [53.964 0 0];
+% x_I = [0 60e3 0];
+% v_I = [53.964 0 0];
+% w_BI = [6.28318e-4 0 0];
 
 %For SRP check and 3BP check
-% x_I = [0 0 100e3];
-% v_I = [0 55.648657 0];
+x_I = [0 0 60e3];
+v_I = [0 53.964 0];
+w_BI = [0 0 0];
 
-w_BI = [6.28318e-4 0 0];
 q_BI = [0 0 0 1];
 q_AI = [0 0 0 1];
 
 C_AI = Q2DCM(q_AI);
 
 %% Select Integrator 
-Switch.Razgus = 1;
+Switch.Razgus = 0;
 Switch.Q = 1;
-Switch.Q_rel = 1;
-Switch.DQ = 1;
+Switch.Q_rel = 0;
+Switch.DQ = 0;
 Switch.DOF6 = 0;
 Switch.DOF6_lin = 0;
 
 %% Plot
-Switch.convert_q = 1;
+Switch.convert_q = 0;
 Switch.kepler_el = 0;
-Switch.kepler_n= 0;
-Switch.err = 1;
+Switch.kepler_n= 1;
+Switch.err = 0;
 
 %% Inertial Dynamics and Kinematics
 if Switch.Q 
@@ -81,7 +82,7 @@ v_BA_B = C_BA*v_BA_A;
 w_AI_B = (C_BA*w_AI');
 w_BA_B = w_BI'-w_AI_B;
 
-if Switch.rel    
+if Switch.Q_rel    
     [Var.t2,Var.y2,Var.r_B] = test_rel_b_eom(w_AI,x_A',v_BA_B',w_BA_B',q_BA');
     for j = 1:length(Var.y2)
         Var.norm_rb(j) = norm(Var.r_B(j,1:3));

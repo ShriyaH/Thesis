@@ -20,7 +20,7 @@ CONSTANTS.ge = 9.807;            %earth grav acc
 %% Dynamics controls
 Switch.point_mass = 1;
 Switch.poly_grav = 0;
-Switch.SRP = 0;
+Switch.SRP = 1;
 Switch.TBP = 0;
 Switch.GG = 0;
 Switch.Ast_rot = 1;

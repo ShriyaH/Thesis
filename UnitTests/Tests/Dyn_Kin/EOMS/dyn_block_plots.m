@@ -1,6 +1,12 @@
 function []= dyn_block_plots()
-global Switch Var
-
+global Switch Var Kleopatra
+if Switch.Razgus
+    G = 6.67e-11;
+    m = 2.618e18;
+    mu = G*m; %standard grav parameter
+else
+   mu = Kleopatra.mu; 
+end
 if Switch.Q
     figure()
     comet3(Var.y(:,1),Var.y(:,2),Var.y(:,3));
