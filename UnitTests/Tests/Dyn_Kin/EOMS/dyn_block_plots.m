@@ -384,6 +384,10 @@ if Switch.kepler_n
     for i = 1:length(Var.y)
         [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(Var.y(i,1:3),Var.y(i,4:6),mu);
     end
+    max(Kepler_deg(:,1))-60e3
+    max(Kepler_deg(:,3))-90
+    max(-Kepler_deg(:,4))-90
+    
     figure()
     goodplot
     hold on

@@ -8,19 +8,24 @@ global Sun SC I m mu Kleopatra Var Switch
 %% Common Input Values 
 Initialize_models;
 
-w_AI = Kleopatra.w_AI;
+% w_AI = Kleopatra.w_AI;
+w_AI = [0 0 0];
 W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 W_AI2 = omega_tensor(w_AI,2);
 
 %For dynamic block check
 % x_I = [0 60e3 0];
-% v_I = [53.964 0 0];
+% v_I = [53.947598031175893 0 0];
 % w_BI = [6.28318e-4 0 0];
 
 %For SRP check and 3BP check
-x_I = [0 0 60e3];
-v_I = [0 53.964 0];
+% x_I = [0 0 60e3];
+% v_I = [0 53.947598031175893 0];
+% w_BI = [0 0 0];
+x_I = [0.689443571879531   0.689443571879531   0.222115110670095].*100e3;
+v_I = [0.316318321278693  -0.010714267062475  -0.948592601755223].*55.648657845450323;
 w_BI = [0 0 0];
+
 
 q_BI = [0 0 0 1];
 q_AI = [0 0 0 1];

@@ -170,10 +170,10 @@ SC.I.I_tank = [(Ixx_p + Ixx_o) 0 0
  
 
 SC.I.I_total = SC.I.I_constant + SC.I.I_tank;
-
+SC.mass.m_facet = [((SC.mass.m_i-2*SC.mass.SA)/12).*ones(12,1);(2*SC.mass.SA/20).*ones(20,1)];
 %% Reflectivity
-SC.a_r = [ones(12,1)*0.85; ones(20,1)*0.7];
-SC.a_d = ones(32,1)*[0.1 0.1];
+SC.a_r = [ones(12,1)*0.5; ones(20,1)*0.21];
+SC.a_d = ones(32,1)*0.1;
 
 %% Lidar reference frame
 th = deg2rad(30); %axis of LIDAR wrt z axis
