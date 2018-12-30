@@ -1,4 +1,4 @@
-function [A,b,G,h,C,dims] = SCvx_ini_para_test2(i)
+function [A,b,G,h,C,dims] = SCvx_ini_para_acik(i)
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 
@@ -94,9 +94,9 @@ for k = 0:K-1
         Ac = zeros(ns,ns);
         Ac(1,15:17) = -alpha0.*(T_k'./norm(T_k));
         Ac(2:4,5:7) = eye(3);
-        Ac(5:7,:) = get_da2(T_k,q_k,m_k,ns);
-        Ac(8:11,:) = get_dqdot2(w_k,q_k,ns); 
-        Ac(12:14,:) = get_dwdot2(w_k,J,r_T,ns);
+        Ac(5:7,:) = get_da_inertial(T_k,q_k,m_k,ns);
+        Ac(8:11,:) = get_dqdot_inertial(w_k,q_k,ns); 
+        Ac(12:14,:) = get_dwdot_inertial(w_k,J,r_T,ns);
         Ac(15:17,18:20) = eye(3);
 
 

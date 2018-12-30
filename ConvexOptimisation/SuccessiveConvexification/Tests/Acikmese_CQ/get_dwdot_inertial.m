@@ -1,4 +1,4 @@
-function [dwdot] = get_dwdot2(w,J,r,ns)
+function [dwdot] = get_dwdot_inertial(w,J,r,ns)
 
 dwdot = zeros(3,ns);
 

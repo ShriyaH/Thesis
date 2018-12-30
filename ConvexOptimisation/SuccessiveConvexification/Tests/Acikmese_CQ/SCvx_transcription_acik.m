@@ -1,4 +1,4 @@
-function[xc,uc,xdotc,cpu_time,status] = SCvx_transcription_test2()
+function[xc,uc,xdotc,cpu_time,status] = SCvx_transcription_acik()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 global CONSTANTS PARAMS ITR;
@@ -32,7 +32,7 @@ count = 1;
  while count < CONSTANTS.i_max
     count = i;
     
-    [A,b,G,h,C,dims] = SCvx_ini_para_test2(i);
+    [A,b,G,h,C,dims] = SCvx_ini_para_acik(i);
     
     [x, y, info_, s, z] = ecos(C, G, h, dims, A, b, opts);
     y =  -y(ns+(1:(K-1)*ns));
@@ -115,7 +115,7 @@ count = 1;
     i = i+1           
 
  end
-acik_plots2(i); 
+acik_plots(i); 
 end
 
 

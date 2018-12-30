@@ -1,4 +1,4 @@
-function[] = ini_models_test2
+function[] = ini_models_acik
 %%-----Initialize for Acikmese test case------%%
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
@@ -64,5 +64,5 @@ PARAMS.n_virt = length(CONSTANTS.x0);
 PARAMS.n_slack = 1;
 PARAMS.n_tr = 1;
 
-first_sol2;
+first_sol_acik;
 end

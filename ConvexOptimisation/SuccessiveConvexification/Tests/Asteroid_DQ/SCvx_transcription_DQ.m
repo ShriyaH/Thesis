@@ -115,7 +115,7 @@ count = 1;
      end
     i = i+1 
  end
- acik_plots_DQ(i);
+ SCvx_plots_DQ(i);
     
 end
 

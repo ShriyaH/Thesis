@@ -1,4 +1,4 @@
-function [da] = get_da2(T,q,m,ns)
+function [da] = get_da_inertial(T,q,m,ns)
 
 da = zeros(3,ns);
 

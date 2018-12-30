@@ -1,4 +1,4 @@
-% function[] = ini_models_test3
+% function[] = ini_models_DQ()
 %%-----Initialize for Acikmese test case------%%
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 

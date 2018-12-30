@@ -1,4 +1,4 @@
-function [dqdot] = get_dqdot2(w,q,ns)
+function [dqdot] = get_dqdot_inertial(w,q,ns)
 
 dqdot = zeros(4,ns);
 
