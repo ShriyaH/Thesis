@@ -28,6 +28,7 @@ addpath ../Thesis/Asteroids/Polyhedronfiles
 
 addpath ../Thesis/ConversionLibrary
 
+addpath ../Thesis/3rdPartyFunctions/matlab2tikz-matlab2tikz-816f875/src
 addpath ../Thesis/ConversionLibrary/att_rep_trans
 
 addpath ../Thesis/ConversionLibrary/q_dq_operators

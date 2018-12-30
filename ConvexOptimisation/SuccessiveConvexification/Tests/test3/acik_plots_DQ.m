@@ -1,4 +1,4 @@
-function [] = acik_plots3(i)
+function [] = acik_plots_DQ(i)
 global CONSTANTS ITR
 
 t = ITR.t_k;

@@ -1,0 +1,61 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymode=log,
+ymin=1e-09,
+ymax=10,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={Difference in Mass Spent},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+1	0.380868143509621\\
+2	0.0352722170366211\\
+3	0.0256609074556595\\
+4	0.0188274709423162\\
+5	0.0155416164305202\\
+6	0.0104071511518655\\
+7	0.00598725521394816\\
+8	0.00337578964073759\\
+9	0.00174785821955825\\
+10	0.000707844308394989\\
+};
+\addlegendentry{$\text{Converged}_{\text{sol}}$}
+
+\addplot [color=red, mark=*, mark options={solid, red}]
+  table[row sep=crcr]{%
+1	0.3766\\
+2	0.06019\\
+3	0.02056\\
+4	0.004083\\
+5	0.002399\\
+6	0.001018\\
+7	5.633e-06\\
+8	9.8e-06\\
+9	6.417e-06\\
+10	4.2e-06\\
+};
+\addlegendentry{$\text{Acikmese}_{\text{sol}}$}
+
+\end{axis}
+\end{tikzpicture}%

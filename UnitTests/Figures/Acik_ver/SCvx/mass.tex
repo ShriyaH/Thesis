@@ -1,0 +1,46 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=1,
+xmax=11,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymin=0.85,
+ymax=1.25,
+ylabel style={font=\color{white!15!black}},
+ylabel={Mass Spent},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+1	1.25\\
+2	0.904404073524964\\
+3	0.894792763946503\\
+4	0.88795932743479\\
+5	0.884673472921507\\
+6	0.879539007641859\\
+7	0.875119111708569\\
+8	0.87250764613284\\
+9	0.870879714709928\\
+10	0.869839700793554\\
+11	0.869131856487595\\
+};
+\addlegendentry{data1}
+
+\end{axis}
+\end{tikzpicture}%

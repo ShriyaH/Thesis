@@ -1,0 +1,45 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymin=0,
+ymax=160,
+ylabel style={font=\color{white!15!black}},
+ylabel={Difference in Converged State},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+1	154.830433422239\\
+2	70.3237568558251\\
+3	46.0998305648981\\
+4	36.436094528751\\
+5	24.0781378528615\\
+6	16.7409110926858\\
+7	12.5652854696688\\
+8	9.66424906383854\\
+9	7.66251722275236\\
+10	5.9806142134246\\
+};
+\addlegendentry{data1}
+
+\end{axis}
+\end{tikzpicture}%

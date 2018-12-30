@@ -70,12 +70,6 @@ for ii = 1:i
     v = ITR.v_k{ii}(1:20,:);
     v_t = mean(v);
     v_n(ii) = abs(mean(v_t));
-    
-    %state convergence and virtual controls convergence
-    if ii < i
-        state_conv(ii) = ITR.state_conv{ii};
-        virt_cont(ii) = ITR.virt_cont{ii};
-    end
 end
 
 
@@ -94,24 +88,6 @@ xlabel('Iterations')
 ylabel('Difference in Mass Spent')
 set(gca, 'YScale', 'log')
 axis([1 i-1 10e-10 10e0])
-grid on
-
-%plot difference in converged state
-figure()
-plot(1:i-1,state_conv(1:i-1),'Marker','o')
-xlabel('Iterations')
-ylabel('Difference in Converged State')
-% set(gca, 'YScale', 'log')
-% axis([1 i-1 10e-10 10e0])
-grid on
-
-%plot difference in converged state
-figure()
-plot(1:i-1,virt_cont(1:i-1),'Marker','o')
-xlabel('Iterations')
-ylabel('Virtual Controls')
-% set(gca, 'YScale', 'log')
-% axis([1 i-1 10e-10 10e0])
 grid on
 
 %plot thrusts
@@ -239,18 +215,6 @@ ylabel('North (m)');
 zlabel('Up (m)');
 grid on
 
-%plot 3D trajectories 2
-figure()
-hold on
-for j = 1:i
-plot3(r(3*j-1,:),r(3*j,:),r(3*j-2,:));
-end
-xlabel('East (m)');
-ylabel('North (m)');
-zlabel('Up (m)');
-legend(Legend,'Location','northeastoutside');
-grid on
-
 %plot quat norm
 Legend = cell(i-1,1);
 figure()
@@ -320,7 +284,7 @@ plot(t,y,'Marker','.', 'Color', 'b');
 plot(t,T(11,:),'Marker','.')
 xlabel('Time (s)');
 ylabel('Thrust (N)');
-legend('T_{max}','T_{min}','Acikmese_{sol}','Converged_{sol}','Location','northeastoutside')
+legend('T_{max}','T_{min}','Converged_{sol}','Acikmese_{sol}','Location','northeastoutside')
 grid on
 
 %plot gimbal angles
@@ -335,7 +299,7 @@ plot(t,y,'Marker','.', 'Color', 'b');
 plot(t,Gm(11,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Gimbal Angle (Deg)');
-legend('\theta_{gm_{max}}','\theta_{gm_{min}}','Acikmese_{sol}','Converged_{sol}','Location','northeastoutside')
+legend('\theta_{gm_{max}}','\theta_{gm_{min}}','Converged_{sol}','Acikmese_{sol}','Location','northeastoutside')
 grid on
 
 %plot tilt angles
@@ -350,7 +314,7 @@ plot(t,y,'Marker','.', 'Color', 'b');
 plot(t,Ta(11,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Tilt Angle (Deg)');
-legend('\delta_{ta_{max}}','\delta_{ta_{min}}','Acikmese_{sol}','Converged_{sol}','Location','northeastoutside')
+legend('\delta_{ta_{max}}','\delta_{ta_{min}}','Converged_{sol}','Acikmese_{sol}','Location','northeastoutside')
 grid on
 
 %plot angular rates
@@ -365,6 +329,6 @@ plot(t,y,'Marker','.', 'Color', 'b');
 plot(t,w(11,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Angular rate (deg/s)');
-legend('\omega_{max}','\omega_{min}','Acikmese_{sol}','Converged_{sol}','Location','northeastoutside')
+legend('\omega_{max}','\omega_{min}','Converged_{sol}','Acikmese_{sol}','Location','northeastoutside')
 grid on
 end

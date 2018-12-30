@@ -1,0 +1,62 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymode=log,
+ymin=1e-09,
+ymax=100000000000,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={Trust Region},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	0\\
+1	5.71351789350649\\
+2	1.85688795294602\\
+3	0.785919371236741\\
+4	0.482629482900715\\
+5	0.218997017082587\\
+6	0.109466079710801\\
+7	0.0634998204205875\\
+8	0.0387123005402181\\
+9	0.024513053416814\\
+10	0.0151256957252747\\
+};
+\addlegendentry{$\text{Converged}_{\text{sol}}$}
+
+\addplot [color=red, mark=*, mark options={solid, red}]
+  table[row sep=crcr]{%
+1	3925\\
+2	2372\\
+3	1127\\
+4	866\\
+5	523\\
+6	195.7\\
+7	0.00499\\
+8	6.49e-05\\
+9	6.34e-05\\
+10	6.19e-05\\
+};
+\addlegendentry{$\text{Acikmese}_{\text{sol}}$}
+
+\end{axis}
+\end{tikzpicture}%
