@@ -1,6 +1,6 @@
 function [F_D, T_D, a_SRP_T] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu)
 %%Get all accelerations and torques in the body reference frame
-global CONSTANTS Switch SC Kleopatra 
+global CONSTANTS Switch SC Kleopatra Sun
 
 c = CONSTANTS.c;
 AU = CONSTANTS.AU;
@@ -18,7 +18,7 @@ m = SC.mass.m_i;
 m_fac = SC.mass.m_facet;
 C = SC.Polyhedron.C;
 V = SC.Polyhedron.Vertices;
-
+q_hi = conj_quat(Sun.Q_IH);
 
 %% Solar Radiation Pressure
 
@@ -32,28 +32,31 @@ if Switch.SRP
         
     F_SRP_B = zeros(size(normalsf,1),3); 
     T_SRP_B = zeros(size(normalsf,1),3);
-%     co = zeros(32,1);
-%     co(13:32) = 1;
-%     co(3:4) =1;
-
+        co(13:32) = 1;
+        co(3:4) =1;
+            co(1:2) =0 ;
+            co(5:12)=0;
         for i=1:1:size(normalsf,1)
             co(i,1) = dot(normalsf(i,1:3),e_B',2); %cos of angle between sun vector and the SC surface normals
             
             if co(i,1) <= 0
                 F_SRP_B(i,:) = 0;
             else
-%               F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_d(i,1)/3 + a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');   
-                F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');                
+                F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_d(i,1)/3 + a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');   
+%                 F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');
+                a_SRP_B(i,:) = F_SRP_B(i,:)./m_fac(i);
             end
+
             T_SRP_B(i,:) = cross(C(i,:),F_SRP_B(i,:));
    
         end
        
 	F_SRP_T = sum(F_SRP_B);
-    a_SRP_T = norm(F_SRP_T./m);
+    a_SRP_T = sum(a_SRP_B);
 	F_SRP_B = [F_SRP_T'; 0];
     T_SRP_B = [sum(T_SRP_B)'; 0];   
-else  
+else
+    a_SRP_T = [0;0;0];    
 	F_SRP_B = [0;0;0;0];
 	T_SRP_B = [0;0;0;0];
 end

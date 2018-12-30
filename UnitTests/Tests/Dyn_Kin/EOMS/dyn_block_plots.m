@@ -7,7 +7,7 @@ if Switch.Razgus
 else
    mu = Kleopatra.mu; 
 end
-if Switch.Q
+if Switch.Q_plots
     figure()
     comet3(Var.y(:,1),Var.y(:,2),Var.y(:,3));
     hold on
@@ -384,9 +384,9 @@ if Switch.kepler_n
     for i = 1:length(Var.y)
         [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(Var.y(i,1:3),Var.y(i,4:6),mu);
     end
-    max(Kepler_deg(:,1))-60e3
-    max(Kepler_deg(:,3))-90
-    max(-Kepler_deg(:,4))-90
+ 
+    a = (max(Kepler_deg(:,3))-min(Kepler_deg(:,3)))
+    b = (max(-Kepler_deg(:,4))-min(-Kepler_deg(:,4)))
     
     figure()
     goodplot
@@ -401,15 +401,35 @@ if Switch.kepler_n
 
     figure()
     plot (Var.t,Kepler_deg(:,3),'Linewidth',2)
+    goodplot
+    xlabel('Time (secs)');
+    ylabel('Degrees');
+    legend('i','Location','northeastoutside');
+    title('Inclination (DQ-Integrator)');
+    grid on
+    print -depsc kepi
+    
+    figure()
+    goodplot
+    plot (Var.t,-Kepler_deg(:,4),'Linewidth',2)
+    xlabel('Time (secs)');
+    ylabel('Degrees');
+    legend('\Omega','Location','northeastoutside');
+    title('RAAN (DQ-Integrator)');
+    grid on
+    print -depsc kepo
+    
+    figure()
+    plot (Var.t,Kepler_deg(:,3),'Linewidth',2)
     hold on
     goodplot
     plot (Var.t,-Kepler_deg(:,4),'Linewidth',2)
     xlabel('Time (secs)');
     ylabel('Degrees');
     legend('i','\Omega','Location','northeastoutside');
-    title('Inclination and RAAN (DQ-Integrator)');
+    title('Inc. and RAAN (DQ-Integrator)');
     grid on
-    print -depsc kepo
+    print -depsc kepio
 end
 
 if Switch.kepler_el
@@ -512,3 +532,11 @@ if Switch.err
     print -depsc posacomp
 end
 end
+% 
+% quiver3(0,0,0,0.689443571879531,0.689443571879531,0.222115110670095)
+% hold on
+% for i = 1:length(SC.Polyhedron.normalsf)
+%     quiver3(0,0,0,SC.Polyhedron.normalsf(i,1),SC.Polyhedron.normalsf(i,2),SC.Polyhedron.normalsf(i,3))
+% end
+% hold on
+% quiver3(0,0,0,-0.651621270998288,0.724260150550413,-0.225470515826943)
