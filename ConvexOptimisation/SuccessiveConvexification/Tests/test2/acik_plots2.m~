@@ -78,13 +78,14 @@ ylabel('Mass Spent')
 grid on
 
 %plot difference in converged end mass
+x = [0,1,2,3,4,5,6,7,8,9];
 y = [0.00018947,0.00017263,0.00016421,0.00014737,0.0001421,0.00013368,...
     0.00008421,0.00008947,0.00008421,0.00007895];
 
 figure()
-plot(1:i-1,diff(1:i-1),'Marker','.')
+plot(1:i-1,diff(1:i-1),'Marker','o')
 hold on
-plot(1:i-1,y,'Linewidth',2,'Marker','.', 'Color', 'r')
+plot(x,y,'Linewidth',2,'Marker','.', 'Color', 'r')
 xlabel('Iterations')
 ylabel('Difference in Mass Spent')
 set(gca, 'YScale', 'log')
@@ -156,10 +157,6 @@ legend(Legend,'Location','northeastoutside');
 grid on
 
 %plot angular rates
-y = [-3.35e-08,-6.053,-16.316,-26.053,-29.737,-22.895,-12.105,-3.421,1.316,...
-    6.053,13.947,20.789,24.737,26.842,26.842,25,23.158,21.579,18.947,13.684,5,...
-    -5,-13.947,-19.737,-21.053,-19.737,-16.579,-10.789,-3.947,-2.12e-08];
-
 figure()
 plot(t,wm,'LineWidth',2, 'Color', 'red');
 hold on
