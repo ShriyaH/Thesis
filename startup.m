@@ -35,7 +35,7 @@ addpath ../Thesis/ConversionLibrary/q_dq_operators
 
 addpath ../Thesis/ConvexOptimisation
 
-addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/test2
+addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/Acikmese_CQ
 
 % addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification
 

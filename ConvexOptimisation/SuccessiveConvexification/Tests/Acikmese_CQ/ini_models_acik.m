@@ -33,10 +33,10 @@ CONSTANTS.theta_gm = deg2rad(10);
 CONSTANTS.rho0 = 0;
 CONSTANTS.rho1 = 0.25;
 CONSTANTS.rho2 = 0.9;
-CONSTANTS.Alpha = 1.224655;
-% CONSTANTS.Alpha = 1.225413799;
+% CONSTANTS.Alpha = 1.224655;
+CONSTANTS.Alpha = 1.2;
 CONSTANTS.Beta = 3;
-CONSTANTS.i_max = 10;
+CONSTANTS.i_max = 15;
 CONSTANTS.tol = 0;
 
 %penalty weights

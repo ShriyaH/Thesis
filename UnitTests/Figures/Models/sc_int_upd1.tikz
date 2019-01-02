@@ -1,0 +1,62 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=5.347in,
+height=4.754in,
+at={(0.897in,0.642in)},
+scale only axis,
+xmin=10,
+xmax=50,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\Delta\text{ v (m/s)}$},
+ymin=0,
+ymax=2,
+ylabel style={font=\color{white!15!black}},
+ylabel={\% Inertia Change},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, line width=1.5pt]
+  table[row sep=crcr]{%
+10	0.0457859349746714\\
+20	0.0915746358039536\\
+30	0.137365696277147\\
+40	0.18315869513736\\
+50	0.228953196579491\\
+};
+\addlegendentry{$\text{I}_\text{x}$}
+
+\addplot [color=mycolor2, line width=1.5pt]
+  table[row sep=crcr]{%
+10	0.367638143574482\\
+20	0.735298495578021\\
+30	1.10297779434147\\
+40	1.47067265738265\\
+50	1.8383795854045\\
+};
+\addlegendentry{$\text{I}_\text{y}$}
+
+\addplot [color=mycolor3, line width=1.5pt]
+  table[row sep=crcr]{%
+10	0.0110745657396092\\
+20	0.0220989119735098\\
+30	0.0330732664303528\\
+40	0.0439978558063727\\
+50	0.0548729057697995\\
+};
+\addlegendentry{$\text{I}_\text{z}$}
+
+\end{axis}
+\end{tikzpicture}%

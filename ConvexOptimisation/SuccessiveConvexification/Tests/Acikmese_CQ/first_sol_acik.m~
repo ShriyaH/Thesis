@@ -67,7 +67,7 @@ for k = 0:K-1
         vdot_k = (C_k*T_k)./m_k + g';
         qdot_k = 1/2.*(omega_tensor(w_k,2)*q_k);
         wdot_k = inv(J)*(cross(r_T',T_k')' - cross(w_k, (J*w_k)));
-        Tdot_k = mdot_k.*g';
+        TTdot
 
         xdot_k = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;

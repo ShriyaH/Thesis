@@ -46,9 +46,9 @@ function dy = orb_int(t,y)
     A_k = zeros(20,20);
     A_k(1,15:17) = -alpha0.*(T_k'./norm(T_k));
     A_k(2:4,5:7) = eye(3);
-    A_k(5:7,:) = get_da(T_k,q_k,m_k,20);
-    A_k(8:11,:) = get_dqdot(w_k,q_k,20);
-    A_k(12:14,:) = get_dwdot(w_k,I,r_T,20);
+    A_k(5:7,:) = get_da_inertial(T_k,q_k,m_k,20);
+    A_k(8:11,:) = get_dqdot_inertial(w_k,q_k,20);
+    A_k(12:14,:) = get_dwdot_inertial(w_k,I,r_T,20);
     A_k(15:17,18:20) = eye(3);
     
     B_k = zeros(20,3);

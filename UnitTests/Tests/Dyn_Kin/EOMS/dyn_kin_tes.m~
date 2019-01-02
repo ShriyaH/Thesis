@@ -6,7 +6,7 @@ clc
 global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-% Initialize_models;
+Initialize_models;
 
 % w_AI = Kleopatra.w_AI;
 w_AI = [0 0 0];
@@ -38,7 +38,7 @@ w_BI = [6.28318e-4 0 0];
 % 
 % 
 % q_BI = [0 0 sin(b/2) cos(b/2)];
-q_BI =[0 0 0 1];
+q_BI =
 q_AI = [0 0 0 1];
 
 C_AI = Q2DCM(q_AI);
@@ -147,13 +147,13 @@ Th_dot_B = [0;0;0];
 I = 0.5.*eye(3);
     
 if Switch.DOF6    
-    [t,y] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,1);    
+    [t,y] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,q_inert);    
 end
 
 %% Inertial Descent: Linear %%
 
 if Switch.DOF6_lin 
-    [tspan,tode4,y1] = test_inert_lineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,t,y,1);    
+    [tspan,tode4,y1] = test_inert_lineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,t,y,q_inert);    
 end
 
 dyn_block_plots();
