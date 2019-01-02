@@ -18,7 +18,7 @@ CONSTANTS.flux = 1361;           %sun flux 1AU, W/m2
 CONSTANTS.ge = 9.807;            %earth grav acc
 
 %% Dynamics controls
-Switch.point_mass = 1;
+Switch.point_mass = 0;
 Switch.poly_grav = 0;
 Switch.SRP = 1;
 Switch.TBP = 0;

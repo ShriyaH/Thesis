@@ -24,17 +24,13 @@ V = SC.Polyhedron.Vertices;
 
 if Switch.SRP
     
-   P = flux/((norm(rs_B(1:3,1))/AU)^2*c);   %radiation pressure at the distance of the Kleopatra
-%     P= flux/c;
-        
+%    P = flux/((norm(rs_B(1:3,1))/AU)^2*c);   %radiation pressure at the distance of the Kleopatra
+     P = flux/(2.7941^2*c);
 %     e = (pos_s(1:3,1)/norm(pos_s(1:3,1)))';  %presently just unit postion vector of sun from Kleopatra in the inertial or Kleopatra frame since sun pos is fixed
 %    e_B = quat_trans(q_BA,e_A,'vect');     %sun position vector in the body frame 
         
     F_SRP_B = zeros(size(normalsf,1),3); 
     T_SRP_B = zeros(size(normalsf,1),3);
-%     co = zeros(32,1);
-%     co(13:32) = 1;
-%     co(3:4) =1;
 
         for i=1:1:size(normalsf,1)
             co(i,1) = dot(normalsf(i,1:3),e_B',2); %cos of angle between sun vector and the SC surface normals
@@ -49,7 +45,7 @@ if Switch.SRP
    
         end
        
-	F_SRP_T = sum(F_SRP_B);
+	F_SRP_T = 4*sum(F_SRP_B);
     a_SRP_T = norm(F_SRP_T./m);
 	F_SRP_B = [F_SRP_T'; 0];
     T_SRP_B = [sum(T_SRP_B)'; 0];   

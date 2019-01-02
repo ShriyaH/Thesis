@@ -50,20 +50,19 @@ if isnan(RAAN)
 end
 RAAN=mode(RAAN, 360);
 
-if e==0
-    e_hat=[0 0 0]';
+if ecc==0
+    e_hat=[0 0 0]'
 else
-    e_hat=ee/e;
+    e_hat=e_bar/ecc;
 end
-n_hat = N/n;
 
-omega = sign (dot(cross(N,ee),H)) * acos(dot (e_hat,n_hat)) * 180/pi; %calculating argument of perigee
+omega = sign (dot(cross(N,ee),H)) * acos(dot (ee,N)/(n*e)) * 180/pi; %calculating argument of perigee
 if isnan(omega)
     omega = 0;
 end
 omega=mod(omega,360);
 
-theta_rad = sign (dot(cross(e_hat,X),H)) * acos(dot (X,e_hat)/r); %calculating theta in radians
+theta_rad = sign (dot(cross(ee,X),H)) * acos(dot (X,ee)/(r*e)); %calculating theta in radians
 theta = theta_rad * 180/pi;
 
 p = sqrt((1-e)/(1+e)) * tan(theta_rad/2);

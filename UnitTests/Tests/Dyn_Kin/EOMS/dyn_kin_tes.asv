@@ -6,7 +6,7 @@ clc
 global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-% Initialize_models;
+Initialize_models;
 
 % w_AI = Kleopatra.w_AI;
 w_AI = [0 0 0];
@@ -43,17 +43,17 @@ C_AI = Q2DCM(q_AI);
 
 %% Select Integrator 
 Switch.Razgus = 1;
-Switch.Q = 1;
+Switch.Q = 0;
 Switch.Q_rel = 0;
 Switch.DQ = 0;
-Switch.DOF6 = 0;
-Switch.DOF6_lin = 0;
+Switch.DOF6 = 1;
+Switch.DOF6_lin = 1;
 
 %% Plot
-Switch.Q_plots = 0;
+Switch.Q_plots = 1;
 Switch.convert_q = 0;
-Switch.kepler_el = 0;
-Switch.kepler_n= 1;
+Switch.kepler_el = 1;
+Switch.kepler_n= 0;
 Switch.err = 0;
 
 %% Inertial Dynamics and Kinematics

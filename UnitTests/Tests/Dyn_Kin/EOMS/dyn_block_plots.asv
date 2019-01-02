@@ -382,7 +382,7 @@ end
 
 if Switch.kepler_n
     for i = 1:length(Var.y)
-        [Kepler(i,:),Kepler_deg(i,:)] = cart2kep([-Var.y(i,1),Var.y(i,2),Var.y(i,3)],[-Var.y(i,4),Var.y(i,5),Var.y(i,6)],mu);
+        [Kepler(i,:),Kepler_deg(i,:)] = cart2kep([Var.y(i,1),Var.y(i,2),Var.y(i,3)],[Var.y(i,1),Var.y(i,2),Var.y(i,3)],mu);
     end
     a = Kepler_deg(:,3)-90;
     a = max(abs(a))
