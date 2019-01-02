@@ -45,7 +45,7 @@ if Switch.SRP
    
         end
        
-	F_SRP_T = 4*sum(F_SRP_B);
+	F_SRP_T = sum(F_SRP_B);
     a_SRP_T = norm(F_SRP_T./m);
 	F_SRP_B = [F_SRP_T'; 0];
     T_SRP_B = [sum(T_SRP_B)'; 0];   
