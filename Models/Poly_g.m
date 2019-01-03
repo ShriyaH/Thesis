@@ -1,4 +1,4 @@
-function [g_A, g_I, Wf, U] = Poly_g(r_A, q_AI, rho, Vert, Fac, Edg, F_tilde, E_tilde)
+function [g_A, Wf, U] = Poly_g(r_A, rho, Vert, Fac, Edg, F_tilde, E_tilde)
 
 G=6.67408e-11;
 
@@ -78,7 +78,7 @@ end
  end
 
 g_A = G*rho*(-Edges+Facets);
-g_I = quat_trans(conj_quat(q_AI),g_A,'n');
+% g_I = quat_trans(conj_quat(q_AI),g_A,'n');
 % g_B = quat_trans(q_BI,g_I,'n');
 
 U = 0.5*G*rho*(U_edg-U_fac);

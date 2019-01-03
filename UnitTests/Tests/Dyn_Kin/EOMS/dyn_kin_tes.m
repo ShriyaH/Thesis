@@ -6,34 +6,7 @@ clc
 global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-Initialize_models;
-
-% w_AI = Kleopatra.w_AI;
-w_AI = [0 0 0];
-W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-W_AI2 = omega_tensor(w_AI,2);
-
-if Switch.SRP
-    %For SRP check 
-    x_I = [0   0   100e3];
-    v_I = [0 -41.787629748527260 0];
-    w_BI = [0 0 0];
-elseif Switch.TBP
-    %For 3RP check 
-    x_I = [0 100e3 0];
-    v_I = [-41.1527817563532 0 7.25634575485216];
-    w_BI = [0 0 0];
-else
-    %For dynamic block check
-    x_I = [0 60e3 0];
-    v_I = [53.947598031175893 0 0];
-    w_BI = [6.28318e-4 0 0];
-end
-
-q_BI =[0 0 0 1];
-q_AI = [0 0 0 1];
-
-C_AI = Q2DCM(q_AI);
+% Initialize_models;
 
 %% Select Integrator 
 Switch.Razgus = 1;
@@ -49,6 +22,44 @@ Switch.convert_q = 0;
 Switch.kepler_el = 0;
 Switch.kepler_n= 1;
 Switch.err = 0;
+
+%% Initialize
+if Switch.SRP
+    %For SRP check 
+    x_I = [0   0   100e3];
+    v_I = [0 -41.787629748527260 0];
+    w_BI = [0 0 0];
+    w_AI = [0 0 0];
+elseif Switch.TBP
+    %For 3RP check 
+    x_I = [0 100e3 0];
+    v_I = [-41.1527817563532 0 7.25634575485216];
+    w_BI = [0 0 0];
+    w_AI = [0 0 0];
+elseif Switch.DOF6 || Switch.DOF6_lin
+    m_sc = 2;
+    g = [0;0;-1];
+    x_I = [1; 0; 2];
+    v_I = [0.2; 0; -1]; 
+    q_BI = [0; 0; 0; 1]; 
+    w_BI = [0; 0; 0.3]; 
+    Th_B = [0; 0; 2];
+    Th_dot_B = [0;0;0];
+    I = 0.5.*eye(3);
+else
+    %For dynamic block check
+    x_I = [0 60e3 0];
+    v_I = [53.947598031175893 0 0];
+    w_BI = [6.28318e-4 0 0];
+    w_AI = Kleopatra.w_AI;
+end
+W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+W_AI2 = omega_tensor(w_AI,2);
+
+q_BI =[0 0 0 1];
+q_AI = [0 0 0 1];
+C_AI = Q2DCM(q_AI);
+C_BI = Q2DCM(q_BI);
 
 %% Inertial Dynamics and Kinematics
 if Switch.Q 
@@ -128,15 +139,7 @@ if Switch.DQ
 end
 
 %% Inertial Descent: Non-linear %%
-% m_sc = 2;
-% g = [0;0;-1];
-% x_I = [1; 0; 2];
-% v_I = [0.2; 0; -1]; 
-% q_BI = [0; 0; 0; 1]; 
-% w_BI = [0; 0; 0.3]; 
-% Th_B = [0; 0; 2];
-% Th_dot_B = [0;0;0];
-% I = 0.5.*eye(3);
+
     
 if Switch.DOF6    
     [t,y] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,1);    

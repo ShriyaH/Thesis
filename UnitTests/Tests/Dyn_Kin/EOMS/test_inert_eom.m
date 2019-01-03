@@ -48,7 +48,7 @@ function dY = orb_int(T,Y)
     
     a_D = F_D/SC.mass.m_i;
     wd = I_inv * (T_D(1:3) - cross(Y(7:9), (I*Y(7:9)))); %omega dot
-    wd=[0;0;0];
+    
     a_D_I = quat_trans(conj_quat(q_BI),a_D,'n');
     
     dY = [Y(4:6); a_D_I(1:3); wd; q_BI_dot; q_AI_dot];

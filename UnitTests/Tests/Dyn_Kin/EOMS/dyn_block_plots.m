@@ -384,6 +384,8 @@ if Switch.kepler_n
     for i = 1:length(Var.y)
         [Kepler(i,:),Kepler_deg(i,:)] = cart2kep(Var.y(i,1:3),Var.y(i,4:6),mu);
     end
+    max(abs(Kepler_deg(:,3)))
+    max(abs(Kepler_deg(:,4)))
     a = Kepler_deg(:,3)-10;
     a = max(abs(a))
     b = Kepler_deg(:,4)-90;
@@ -402,7 +404,7 @@ if Switch.kepler_n
     %print -depsc kepa
 
     figure()
-    plot (Var.t,Kepler_deg(:,3),'Linewidth',2)
+    plot (Var.t,Kepler_deg(:,3)-10,'Linewidth',2)
     %goodplot
     xlabel('Time (secs)');
     ylabel('Degrees');
@@ -413,7 +415,7 @@ if Switch.kepler_n
     
     figure()
     %goodplot
-    plot (Var.t,Kepler_deg(:,4),'Linewidth',2)
+    plot (Var.t,Kepler_deg(:,4)-90,'Linewidth',2)
     xlabel('Time (secs)');
     ylabel('Degrees');
     legend('\Omega','Location','northeastoutside');
