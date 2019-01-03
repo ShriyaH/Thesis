@@ -16,7 +16,7 @@ I_inv = V*(S\U');
 %% Integrator
 Y0 = [x';v';w';q1';q2'];
 % T = [0 20000];
-T = [0 30072]; %for SRP orbit
+T = [0 1.503599353442876e+04]; %for SRP orbit
 
 %Opt = odeset('Events', @stopevent);
 tic
@@ -39,16 +39,16 @@ function dY = orb_int(T,Y)
     
     rs_B = C_BI*Sun.rs_I(1:3);
     e_B = rs_B./norm(rs_B);
-    e_B = [-1;0;0];
+%     e_B = [1;0;0];       %uncomment for SRP easy check
     
     r_B = C_BI*Y(1:3);
     C_BA = C_BI*C_AI';
     
-    [F_D,T_D, a_SRP_T] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu);
-    a_SRP_T
+    [F_D,T_D] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Kleopatra);
+    
     a_D = F_D/SC.mass.m_i;
     wd = I_inv * (T_D(1:3) - cross(Y(7:9), (I*Y(7:9)))); %omega dot
-    
+    wd=[0;0;0];
     a_D_I = quat_trans(conj_quat(q_BI),a_D,'n');
     
     dY = [Y(4:6); a_D_I(1:3); wd; q_BI_dot; q_AI_dot];

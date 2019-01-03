@@ -11,7 +11,7 @@ global CONSTANTS Switch T Sun SC Samples Constraints Kleopatra
 %% Astronomical Constants
 CONSTANTS.G = 6.67408e-11;       %gravitational constant
 CONSTANTS.mass_s = 1.988*10^30;  %mass of sun, kg
-CONSTANTS.mu_s = CONSTANTS.G*CONSTANTS.mass_s;       %standard grav parameter of the sun
+CONSTANTS.mu_s = 1.32712440018e20;       %standard grav parameter of the sun
 CONSTANTS.c = 3e8;               %vel of light, m/s
 CONSTANTS.AU = 1.49e11;          %1AU, m
 CONSTANTS.flux = 1361;           %sun flux 1AU, W/m2
@@ -20,8 +20,8 @@ CONSTANTS.ge = 9.807;            %earth grav acc
 %% Dynamics controls
 Switch.point_mass = 0;
 Switch.poly_grav = 0;
-Switch.SRP = 1;
-Switch.TBP = 0;
+Switch.SRP = 0;
+Switch.TBP = 1;
 Switch.GG = 0;
 Switch.Ast_rot = 1;
 Switch.Control = 0;

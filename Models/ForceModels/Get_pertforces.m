@@ -1,13 +1,11 @@
-function [F_D, T_D, a_SRP_T] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu)
+function [F_D, T_D] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Asteroid)
 %%Get all accelerations and torques in the body reference frame
-global CONSTANTS Switch SC Kleopatra 
+global CONSTANTS Switch SC Sun
 
 c = CONSTANTS.c;
 AU = CONSTANTS.AU;
 mu_s = CONSTANTS.mu_s;
 flux = CONSTANTS.flux;
-% mu = Kleopatra.mu;
-
 % pos_s = Sun.pos;
 
 normalsf = SC.Polyhedron.normalsf;
@@ -15,40 +13,39 @@ A = SC.Polyhedron.A_facet;
 a_r = SC.a_r;
 a_d = SC.a_d;
 m = SC.mass.m_i;
-m_fac = SC.mass.m_facet;
 C = SC.Polyhedron.C;
 V = SC.Polyhedron.Vertices;
 
+rs_I = Sun.rs_I(1:3);
 
 %% Solar Radiation Pressure
 
 if Switch.SRP
     
-%    P = flux/((norm(rs_B(1:3,1))/AU)^2*c);   %radiation pressure at the distance of the Kleopatra
-     P = flux/(2.7941^2*c);
-%     e = (pos_s(1:3,1)/norm(pos_s(1:3,1)))';  %presently just unit postion vector of sun from Kleopatra in the inertial or Kleopatra frame since sun pos is fixed
+   P = flux/((Asteroid.kep_orbit(1)/AU)^2*c);   %radiation pressure at the distance of the Kleopatra
+     
+%    e = (pos_s(1:3,1)/norm(pos_s(1:3,1)))';  %presently just unit postion vector of sun from Kleopatra in the inertial or Kleopatra frame since sun pos is fixed
 %    e_B = quat_trans(q_BA,e_A,'vect');     %sun position vector in the body frame 
         
-    F_SRP_B = zeros(size(normalsf,1),3); 
-    T_SRP_B = zeros(size(normalsf,1),3);
+   F_SRP_B = zeros(size(normalsf,1),3); 
+   T_SRP_B = zeros(size(normalsf,1),3);
 
-        for i=1:1:size(normalsf,1)
-            co(i,1) = dot(normalsf(i,1:3),e_B',2); %cos of angle between sun vector and the SC surface normals
+   for i=1:1:size(normalsf,1)
+       co(i,1) = dot(normalsf(i,1:3),e_B',2); %cos of angle between sun vector and the SC surface normals
             
-            if co(i,1) <= 0
-                F_SRP_B(i,:) = 0;
-            else
-%               F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_d(i,1)/3 + a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');   
-                F_SRP_B(i,:) = -(P*A(i)*co(i,1)).*((2*(a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');                
-            end
-            T_SRP_B(i,:) = cross(C(i,:),F_SRP_B(i,:));
+       if co(i,1) < 0
+          F_SRP_B(i,:) = 0;
+       else
+          F_SRP_B(i,:) = -A(i)*co(i,1)*((2*(a_d(i,1)/3 + a_r(i,1)*co(i,1))).*normalsf(i,1:3) + (1-a_r(i,1)).*e_B');            
+       end
+          T_SRP_B(i,:) = cross(C(i,:),F_SRP_B(i,:),2);
    
-        end
+    end
        
-	F_SRP_T = sum(F_SRP_B);
-    a_SRP_T = norm(F_SRP_T./m);
+	F_SRP_T = P*sum(F_SRP_B);
+%     a_SRP_T = norm(F_SRP_T)/m;
 	F_SRP_B = [F_SRP_T'; 0];
-    T_SRP_B = [sum(T_SRP_B)'; 0];   
+    T_SRP_B = [sum(T_SRP_B)'; 0];  
 else  
 	F_SRP_B = [0;0;0;0];
 	T_SRP_B = [0;0;0;0];
@@ -57,13 +54,11 @@ end
 %% 3rd Body Perturbations
 
 if Switch.TBP
-    r_BH_B = rs_B(1:3) - r_B; %position of sun wrt to SC
-    a_3BP_B = -mu_s*(r_BH_B/norm(r_BH_B)^3 - rs_B/norm(rs_B)^3); 
-%     a_3BP_B = quat_trans(q_BA,a_3BP_I,'n');
+    r_bs_B = rs_B(1:3) - r_B;          %position of sun wrt to SC
+    a_3BP_B = -mu_s*(r_bs_B/norm(r_bs_B)^3 - rs_B/norm(rs_B)^3);
 
-%     a_3BP = norm(a_3BP_B);
-    F_3BP_B = [m*a_3BP_B; 0];
-else
+    F_3BP_B = [m.*a_3BP_B;0];
+else 
     
     F_3BP_B = [0;0;0;0];
  

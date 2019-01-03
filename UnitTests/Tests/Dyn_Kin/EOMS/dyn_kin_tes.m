@@ -6,36 +6,30 @@ clc
 global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-% Initialize_models;
+Initialize_models;
 
 % w_AI = Kleopatra.w_AI;
 w_AI = [0 0 0];
 W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 W_AI2 = omega_tensor(w_AI,2);
 
-%For dynamic block check
-% x_I = [0 60e3 0];
-% v_I = [53.947598031175893 0 0];
-% w_BI = [6.28318e-4 0 0];
+if Switch.SRP
+    %For SRP check 
+    x_I = [0   0   100e3];
+    v_I = [0 -41.787629748527260 0];
+    w_BI = [0 0 0];
+elseif Switch.TBP
+    %For 3RP check 
+    x_I = [0 100e3 0];
+    v_I = [-41.1527817563532 0 7.25634575485216];
+    w_BI = [0 0 0];
+else
+    %For dynamic block check
+    x_I = [0 60e3 0];
+    v_I = [53.947598031175893 0 0];
+    w_BI = [6.28318e-4 0 0];
+end
 
-%For SRP check and 3BP check
-x_I = [0   0   100e3];
-v_I = [0 -41.787629748527260 0];
-w_BI = [0 0 0];
-% x_I = [0.689443571879531   0.689443571879531   0.222115110670095].*100e3;
-% v_I = [0.316318321278693  -0.010714267062475  -0.948592601755223].*55.648657845450323;
-% %transform SC frame parallel to orbit
-% a = dot(x_I,[0 0 1],2);
-% b = acos(a/norm(a));
-% q = [0 0 -sin(b/2) cos(b/2)];
-% for i = 1:length(SC.Polyhedron.normalsf)
-%     SC.Polyhedron.normalsf(i,1:3) = quat_trans(q,SC.Polyhedron.normalsf(i,1:3),'vect');
-%     SC.Polyhedron.C(i,1:3) = quat_trans(q, SC.Polyhedron.C(i,1:3),'vect');
-% end
-% w_BI = [0 0 0];
-% 
-% 
-% q_BI = [0 0 sin(b/2) cos(b/2)];
 q_BI =[0 0 0 1];
 q_AI = [0 0 0 1];
 
@@ -88,14 +82,14 @@ end
 %% Relative Dynamics and Kinematics: Dual Quaternions %%
 
 %Relative frame Initialisation
-x_A = (C_AI*x_I');
-v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
-q_BA = cross_quat(q_BI',q_AI');
-C_BA = Q2DCM(q_BA);
-
-v_BA_B = C_BA*v_BA_A;
-w_AI_B = (C_BA*w_AI');
-w_BA_B = w_BI'-w_AI_B;
+% x_A = (C_AI*x_I');
+% v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
+% q_BA = cross_quat(q_BI',q_AI');
+% C_BA = Q2DCM(q_BA);
+% 
+% v_BA_B = C_BA*v_BA_A;
+% w_AI_B = (C_BA*w_AI');
+% w_BA_B = w_BI'-w_AI_B;
 
 if Switch.Q_rel    
     [Var.t2,Var.y2,Var.r_B] = test_rel_b_eom(w_AI,x_A',v_BA_B',w_BA_B',q_BA');
@@ -134,15 +128,15 @@ if Switch.DQ
 end
 
 %% Inertial Descent: Non-linear %%
-m_sc = 2;
-g = [0;0;-1];
-x_I = [1; 0; 2];
-v_I = [0.2; 0; -1]; 
-q_BI = [0; 0; 0; 1]; 
-w_BI = [0; 0; 0.3]; 
-Th_B = [0; 0; 2];
-Th_dot_B = [0;0;0];
-I = 0.5.*eye(3);
+% m_sc = 2;
+% g = [0;0;-1];
+% x_I = [1; 0; 2];
+% v_I = [0.2; 0; -1]; 
+% q_BI = [0; 0; 0; 1]; 
+% w_BI = [0; 0; 0.3]; 
+% Th_B = [0; 0; 2];
+% Th_dot_B = [0;0;0];
+% I = 0.5.*eye(3);
     
 if Switch.DOF6    
     [t,y] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,1);    
