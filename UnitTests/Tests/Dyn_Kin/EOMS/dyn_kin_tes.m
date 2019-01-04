@@ -6,21 +6,21 @@ clc
 global Sun SC I m mu Kleopatra Var Switch
 
 %% Common Input Values 
-% Initialize_models;
+Initialize_models;
 
 %% Select Integrator 
 Switch.Razgus = 1;
 Switch.Q = 1;
 Switch.Q_rel = 0;
-Switch.DQ = 0;
+Switch.DQ = 1;
 Switch.DOF6 = 0;
 Switch.DOF6_lin = 0;
 
 %% Plot
 Switch.Q_plots = 0;
-Switch.convert_q = 0;
+Switch.convert_q = 1;
 Switch.kepler_el = 0;
-Switch.kepler_n= 1;
+Switch.kepler_n= 0;
 Switch.err = 0;
 
 %% Initialize
@@ -93,14 +93,14 @@ end
 %% Relative Dynamics and Kinematics: Dual Quaternions %%
 
 %Relative frame Initialisation
-% x_A = (C_AI*x_I');
-% v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
-% q_BA = cross_quat(q_BI',q_AI');
-% C_BA = Q2DCM(q_BA);
-% 
-% v_BA_B = C_BA*v_BA_A;
-% w_AI_B = (C_BA*w_AI');
-% w_BA_B = w_BI'-w_AI_B;
+x_A = (C_AI*x_I');
+v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
+q_BA = cross_quat(q_BI',q_AI');
+C_BA = Q2DCM(q_BA);
+
+v_BA_B = C_BA*v_BA_A;
+w_AI_B = (C_BA*w_AI');
+w_BA_B = w_BI'-w_AI_B;
 
 if Switch.Q_rel    
     [Var.t2,Var.y2,Var.r_B] = test_rel_b_eom(w_AI,x_A',v_BA_B',w_BA_B',q_BA');

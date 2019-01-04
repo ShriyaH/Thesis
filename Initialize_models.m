@@ -1,4 +1,4 @@
-% function[] = Initialize_models
+1% function[] = Initialize_models
 %%-----Initialize Models------%%
 
 % Change switch values to 0/1 for enabling respective parameters
@@ -19,10 +19,10 @@ CONSTANTS.ge = 9.807;            %earth grav acc
 
 %% Dynamics controls
 Switch.point_mass = 0;
-Switch.poly_grav = 1;
+Switch.poly_grav = 0;
 Switch.SRP = 0;
 Switch.TBP = 0;
-Switch.GG = 1;
+Switch.GG = 0;
 Switch.Ast_rot = 1;
 Switch.Control = 0;
 Switch.Mapping =0;

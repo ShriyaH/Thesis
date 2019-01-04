@@ -39,7 +39,7 @@ addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/Acikmese_CQ
 
 % addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification
 
-addpath ../Thesis/CubeExample
+% addpath ../Thesis/CubeExample
 
 addpath ../Thesis/Figures
 

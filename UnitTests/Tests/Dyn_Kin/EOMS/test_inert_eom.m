@@ -15,8 +15,8 @@ I_inv = V*(S\U');
 
 %% Integrator
 Y0 = [x';v';w';q1';q2'];
-% T = [0 20000];
-T = [0 1.503599353442876e+04]; %for SRP orbit
+T = [0 20000];
+% T = [0 1.503599353442876e+04]; %for SRP orbit
 
 %Opt = odeset('Events', @stopevent);
 tic

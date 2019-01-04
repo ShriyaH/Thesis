@@ -30,6 +30,7 @@ for i = 1:30
     r(1:3,i) = cc(i).*r_vec;
     r_act(1:3,i) = r(1:3,i) + ri;
     dq(1:8,i) = Q2DQ(a(1:4,i),r_act(1:3,i),1);
+    rc(1)
 end
 
 for i = 1:30
@@ -63,13 +64,13 @@ conv2=rtt(1:3,:)-r;
 % % xlabel('Time (sec)');
 % % ylabel('Position (m)');
 % % 
-figure()
-axis equal
-grid on
-quiver3(0,0,0,10*l(1),10*l(2),10*l(3));     
-hold on
-quiver3(r(1,1),r(2,1),r(3,1),r(1,30),r(2,30),r(3,30)); 
-plot3(rtt(1,1:30),rtt(2,1:30),rtt(3,1:30));   
+% figure()
+% axis equal
+% grid on
+% quiver3(0,0,0,10*l(1),10*l(2),10*l(3));     
+% hold on
+% quiver3(ri(1),ri(2),ri(3),6,-8,1); 
+% plot3(rtt(1,1:30),rtt(2,1:30),rtt(3,1:30));   
 % plot3(r_act(1,1:30),r_act(2,1:30),r_act(3,1:30));   
-xlabel('Time (sec)');
-ylabel('Position (m)');
+% xlabel('Time (sec)');
+% ylabel('Position (m)');
