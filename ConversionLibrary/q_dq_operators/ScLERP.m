@@ -16,6 +16,7 @@ function [dqm,r,r_norm,ang] = ScLERP(dqi, dqn, tt)
 T = tt./tt(end);
 dqi = norm_dq(dqi);
 dqn = norm_dq(dqn);
+
 dqi_c = conj_dq(dqi,2);       % conjugate of dual quaternion for ScLERP
 dqs = cross_dq(dqi_c,dqn);    % ScLERP operation
 dqs = norm_dq(dqs);           %check norm of dual quaternion and if not normalise
