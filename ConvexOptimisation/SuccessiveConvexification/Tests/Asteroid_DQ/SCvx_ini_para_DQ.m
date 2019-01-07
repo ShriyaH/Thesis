@@ -339,8 +339,8 @@ if Switch.tilt_ang_on
     dc = sqrt((1-cos(theta_tilt))/2);
     for ii = 1:K
         Ac = S;
-        Ac(1,(ii-1)*n+(8:11)) = [0 1 0 0];
-        Ac(2,(ii-1)*n+(8:11)) = [0 0 1 0];
+        Ac(1,(ii-1)*n+(2:5)) = [0 1 0 0];
+        Ac(2,(ii-1)*n+(2:5)) = [0 0 1 0];
           
         cc = s;
         

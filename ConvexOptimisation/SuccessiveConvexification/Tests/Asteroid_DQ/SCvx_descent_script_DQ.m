@@ -10,6 +10,6 @@ ini_models_DQ;
 
 [xc,uc,xdotc,cpu_time,status] = SCvx_transcription_DQ();
 
-m_spent = ITR.x_k{end}(1,1)-ITR.x_k{end}(1,end);
+m_spent = xc(1,1)-xc(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])
 

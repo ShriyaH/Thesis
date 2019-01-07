@@ -60,13 +60,13 @@ CONSTANTS.theta_gm = deg2rad(10);
 CONSTANTS.rho0 = 0;
 CONSTANTS.rho1 = 0.25;
 CONSTANTS.rho2 = 0.9;
-CONSTANTS.Alpha = 1.2;
+CONSTANTS.Alpha = 1.15;
 CONSTANTS.Beta = 3;
 CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 145;
+CONSTANTS.w_vc = 30;
 CONSTANTS.w_tr = 0.05;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
@@ -75,14 +75,15 @@ Switch.trust_region_on = 1;
 Switch.constant_grav_on = 1;
 Switch.discrete_higherorder_on = 0;
 Switch.mass_lower_boundary_on = 1;
+Switch.mass_upper_boundary_on = 1;
 Switch.thrust_upper_boundary_on = 1;
 Switch.thrust_lower_boundary_on = 1;
 
 %conic constraints control
 Switch.ang_rate_on = 1;
 Switch.glideslope_on = 0;
-Switch.tilt_ang_on = 0;
-Switch.gimbal_ang_on = 0;
+Switch.tilt_ang_on = 1;
+Switch.gimbal_ang_on = 1;
 
 %initialize iter 1 state solution
 PARAMS.n_state = length(CONSTANTS.x0);
