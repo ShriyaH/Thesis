@@ -1,7 +1,5 @@
-function [g_A, g_B, Wf, U] = Poly_g_new(r_A, q_BA)
+function [g_A, g_B, Wf, U] = Poly_g_new(r_A, q_BA,Asteroid)
 
-global Kleopatra;
-Asteroid = Kleopatra;
 G=6.67408e-11;
 
 V=Asteroid.Polyhedron.Vertices;
@@ -76,20 +74,20 @@ end
     
     den = (ri*rj*rk+ri*dot(Rj,Rk)+rj*dot(Rk,Ri)+rk*dot(Ri,Rj));
     
-    if den>0
-        wf = 2*atan(num,den);
-    elseif x<0 && y>=0
-        wf = 2*atan(num,den) + pi;
-    elseif x<0 && y<0
-        wf = 2*atan(num,den) - pi;
-    elseif x ==0 && y>0
-        wf = pi;
-    elseif x==0 && y<0
-        wf = -pi;
-    elseif imag(num) ~= 0 && imag(den) ~= 0;
+    if imag(den) ~= 0
+        conj_den = den';
+
+        num = num*conj_den;
+        den = den*conj_den;
         
+        wf=2*atan2(imag(num)/den,real(num)/den);
+    else
+        wf=2*atan2(num,den);
+    
+    end
+
         
-    wf=2*atan2(num,den);
+    
     
     Rf=(Ri+Rj+Rk)/3;
 

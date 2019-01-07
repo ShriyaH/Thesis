@@ -23,7 +23,7 @@ xf = CONSTANTS.xf;
 
 mf = CONSTANTS.xf(1);
 
-W = CONSTANTS.w_AI;
+wa = CONSTANTS.w_AI;
 %considering constant gravitational field
 
 w_vc = CONSTANTS.w_vc;
@@ -96,7 +96,7 @@ for k = 0:K-1
         Ac = zeros(ns,ns);
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
         Ac(2:9,:) = get_dDQdot(dw_k,dq_k,ns);
-        Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,W,r_F,ns,Asteroid);
+        Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,r_F,ns,Asteroid);
         Ac(18:25,26:33) = eye(8);
 
 

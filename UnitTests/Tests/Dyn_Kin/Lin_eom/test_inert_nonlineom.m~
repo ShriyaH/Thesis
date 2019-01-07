@@ -5,8 +5,6 @@ I_inv = inv(I);
 alpha0 = 0.1;
 r_T = [-1;0;0];
 j=0;
-xdot_k = ITR.xdot_k{9};
-vc = ITR.v_k{9};
 %% Integrator
 Y0 = [m;x;v;q;w;Th;Th_dot];
 % T = [0 7];
@@ -47,18 +45,14 @@ function dY = orb_int(t,Y)
 %     wdot_k = I_inv*(cross(r_T',T)' - cross(ww, (I*ww)));
 % %     Tdot_k = g.*mdot_k;
 % %     u_k = [0;0;0];
-   [ d, ix ] = min( abs( tt-t ) );
+%     [ d, ix ] = min( abs( tt-t ) );
 %     vdot_k = vvv(1:3,ix);
 %     Tdot_k = tdot(1:3,ix);
 %     u_k = u(1:3,ix);
-%      vc = vk(1:20,ix);
+%     vc = vk(1:20,ix);
 % 
 %     dY = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k]  ;  
-   if ix<30
-        dY = xdot_k(:,ix) + vc(1:20,ix) ;
-   else
-       dY = zeros(20,1) + vc(1:20,ix);
-   end
+
     
 end
 
@@ -139,14 +133,14 @@ if q_inert == 1
 %     grid on
 % %     print -depsc orb_nlin
 
-%     figure()
-%     plot3(y(1:30,3),y(1:30,4),y(1:30,2),'Color','r');
-%     hold on
-%     plot3(xc(3,1:30),xc(4,1:30),xc(2,1:30),'Color','b');
-%     xlabel('Up (m)');
-%     ylabel('East (m)');
-%     zlabel('North (m)');
-%     grid on
+    figure()
+    plot3(y(1:30,3),y(1:30,4),y(1:30,2),'Color','r');
+    hold on
+    plot3(xc(3,1:30),xc(4,1:30),xc(2,1:30),'Color','b');
+    xlabel('Up (m)');
+    ylabel('East (m)');
+    zlabel('North (m)');
+    grid on
     
     figure()
     plot(tspan,y(:,3),'Linewidth',2); 

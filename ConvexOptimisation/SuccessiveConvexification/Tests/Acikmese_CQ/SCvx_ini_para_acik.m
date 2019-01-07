@@ -9,6 +9,7 @@ global CONSTANTS PARAMS Switch ITR;
 alpha0 =  CONSTANTS.alpha0;
 T1 = CONSTANTS.T1;
 T2 = CONSTANTS.T2;
+g = CONSTANTS.g;
 
 J = CONSTANTS.J;
 r_T = CONSTANTS.r_T;
@@ -106,7 +107,12 @@ for k = 0:K-1
         Bc(18:20,:) = eye(nc);
 
         ITR.Bc_k{i}{ii} = Bc;
+        
+        Bg = zeros(ns,3);
+        Bg(5:7,:) = eye(3);
 
+        ITR.Bg_k{i}{ii} = Bg;
+        
         zc = xdot_k - Ac*x_k - Bc*u_k;
 
         ITR.zc_k{i}{ii} = zc;
@@ -126,7 +132,10 @@ for k = 0:K-1
 
         Bd = dt.*(Psi*Bc);
         ITR.Bd_k{i}{ii} = Bd;
-
+        
+        Bgd = dt.*(Psi*Bg);
+        ITR.Bgd_k{i}{ii} = Bgd;
+        
         zd = dt.*(Psi*zc);
         ITR.zd_k{i}{ii} = zd;
 
@@ -147,6 +156,7 @@ for k = 0:K-1
         A(idx,jdx) = -Ed;
 
         % construct b
+%         b(idx,1) = zd+Bgd*g';
         b(idx,1) = zd;
     end   
 end

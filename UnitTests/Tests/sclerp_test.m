@@ -29,19 +29,22 @@ cc = linspace(0,c,30);
 for i = 1:30
     r(1:3,i) = cc(i).*r_vec;
     r_act(1:3,i) = r(1:3,i) + ri;
-    dq(1:8,i) = Q2DQ(a(1:4,i),r_act(1:3,i),1);
+    dq_act(1:8,i) = Q2DQ(a(1:4,i),r_act(1:3,i),1);
 end
 
-for i = 1:30
-    check1(1:3,i) =(T(i)*d/2*cos(T(i)*theta/2)).*l;
-    check2(1:3,i) = (dq(5:7,i)-check1(1:3,i)); 
-    check3(i) = sin(T(i)*theta/2);
-    check4(1:3,i) = check2(1:3,i)./check3(i);
-    check5(1:3,i) = check4(1:3,i)./norm(m);
-%     check6(1:3,i) = check5(1:3,i).*T(i);
-end
-conv = dq-dqm;
-conv2=rtt(1:3,:)-r;
+% for i = 1:30
+%     check1(1:4,i) =cross_quat(dqi(5:8),dqt(1:4,i));
+%     check2(1:4,i) = dq(5:8,i)- check1(1:4,i); 
+%     check3(1:4,i) = cross_quat(conj_quat(dqi(1:4)),check2(1:4,i));
+%     check4(i) = sin(T(i)*ang(i)/2);
+%     check5(1:3,i) = l.*(T(i)*cos(T(i)*ang(i)/2)/2);
+% %     check5(1:3,i) = check4(1:3,i)./norm(m);
+% %     check6(1:3,i) = check5(1:3,i).*T(i);
+% end
+% conv = check3-dqt(5:8,:);
+
+
+
 % figure()
 % axis equal
 % grid on         
@@ -66,10 +69,10 @@ conv2=rtt(1:3,:)-r;
 figure()
 axis equal
 grid on
-quiver3(0,0,0,10*l(1),10*l(2),10*l(3));     
+quiver3(rtt(1,1),rtt(2,1),rtt(3,1),10*l(1),10*l(2),10*l(3));     
 hold on
-quiver3(r(1,1),r(2,1),r(3,1),r(1,30),r(2,30),r(3,30)); 
+% quiver3(r(1,1),r(2,1),r(3,1),r(1,30),r(2,30),r(3,30)); 
 plot3(rtt(1,1:30),rtt(2,1:30),rtt(3,1:30));   
-% plot3(r_act(1,1:30),r_act(2,1:30),r_act(3,1:30));   
+plot3(r_act(1,1:30),r_act(2,1:30),r_act(3,1:30));   
 xlabel('Time (sec)');
 ylabel('Position (m)');

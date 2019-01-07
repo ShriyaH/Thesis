@@ -7,7 +7,6 @@ clc
 global CONSTANTS PARAMS Switch ITR; 
 
 %% Successive Convexification
-
 CONSTANTS.g = [-1; 0; 0]';
 CONSTANTS.alpha0 = 0.1;
 CONSTANTS.m0 = 2; %mass bounds
@@ -16,10 +15,12 @@ CONSTANTS.J = 0.5 .* eye(3);
 
 CONSTANTS.T1 = 0.5;
 CONSTANTS.T2 = 3;
+
 CONSTANTS.r_T = [-1;0;0];
 
 CONSTANTS.x0 = [CONSTANTS.m0; 2; 1; 0; -1; 0.2; 0; 0; 0; 0; 1; 0; 0; 0; 2; 0; 0; 0; 0; 0];  %state bounds
 CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.1; 0; 0; 0; 0; 0; 1; 0; 0; 0; 0.75; 0; 0; 0; 0; 0];
+
 CONSTANTS.t0 = 0;  %initial time
 CONSTANTS.tf = 5;  %closed time
 CONSTANTS.nodes = 30;
@@ -35,12 +36,15 @@ CONSTANTS.rho1 = 0.25;
 CONSTANTS.rho2 = 0.9;
 % CONSTANTS.Alpha = 1.224655;
 CONSTANTS.Alpha = 1.2;
-CONSTANTS.Beta = 3;
+% CONSTANTS.Alpha = 1.5;
+CONSTANTS.Beta = 1.2;
 CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 145;
+% CONSTANTS.w_vc = 145;
+% CONSTANTS.w_tr = 0.05;
+CONSTANTS.w_vc = 0;
 CONSTANTS.w_tr = 0.05;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;

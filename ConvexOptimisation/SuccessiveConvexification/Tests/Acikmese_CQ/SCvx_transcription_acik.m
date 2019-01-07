@@ -10,6 +10,7 @@ rho2 = CONSTANTS.rho2;
 Alpha = CONSTANTS.Alpha;
 Beta = CONSTANTS.Beta;
 tol = CONSTANTS.tol;
+g = CONSTANTS.g;
 
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
@@ -115,7 +116,7 @@ count = 1;
     i = i+1           
 
  end
-acik_plots(i); 
+SCvx_plots_DQ(i); 
 end
 
 

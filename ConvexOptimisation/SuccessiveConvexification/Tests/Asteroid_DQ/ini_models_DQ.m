@@ -14,26 +14,29 @@ CONSTANTS.w_AI =[0;0;0;0;0;0;0;0];
 
 CONSTANTS.alpha0 = 0.1;
 
-m0 = 2;
-mf = 0.75; 
+CONSTANTS.m0 = 2;
+CONSTANTS.mf = 0.75; 
 CONSTANTS.J = 0.5*eye(3);
 
 CONSTANTS.F1 = 0.5;
 CONSTANTS.F2 = 3;
 CONSTANTS.r_F = [-1;0;0];
 
-dq0 = Q2DQ([0;0;0;1],[2;1;0],2);
+CONSTANTS.dq_form = 2;
+dq_form = CONSTANTS.dq_form;
+
+dq0 = Q2DQ([0;0;0;1],[2;1;0],dq_form);
 dw0 = [0;0;0;0;-1; 0.2; 0;0]; 
 dF0 = [0; 0; 2;0;cross(CONSTANTS.r_F,[0,0,2])';0]; 
 dF_dot0 = [0; 0; 0; 0; 0; 0; 0; 0];
 
-dqf = Q2DQ([0;0;0;1],[0;0;0],2);
+dqf = Q2DQ([0;0;0;1],[0;0;0],dq_form);
 dwf = [0;0;0;0;-0.1; 0; 0;0]; 
 dFf = [0; 0; 0.75; 0;cross(CONSTANTS.r_F,[0,0,0.75])';0]; 
 dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
 
-CONSTANTS.x0 = [m0; dq0; dw0; dF0; dF_dot0];  %state bounds
-CONSTANTS.xf = [mf; dqf; dwf; dFf; dF_dotf];
+CONSTANTS.x0 = [CONSTANTS.m0; dq0; dw0; dF0; dF_dot0];  %state bounds
+CONSTANTS.xf = [CONSTANTS.mf; dqf; dwf; dFf; dF_dotf];
 CONSTANTS.t0 = 0;  %initial time
 CONSTANTS.tf = 5;  %closed time
 CONSTANTS.nodes = 30;
@@ -50,10 +53,11 @@ CONSTANTS.rho2 = 0.9;
 CONSTANTS.Alpha = 2;
 CONSTANTS.Beta = 3.2;
 CONSTANTS.i_max = 10;
+CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 1e2;
-CONSTANTS.w_tr = 0.1;
+CONSTANTS.w_vc = 10;
+CONSTANTS.w_tr = 0.05;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
 
@@ -77,6 +81,6 @@ PARAMS.n_virt = length(CONSTANTS.x0);
 PARAMS.n_slack = 1;
 PARAMS.n_tr = 1;
 
-[Kleopatra] = Get_Asteroid('Kleopatra',1);
+% [Kleopatra] = Get_Asteroid('Kleopatra',1);
 first_sol_DQ;
 %                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                end

@@ -23,9 +23,8 @@ U_edg=@(q1,q2,q3,q4,q5,q6,q7,q8) 0;
 U_fac=@(q1,q2,q3,q4,q5,q6,q7,q8) 0;
 
 %function for r_A (2.q_d.q_r^*)
-S =@(q1,q2,q3,q4,q5,q6,q7,q8)  2*[-q8*q1 + q7*q2 - q6*q3 + q5*q4
-                                  -q7*q1 - q8*q2 + q5*q3 + q6*q4
-                                  q6*q1 - q5*q2 - q8*q3 + q7*q4];
+S =@(q1,q2,q3,q4,q5,q6,q7,q8)  2.*cross_quat([q5;q6;q7;q8],[-q1;-q2;-q3;q4]);
+S =@(q1,q2,q3,q4,q5,q6,q7,q8)  S(1:3);
 
 for j=1:1:size(E,1)
     

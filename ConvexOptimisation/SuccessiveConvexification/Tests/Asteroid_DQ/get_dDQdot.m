@@ -18,7 +18,10 @@ d2(5:8,5:8) = d2a;
 d2(5:8,1:4) = d2b;
 d2(:,4) = zeros(8,1);
 d2(:,8) = zeros(8,1);
-dDQdot2 = d2./2;
+dw2 = zeros(8,8);
+dw2(1:3,1:3) = eye(3);
+dw2(5:7,5:7) = eye(3);
+dDQdot2 = (d2*dw2)./2;
 
 dDQdot(1:8,2:9) = dDQdot1;
 dDQdot(1:8,10:17) = dDQdot2;
