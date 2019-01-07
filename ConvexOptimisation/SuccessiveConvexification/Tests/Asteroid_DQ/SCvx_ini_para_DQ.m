@@ -21,6 +21,7 @@ dt = CONSTANTS.dt;
 x0 = CONSTANTS.x0;
 xf = CONSTANTS.xf;
 
+m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
 wa = CONSTANTS.w_AI;
@@ -211,6 +212,22 @@ if Switch.mass_lower_boundary_on % m_k <= m_dry
         ht(ii) = -mf;
         
         Gt(ii,(ii-1)*n+1) = -1;
+    end
+    
+    G = [G;Gt];
+    h = [h;ht];
+    dims.l =  size(G,1);
+        
+end
+
+if Switch.mass_lower_boundary_on % m_k <= m_dry
+    Gt = zeros(K,K*n+2);
+    ht = zeros(K,1);
+    
+    for ii = 1:K
+        ht(ii) = m0;
+        
+        Gt(ii,(ii-1)*n+1) = 1;
     end
     
     G = [G;Gt];

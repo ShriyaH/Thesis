@@ -32,17 +32,16 @@ v0 = quat_trans(q0,[-1; 0.2; 0],'n');
 vf =  quat_trans(qf,[-0.1; 0; 0],'n');
 w0 = [0;0;0;0];
 wf = [0;0;0;0];
-F0 = [2;0;0;0];
-Ff = [0.75;0;0;0];
-
+F0 = ;
+Ff = ;
 dq0 = Q2DQ(q0,r0,CONSTANTS.dq_form); 
 dw0 = [w0;v0]; 
-dF0 = [F0;cross(CONSTANTS.r_F,F0(1:3));0]; 
+dF0 = [F0;cross(CONSTANTS.r_F,[0,0,2])';0]; 
 dF_dot0 = [0; 0; 0; 0; 0; 0; 0; 0];
 
 dqf = Q2DQ(qf,rf,CONSTANTS.dq_form);
 dwf = [wf;vf]; 
-dFf = [Ff;cross(CONSTANTS.r_F,Ff(1:3));0]; 
+dFf = [0; 0; 0.75; 0;cross(CONSTANTS.r_F,[0,0,0.75])';0]; 
 dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
 
 CONSTANTS.x0 = [CONSTANTS.m0; dq0; dw0; dF0; dF_dot0];  %state bounds

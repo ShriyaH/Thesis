@@ -83,8 +83,8 @@ for k = 0:K-1
         dqdot_k = 1/2.*(omega_tensor(dw_k,3)*dq_k);
 %         dwdot_k = J_inv_k*(dF_k - omega_tensor((dw_k+wa),4)*(J_k*(dw_k+wa)) - J_k*(Wa*dw_k) - J_k*(Wa*(Wa*R)));
         dwdot_k = J_inv_k*(dF_k - omega_tensor(dw_k,4)*(J_k*dw_k));
-%         Fdot_k = mdot_k.*g';
-%         dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
+        Fdot_k = mdot_k.*g;
+        dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
         xdot_k = [mdot_k;dqdot_k;dwdot_k;dFdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;
     end

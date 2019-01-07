@@ -23,6 +23,7 @@ dt = (tf-t0)/K;
 x0 = CONSTANTS.x0;
 xf = CONSTANTS.xf;
 
+m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
 %considering constant gravitational field
@@ -228,6 +229,23 @@ if Switch.mass_lower_boundary_on % m_k <= m_dry
     dims.l =  size(G,1);
         
 end
+
+if Switch.mass_upper_boundary_on % m_k <= m_dry
+    Gt = zeros(K,K*n+2);
+    ht = zeros(K,1);
+    
+    for ii = 1:K
+        ht(ii) = m0;
+        
+        Gt(ii,(ii-1)*n+1) = 1;
+    end
+    
+    G = [G;Gt];
+    h = [h;ht];
+    dims.l =  size(G,1);
+        
+end
+
 
 if Switch.thrust_lower_boundary_on % T_min <= ||T_sol_k||_2 + T_sol_k'/||T_sol_k||_2 (T_k - T_sol_k)
     Gt = zeros(K,K*n+2);
