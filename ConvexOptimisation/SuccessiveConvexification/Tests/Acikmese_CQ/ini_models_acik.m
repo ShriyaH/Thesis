@@ -35,15 +35,15 @@ CONSTANTS.rho0 = 0;
 CONSTANTS.rho1 = 0.25;
 CONSTANTS.rho2 = 0.9;
 % CONSTANTS.Alpha = 1.02; %15 max itr
-% CONSTANTS.Alpha = 1.2;  %10 max itr
-CONSTANTS.Alpha = 1.2;  %10 max iteration also for 15 %also for no angular constraints
+CONSTANTS.Alpha = 1.2;  %10 max itr
+% CONSTANTS.Alpha = 1.2;  %10 max iteration also for 15 %also for no angular constraints
 CONSTANTS.Beta = 3;
 CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 100; %no angular constraints
-% CONSTANTS.w_vc = 145; %10/15 max itr
+% CONSTANTS.w_vc = 100; %no angular constraints
+CONSTANTS.w_vc = 145; %10/15 max itr
 CONSTANTS.w_tr = 0.05;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
@@ -57,7 +57,7 @@ Switch.thrust_lower_boundary_on = 1;
 
 %conic constraints control
 Switch.ang_rate_on = 1;
-Switch.glideslope_on = 0;
+Switch.glideslope_on = 1;
 Switch.tilt_ang_on = 1;
 Switch.gimbal_ang_on = 1;
 

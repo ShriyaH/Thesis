@@ -18,8 +18,8 @@ count = 0;
 
         [g_Ac(1:3,count), g_Bc(1:4,count), Wfc(count), Uc(count)] = Poly_g_new(r_Ac, q_BAc,Kleopatra);
 
-        dga(1:3,count) = g_Ac(1:3,count)./h;
-        dgb(1:4,count) = g_Bc(1:4,count)./h;
+        dga(1:3,count) = imag(g_Ac(1:3,count))./h;
+        dgb(1:4,count) = imag(g_Bc(1:4,count))./h;
 
         % finite differentiation
         dqc2(1:8,count) = dq + h;

@@ -1,0 +1,63 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.028in,
+height=4.754in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=30,
+xlabel style={font=\color{white!15!black}},
+xlabel={Time (secs)},
+ymin=0,
+ymax=0.15,
+ylabel style={font=\color{white!15!black}},
+ylabel={Difference in Position Norm (m)},
+axis background/.style={fill=white},
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1]
+  table[row sep=crcr]{%
+1	1.61656210599304e-11\\
+2	0.00759784541796173\\
+3	0.0163227232164731\\
+4	0.0265120918019153\\
+5	0.0378215022236525\\
+6	0.049740501066029\\
+7	0.061861849759556\\
+8	0.0738251469087429\\
+9	0.0852370499090682\\
+10	0.0811651232326611\\
+11	0.0899613232739723\\
+12	0.0966023176017615\\
+13	0.100594915238707\\
+14	0.102037896472207\\
+15	0.101638308417065\\
+16	0.100411058032695\\
+17	0.09925036978316\\
+18	0.105886727569477\\
+19	0.106277891361129\\
+20	0.10822817020567\\
+21	0.111923330908336\\
+22	0.117236991045451\\
+23	0.123883467753089\\
+24	0.131260517397984\\
+25	0.13839143353675\\
+26	0.144295124291326\\
+27	0.148255182570862\\
+28	0.149974787053995\\
+29	0.149597698171737\\
+30	0.145887015864548\\
+};
+\addlegendentry{data1}
+
+\end{axis}
+\end{tikzpicture}%

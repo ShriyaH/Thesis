@@ -46,7 +46,7 @@ if dqi(1:4)~= dqn(1:4)
             dqm(1:8,i) = cross_dq(dqi,dq);
             dqm(1:8,i) = norm_dq(dqm(1:8,i));       
         end
-        r(1:4,i) = DQ2R(dqm,dq_form);
+        r(1:4,i) = DQ2R(dqm(1:8,i),dq_form);
         ang(i) = 2*rad2deg(acos(dqm(4,i)));
         r_norm(i) = norm(r(1:3,i));
     end
@@ -59,9 +59,34 @@ else
         dqm(1:8,i) = Q2DQ(dqi(1:4),rm,dq_form);
     end
 end
-        
+ri =  DQ2R(dqi,dq_form);
+rf =  DQ2R(dqn,dq_form);
+    for i = 1:length(T)
+        K=length(T);
+        rm(1:4,i) = ((K-i-1)/(K-1))*ri + (i/(K-1))*rf;
+        dqmm(1:8,i) = Q2DQ(dqm(1:4,i),rm(1:4,i),dq_form);
+        ang(i) = 2*rad2deg(acos(dqmm(4,i)));
+        r_n(i) = norm(rm(1:4,i));
+    end
+
+figure()
+plot(1:40,ang','Marker','.')
+xlabel('Time (sec)')
+ylabel('Angle (deg)')
+grid on  
+
+figure()
+plot(1:40,r_n,'Marker','.')
+xlabel('Time (sec)')
+ylabel('Angle (deg)')
+grid on 
+
+figure()
+plot3(rm(1,:),rm(2,:),rm(3,:),'Marker','.')
+xlabel('X (m)')
+ylabel('Y (m)')
+zlabel('Z (m)')
+grid on 
 end
-
-
 
 

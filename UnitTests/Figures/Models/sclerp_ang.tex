@@ -1,0 +1,73 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.028in,
+height=4.754in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=40,
+xlabel style={font=\color{white!15!black}},
+xlabel={Time (sec)},
+ymin=105,
+ymax=140,
+ylabel style={font=\color{white!15!black}},
+ylabel={Angle (deg)},
+axis background/.style={fill=white},
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=*, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+1	107.927843881088\\
+2	108.55595154331\\
+3	109.191906864286\\
+4	109.83555702725\\
+5	110.486750759177\\
+6	111.145338384716\\
+7	111.811171874458\\
+8	112.484104887795\\
+9	113.163992810593\\
+10	113.850692787923\\
+11	114.544063752079\\
+12	115.243966446121\\
+13	115.95026344317\\
+14	116.66281916168\\
+15	117.38149987692\\
+16	118.106173728868\\
+17	118.836710726734\\
+18	119.57298275033\\
+19	120.314863548461\\
+20	121.062228734554\\
+21	121.814955779695\\
+22	122.572924003261\\
+23	123.336014561314\\
+24	124.104110432918\\
+25	124.877096404548\\
+26	125.654859052728\\
+27	126.437286725045\\
+28	127.224269519676\\
+29	128.015699263558\\
+30	128.811469489316\\
+31	129.611475411069\\
+32	130.415613899224\\
+33	131.223783454357\\
+34	132.035884180278\\
+35	132.851817756368\\
+36	133.671487409281\\
+37	134.494797884077\\
+38	135.321655414873\\
+39	136.15196769507\\
+40	136.985643847228\\
+};
+\addlegendentry{data1}
+
+\end{axis}
+\end{tikzpicture}%

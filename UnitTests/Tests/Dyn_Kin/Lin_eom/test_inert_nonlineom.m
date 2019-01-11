@@ -1,12 +1,13 @@
-function [y] = test_inert_nonlineom(I,m,x,v,q,w,Th,Th_dot,g,u,tdot,vk,vvv,q_inert)
-global ITR xc 
+function [y] = test_inert_nonlineom(I,m,x,v,q,w,Th,Th_dot,q_inert)
+global ITR 
 %% Initial Values
+% SCvx_descent_script_acik;
 I_inv = inv(I);
 alpha0 = 0.1;
 r_T = [-1;0;0];
 j=0;
-xdot_k = ITR.xdot_k{9};
-vc = ITR.v_k{9};
+xdot_k = ITR.xdot_k{11};
+vc = ITR.v_k{11};
 %% Integrator
 Y0 = [m;x;v;q;w;Th;Th_dot];
 % T = [0 7];
@@ -54,10 +55,16 @@ function dY = orb_int(t,Y)
 %      vc = vk(1:20,ix);
 % 
 %     dY = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k]  ;  
+%    if ix<30
+%         dY = xdot_k(:,ix) + vc(1:20,ix) ;
+%    else
+%        dY = zeros(20,1) + vc(1:20,ix);
+%    end
+   
    if ix<30
-        dY = xdot_k(:,ix) + vc(1:20,ix) ;
+        dY = xdot_k(:,ix);
    else
-       dY = zeros(20,1) + vc(1:20,ix);
+       dY = zeros(20,1);
    end
     
 end
@@ -147,6 +154,16 @@ if q_inert == 1
 %     ylabel('East (m)');
 %     zlabel('North (m)');
 %     grid on
+
+%     for i = 1:30
+%         d(1,i) = norm(y(i,2:4)'-xc(2:4,i));
+%     end
+%     figure()
+%     plot(1:30,d)
+%     xlabel('Time (secs)');
+%     ylabel('Difference in Position Norm (m)');
+%     grid on
+%     
     
     figure()
     plot(tspan,y(:,3),'Linewidth',2); 
