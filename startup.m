@@ -35,7 +35,7 @@ addpath ../Thesis/ConversionLibrary/q_dq_operators
 
 addpath ../Thesis/ConvexOptimisation
 
-addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/Acikmese_CQ
+addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification/Tests/Acikmese_DQ
 
 % addpath ../Thesis/ConvexOptimisation/SuccessiveConvexification
 
@@ -57,6 +57,5 @@ addpath ../Thesis/MotionPlanning
 
 addpath ../Thesis/UnitTests
 
-addpath ../Thesis/UnitTests/Tests/Dyn_Kin/EOMS
-addpath ../Thesis/UnitTests/Tests/Dyn_Kin/Lin_eom
+addpath ../Thesis/UnitTests/Tests/Dyn_Kin
 end

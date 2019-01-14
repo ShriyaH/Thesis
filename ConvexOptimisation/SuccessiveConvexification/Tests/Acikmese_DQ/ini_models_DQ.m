@@ -66,7 +66,7 @@ CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 25;
+CONSTANTS.w_vc = 5;
 CONSTANTS.w_tr = 0.05;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
@@ -92,6 +92,5 @@ PARAMS.n_virt = length(CONSTANTS.x0);
 PARAMS.n_slack = 1;
 PARAMS.n_tr = 1;
 
-% [Kleopatra] = Get_Asteroid('Kleopatra',1);
 first_sol_DQ;
-%                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                end
+% end                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               end

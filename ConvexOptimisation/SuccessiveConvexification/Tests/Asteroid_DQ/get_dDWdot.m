@@ -4,7 +4,7 @@ g = CONSTANTS.g;
 dq_form =CONSTANTS.dq_form;
 % r_F =CONSTANTS.r_F;
 
-dDWdot = zeros(3,ns);
+dDWdot = zeros(8,ns);
 dW(1:4) = quat_trans(dq(1:4),wa(1:4),'n');
 dW(5:8) = quat_trans(dq(1:4),wa(5:8),'n');
 dW = dW';

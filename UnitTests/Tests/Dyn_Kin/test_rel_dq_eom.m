@@ -11,7 +11,7 @@ else
 end
 [U, S, V] = svd(dI);
 dI_inv = V*(S\U');
-w_AI = w_AI';
+% w_AI = w_AI';
 
 %% Integrator
 Y0 = [dq_rel';dw_rel'];

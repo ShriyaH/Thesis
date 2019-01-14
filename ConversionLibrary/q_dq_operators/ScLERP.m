@@ -69,24 +69,24 @@ rf =  DQ2R(dqn,dq_form);
         r_n(i) = norm(rm(1:4,i));
     end
 
-figure()
-plot(1:40,ang','Marker','.')
-xlabel('Time (sec)')
-ylabel('Angle (deg)')
-grid on  
+% figure()
+% plot(1:40,ang','Marker','.')
+% xlabel('Time (sec)')
+% ylabel('Angle (deg)')
+% grid on  
+% 
+% figure()
+% plot(1:40,r_n,'Marker','.')
+% xlabel('Time (sec)')
+% ylabel('Angle (deg)')
+% grid on 
 
-figure()
-plot(1:40,r_n,'Marker','.')
-xlabel('Time (sec)')
-ylabel('Angle (deg)')
-grid on 
-
-figure()
-plot3(rm(1,:),rm(2,:),rm(3,:),'Marker','.')
-xlabel('X (m)')
-ylabel('Y (m)')
-zlabel('Z (m)')
-grid on 
+% figure()
+% plot3(rm(1,:),rm(2,:),rm(3,:),'Marker','.')
+% xlabel('X (m)')
+% ylabel('Y (m)')
+% zlabel('Z (m)')
+% grid on 
 end
 
 

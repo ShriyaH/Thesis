@@ -5,11 +5,11 @@ clear all;
 clc; 
 close all; 
 
-global ITR PARAMS CONSTANTS;
-ini_models_acik;
+global ITR CONSTANTS;
+ini_models_DQ;
 
-[xc1,uc1,xdotc1,cpu_time1,status1] = SCvx_transcription_acik();
+[xc,uc,xdotc,cpu_time,status] = SCvx_transcription_DQ();
 
-m_spent = xc1(1,1)-xc1(1,end);
+m_spent = xc(1,1)-xc(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])
 

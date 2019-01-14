@@ -3,22 +3,25 @@
 %and without controls
 clear data
 clc
-global Sun SC I m mu Kleopatra Var Switch
+global Sun SC I m mu Kleopatra Var Switch CONSTANTS
 
 %% Common Input Values 
 Initialize_models;
 
 %% Select Integrator 
-Switch.Razgus = 0;
+Switch.Razgus = 1;
 Switch.Q = 0;
 Switch.Q_rel = 0;
 Switch.DQ = 0;
 Switch.DOF6 = 1;
 Switch.DOF6_lin = 0;
+Switch.DOF6_lin_DQ = 1;
+Switch.SCvx.check = 0;
 
 %% Plot
-Switch.Q_plots = 0;
+Switch.Q_plots = 1;
 Switch.convert_q = 0;
+Switch.q_inert = 1;
 Switch.kepler_el = 0;
 Switch.kepler_n= 0;
 Switch.err = 0;
@@ -36,31 +39,36 @@ elseif Switch.TBP
     v_I = [-41.1527817563532 0 7.25634575485216];
     w_BI = [0 0 0];
     w_AI = [0 0 0];
-elseif Switch.DOF6 || Switch.DOF6_lin
+elseif Switch.DOF6 || Switch.DOF6_lin || Switch.DOF6_lin_DQ
     m_sc = 2;
-    g = [-1;0;0];
+    CONSTANTS.g = [-1;0;0];
+    g = CONSTANTS.g;
     x_I = [2; 1; 0];
     v_I = [-1; 0.2; 0]; 
-    q_BI = [0; 0; 0; 1]; 
-    w_BI = [0; 0; 0]; 
+    q_BI =[0.8;0.7;0.8;0.9];
+    q_BI = q_BI./norm(q_BI);
+    w_BI = [3e-5; 0; 0]; 
     Th_B = [2; 0; 0];
     Th_dot_B = [0;0;0];
     I = 0.5.*eye(3);
-    w_AI = [0 0 0];
+    w_AI = [0; 0; 0];
+    r_T = [-1;0;0];
+    Switch.constant_grav_on =1;
 else
     %For dynamic block check
     x_I = [0 60e3 0];
     v_I = [53.947598031175893 0 0];
     w_BI = [6.28318e-4 0 0];
-    w_AI = Kleopatra.w_AI;
+    w_AI = [0 0 3e-4];
+    q_BI = [0; 0; 0; 1];
+    q_AI = [0 0 0 1];
+    C_AI = Q2DCM(q_AI);
+    C_BI = Q2DCM(q_BI);
 end
 W_AI1 = omega_tensor(w_AI,1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 W_AI2 = omega_tensor(w_AI,2);
 
-% q_BI =[0 0 0 1];
-% q_AI = [0 0 0 1];
-% C_AI = Q2DCM(q_AI);
-C_BI = Q2DCM(q_BI);
+
 
 %% Inertial Dynamics and Kinematics
 if Switch.Q 
@@ -94,14 +102,16 @@ end
 %% Relative Dynamics and Kinematics: Dual Quaternions %%
 
 %Relative frame Initialisation
-% x_A = (C_AI*x_I');
-% v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
-% q_BA = cross_quat(q_BI',q_AI');
-% C_BA = Q2DCM(q_BA);
-% 
-% v_BA_B = C_BA*v_BA_A;
-% w_AI_B = (C_BA*w_AI');
-% w_BA_B = w_BI'-w_AI_B;
+if Switch.Q_rel || Switch.DQ
+    x_A = (C_AI*x_I');
+    v_BA_A = (C_AI*v_I') - (W_AI1*x_A);
+    q_BA = cross_quat(q_BI',conj_quat(q_AI'));
+    C_BA = Q2DCM(q_BA);
+
+    v_BA_B = C_BA*v_BA_A;
+    w_AI_B = (C_BA*w_AI');
+    w_BA_B = w_BI'-w_AI_B;
+end
 
 if Switch.Q_rel    
     [Var.t2,Var.y2,Var.r_B] = test_rel_b_eom(w_AI,x_A',v_BA_B',w_BA_B',q_BA');
@@ -137,18 +147,28 @@ if Switch.DQ
         C_BAtt(3*j-2:3*j,:) = Q2DCM(Var.y3(j,1:4)');
         Var.dqw_AI_B(:,j) = C_BAtt(3*j-2:3*j,:)*w_AI';
     end
+    
+    
 end
 
 %% Inertial Descent: Non-linear %%
-
 if Switch.DOF6    
-    y = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,1);    
+   [Var.t5, Var.y5] = test_inert_nonlineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g);  
 end
 
 %% Inertial Descent: Linear %%
-
 if Switch.DOF6_lin 
-    [tspan,tode4,y1] = test_inert_lineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,t,y,1);    
+    [tspan,tode4,Var.y6] = test_inert_lineom(I,m_sc,x_I,v_I,q_BI,w_BI,Th_B,Th_dot_B,g,Var.t5,Var.y5,1);    
 end
 
-dyn_block_plots();
+%% Inertial Descent: Linear DQ%%
+if Switch.DOF6_lin_DQ 
+    dq_I = Q2DQ(q_BI,x_I,2);
+    v_B = quat_trans(q_BI,v_I,'n');
+    dw_B = [w_BI;0;v_B];
+    dF_B = [Th_B;0;cross(r_T,Th_B);0];
+    dF_B_dot = [0;0;0;0;0;0;0;0];
+    dwa = [w_AI;0;0;0;0;0];
+    [Var.t6,Var.y7] = test_lindq(I,m_sc,dq_I,dw_B,dF_B,dF_B_dot,g,Var.t5);
+end
+% dyn_block_plots;

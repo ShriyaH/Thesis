@@ -1,63 +1,65 @@
-function [A,b,G,h,C,dims] = SCvx_ini_para_test(i)
+function [A,b,G,h,C,dims] = SCvx_ini_para_DQ(i)
+% Asteroid descent problem for ECOS with Successive Convexification
+% Shriya Hazra, 31-Jul-2018 
 
 % Standard formulation
 global CONSTANTS PARAMS Switch ITR;
 
 % load parameters & compute constants
 alpha0 =  CONSTANTS.alpha0;
-T1 = CONSTANTS.T1;
-T2 = CONSTANTS.T2;
+F1 = CONSTANTS.F1;
+F2 = CONSTANTS.F2;
 
 J = CONSTANTS.J;
-r_T = CONSTANTS.r_T;
+r_F = CONSTANTS.r_F;
 
-t0 = CONSTANTS.t0;
-tf = CONSTANTS.tf;
+% t0 = CONSTANTS.t0;
+% tf = CONSTANTS.tf;
 K = CONSTANTS.nodes;
-ITR.t_k = (0:K-1)*tf/(K-1);
-dt = (tf-t0)/K;
+dt = CONSTANTS.dt;
 
 x0 = CONSTANTS.x0;
 xf = CONSTANTS.xf;
 
+m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
+wa = CONSTANTS.w_AI;
 %considering constant gravitational field
 
 w_vc = CONSTANTS.w_vc;
-% w_tr = CONSTANTS.w_tr;
+ITR.w_tr{1} = CONSTANTS.w_tr;
 
 %Initialize state and control sizes
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
 nv = PARAMS.n_virt;
 nsl = PARAMS.n_slack;
-n = ns+nc+nv+nsl;
+nt = PARAMS.n_tr;
+n = ns+nc+nv+nsl+nt;
 
 Ed = zeros(ns,nv+nsl);
 Ed(1:nv,1:nv) = eye(nv);
 
 % define the final elements we impose
-X_f_flag = [0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1];
+X_f_flag = [0;ones(ns-1,1)];
 n_flag = sum(X_f_flag);
 
 %% COST FUNCTION
-% the formulation of the control vector is [X0 U0 nu0 s0 X1 U1 nu1 s1... XN UN nuN sN]
-X0 = zeros(n*K,1);
+% the formulation of the control vector is [X0 U0 nu0 s0 eta0 X1 U1 nu1 s1 eta1... XN UN nuN sN etaN S ETA]
+X0 = zeros(n*K+2,1);
 
 % construct the cost function - initialize it
 C = zeros(size(X0));
 
 % we want to minimize the final value of mass and the penalised virtual controls and trust regions 
-c_mod = reshape(C',n,[]);
-c_mod(ns+nc+nv+1:n,:) = w_vc;
-C = c_mod(:);
 C(n*(K-1)+1,1) = -1;
-C(end,1) = 0;
+C(n*K+1,1) = w_vc;
+C(end,1) = ITR.w_tr{i};
 
 %% DYNAMICS
 % Dimensions of A and b
-A = zeros(K*ns+n_flag,K*n);
+A = zeros(K*ns+n_flag,K*n+2);
 b = zeros(K*ns+n_flag,1);
 
 % Identity matrices for state vector at current time step 
@@ -79,10 +81,12 @@ for k = 0:K-1
     % construct linearisation point states
     x_k = ITR.x_k{i}(:,ii);
     m_k = x_k(1,1);
-    q_k = x_k(8:11,1);
-    w_k = x_k(12:14,1); 
-    T_k = x_k(15:17,1);
-   
+    dq_k = x_k(2:9,1);
+    dw_k = x_k(10:17,1); 
+    dF_k = x_k(18:25,1);
+    
+    dJ_k = dq_inertia(m_k,J);
+        
     if ii<K
         
         % construct linearisation point state differential
@@ -91,18 +95,16 @@ for k = 0:K-1
     
         % construct continuous-time matrices at linearisation point
         Ac = zeros(ns,ns);
-        Ac(1,15:17) = -alpha0.*(T_k'./norm(T_k));
-        Ac(2:4,5:7) = eye(3);
-        Ac(5:7,:) = get_da(T_k,q_k,m_k,ns);
-        Ac(8:11,:) = get_dqdot(w_k,q_k,ns); 
-        Ac(12:14,:) = get_dwdot(w_k,J,r_T,ns);
-        Ac(15:17,18:20) = eye(3);
+        Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
+        Ac(2:9,:) = get_dDQdot(dw_k,dq_k,ns);
+        Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,r_F,ns);
+        Ac(18:25,26:33) = eye(8);
 
 
         ITR.Ac_k{i}{ii} = Ac;
 
         Bc = zeros(ns,nc);
-        Bc(18:20,:) = eye(nc);
+        Bc(26:33,:) = eye(nc);
 
         ITR.Bc_k{i}{ii} = Bc;
 
@@ -150,22 +152,9 @@ for k = 0:K-1
     end   
 end
 
-%Quaternion norm constraint
-if Switch.quat_bound
-    Aq = zeros(K,K*n);
-    bq = zeros(K,1);
-    for ii = 1:K
-        jdx = (ii-1)*n+(8:11);
-        idx = ii;
-        Aq(idx,jdx)=ITR.x_k{i}(8:11,ii)';
-        bq(idx,1)=1;
-    end
-    A = [A;Aq];
-    b = [b;bq];
-end
-
-if Switch.discrete_higherorder_on
-          phi = {};
+%Increase the order of discretised solution
+if Switch.discrete_higherorder_on 
+  phi = {};
   for k = 1:K-1
        for ii = 1:K-k
            if ii == 1 
@@ -205,7 +194,7 @@ if Switch.discrete_higherorder_on
 z_new = Z*z;
 z_new = z_new(ns+1:end,1);
 
-b(ns+1:K*ns,1) = z_new;  
+b(ns+1:K*ns,1) = z_new;      
 end  
     
 
@@ -213,8 +202,10 @@ end
 G = [];
 h = [];
 
-if Switch.mass_lower_boundary_on
-    Gt = zeros(K,K*n);
+%Linear constraints of the form Gx <= h
+
+if Switch.mass_lower_boundary_on % m_k <= m_dry
+    Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
     for ii = 1:K
@@ -229,31 +220,14 @@ if Switch.mass_lower_boundary_on
         
 end
 
-if Switch.quat_bound
-    Gt = zeros(4*K,K*n);
-    ht = ones(4*K,1);
-   
-    for ii = 1:K
-        Gt(4*ii-3:4*ii,(ii-1)*n + (8:11)) = eye(4);
-    end
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);
-end
-
-if Switch.thrust_lower_boundary_on 
-    Gt = zeros(K,K*n);
+if Switch.mass_lower_boundary_on % m_k <= m_dry
+    Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
     for ii = 1:K
-        T(:,ii) = ITR.x_k{i}(15:17,ii);
-        T_norm(ii) = norm(T(:,ii));
-        T_norma(ii,:) = T(:,ii)'./T_norm(ii);
-        T_dot(ii) = -T_norma(ii,:)*T(:,ii);
-        ht(ii) = T_norm(ii) + T_dot(ii) - T1;
+        ht(ii) = m0;
         
-        Gt(ii,(ii-1)*n+(15:17)) = -T_norma(ii);
+        Gt(ii,(ii-1)*n+1) = 1;
     end
     
     G = [G;Gt];
@@ -262,18 +236,18 @@ if Switch.thrust_lower_boundary_on
         
 end
 
-if Switch.thrust_upper_boundary_on
-    Gt = zeros(K,K*n);
+if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + T_sol_k'/||T_sol_k||_2 (T_k - T_sol_k)
+    Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
     for ii = 1:K
-        T(:,ii) = ITR.x_k{i}(15:17,ii);
-        T_norm(ii) = norm(T(:,ii));
-        T_norma(ii,:) = T(:,ii)'./T_norm(ii);
-        T_dot(ii) = -T_norma(ii,:)*T(:,ii);
-        ht(ii) = T2 - T_norm(ii) - T_dot(ii);
-        
-        Gt(ii,(ii-1)*n+(15:17)) = T_norma(ii);
+        F(:,ii) = ITR.x_k{i}(18:20,ii);
+        F_norm(ii) = norm(F(:,ii));
+        F_norma(ii,:) = F(:,ii)'./F_norm(ii);
+        F_dot(ii) = -F_norma(ii,:)*F(:,ii);
+        ht(ii) = F_norm(ii) + F_dot(ii) - F1;
+         
+        Gt(ii,(ii-1)*n+(18:20)) = -F_norma(ii);
     end
     
     G = [G;Gt];
@@ -282,32 +256,18 @@ if Switch.thrust_upper_boundary_on
         
 end
 
-% if Switch.virtual_control_on % s_k <= zeta_k
-%         Gt = zeros(K,K*n);
-%         ht = zeros(K,1);
-% 
-%         for ii = 1:K        
-%             Gt(ii,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
-%             ht(ii,1) = zeta_k(ii);
-%         end
-% 
-%         G = [G;Gt];
-%         h = [h;ht];
-%         dims.l =  size(G,1);
-% 
-% end
+%SOCP constraints of the form ||Ax + b||_2 <= c'x +d
 
-dims.q = [];
+dims.q = []; 
 
-if Switch.ang_rate_on % ||w_BI_k||_2 <= w_max
-    w_max = CONSTANTS.w_max;
-   	S = zeros(3,K*n);
-    s = zeros(1,K*n);
+if Switch.thrust_upper_boundary_on %||F_k||_2 <= F_max
+   	S = zeros(3,K*n+2);
+    s = zeros(1,K*n+2);
     bc = [0;0;0];
-    dc = w_max;
+    dc = F2;
     for ii = 1:K
         Ac = S;
-        Ac(1:3,(ii-1)*n+(12:14)) = eye(3);
+        Ac(1:3,(ii-1)*n+(18:20)) = eye(3);
           
         cc = s;
         
@@ -323,18 +283,42 @@ if Switch.ang_rate_on % ||w_BI_k||_2 <= w_max
 end
 
 
-if Switch.gimbal_ang_on
+if Switch.ang_rate_on % ||w_BI_k||_2 <= w_max
+    w_max = CONSTANTS.w_max;
+   	S = zeros(3,K*n+2);
+    s = zeros(1,K*n+2);
+    bc = [0;0;0];
+    dc = w_max;
+    for ii = 1:K
+        Ac = S;
+        Ac(1:3,(ii-1)*n+(10:12)) = eye(3);
+          
+        cc = s;
+        
+        Gt = -[cc;Ac];
+        ht = [dc;bc];
+        
+        G = [G;Gt];
+        h = [h;ht];
+    
+        dims.q = [dims.q 4];
+        
+    end
+end
+
+
+if Switch.gimbal_ang_on 
     theta_gm = CONSTANTS.theta_gm;
-    S = zeros(3,K*n);
-    s = zeros(1,K*n);
+    S = zeros(3,K*n+2);
+    s = zeros(1,K*n+2);
     bc = [0;0;0];
     dc = 0;
     for ii = 1:K
         Ac = S;
-        Ac(1:3,(ii-1)*n+(15:17)) = eye(3);
+        Ac(1:3,(ii-1)*n+(18:20)) = eye(3);
           
         cc = s;
-        cc(1,(ii-1)*n+(15:17)) = [1/cos(theta_gm) 0 0];
+        cc(1,(ii-1)*n+(18:20)) = [1/cos(theta_gm) 0 0];
         
         Gt = -[cc;Ac];
         ht = [dc;bc];
@@ -349,14 +333,14 @@ end
 
 if Switch.tilt_ang_on
     theta_tilt = CONSTANTS.theta_tilt;
-    S = zeros(2,K*n);
-    s = zeros(1,K*n);
+    S = zeros(2,K*n+2);
+    s = zeros(1,K*n+2);
     bc = [0;0];
     dc = sqrt((1-cos(theta_tilt))/2);
     for ii = 1:K
         Ac = S;
-        Ac(1,(ii-1)*n+(8:11)) = [0 1 0 0];
-        Ac(2,(ii-1)*n+(8:11)) = [0 0 1 0];
+        Ac(1,(ii-1)*n+(2:5)) = [0 1 0 0];
+        Ac(2,(ii-1)*n+(2:5)) = [0 0 1 0];
           
         cc = s;
         
@@ -373,8 +357,8 @@ end
 
 if Switch.glideslope_on
     theta_gs = CONSTANTS.theta_gs;
-    S = zeros(2,K*n);
-    s = zeros(1,K*n);
+    S = zeros(2,K*n+2);
+    s = zeros(1,K*n+2);
     bc = [0;0];
     dc = 0;
     for ii = 1:K
@@ -397,8 +381,8 @@ if Switch.glideslope_on
 end
 
 if Switch.virtual_control_on %||v_k||_2 <= s_k
-    S = zeros(nv,K*n);
-    s = zeros(1,K*n);
+    S = zeros(nv,K*n+2);
+    s = zeros(1,K*n+2);
     bc = zeros(nv,1);
     
     for ii = 1:K
@@ -420,21 +404,43 @@ if Switch.virtual_control_on %||v_k||_2 <= s_k
     end
 end
 
-if Switch.trust_region_on % ||(1 - 2x_k^Tx + (x_k^Tx_k - eta_k))/2; Ax|| <= (1 + 2x_k^Tx - (x_k^Tx_k - eta_k))/2
+if Switch.virtual_control_on % ||s_k||_2 <= S
+    Ac = zeros(K,K*n+2);
+    cc = zeros(1,K*n+2);
+    bc = zeros(K,1);
+    dc = 0;
+    for ii = 1:K
+        Ac(ii,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
+    end     
+        cc(1,K*n+1) = 1;
+           
+        Gt = -[cc;Ac];
+        ht = [dc;bc];
+        
+        G = [G;Gt];
+        h = [h;ht];
     
-   	S = zeros(ns+nc+1,K*n);
-    s = zeros(1,K*n);
+    dims.q = [dims.q K+1];
+
+end
+
+if Switch.trust_region_on % ||(1 - (2x_sol'x_k + eta_k) + x_sol'x_sol)/2; Ax_k||_2 <= (1 + (2x_sol'x_k + eta_k) - x_sol'x_sol)/2
+    
+   	S = zeros(ns+nc+1,K*n+2);
+    s = zeros(1,K*n+2);
     bc = zeros(ns+nc+1,1);  
     for ii = 1:K
         xk(:,ii) = [ITR.x_k{i}(:,ii);ITR.u_k{i}(:,ii)];
-        c(ii) = (xk(:,ii)'*xk(:,ii) - ITR.eta_k{i}(ii))/2;
+        c(ii) = (xk(:,ii)'*xk(:,ii))/2;
         
         Ac = S;
         Ac(1,(ii-1)*n+(1:(ns+nc))) = -xk(:,ii)';
+        Ac(1,(ii-1)*n+ns+nc+nv+nsl+(1:nt)) = -0.5;
         Ac(2:(ns+nc+1),(ii-1)*n+(1:(ns+nc))) = eye(ns+nc);
         
         cc = s;
         cc(1,(ii-1)*n+(1:(ns+nc))) = xk(:,ii)';
+        cc(1,(ii-1)*n+ns+nc+nv+nsl+(1:nt)) = 0.5;
         
         dc = 0.5 - c(ii);
                  
@@ -450,6 +456,26 @@ if Switch.trust_region_on % ||(1 - 2x_k^Tx + (x_k^Tx_k - eta_k))/2; Ax|| <= (1 +
         
     end
 end   
+
+if Switch.trust_region_on % ||eta_k||_2 <= ETA
+    Ac = zeros(K,K*n+2);
+    cc = zeros(1,K*n+2);
+    bc = zeros(K,1);
+    dc = 0;
+    for ii = 1:K
+        Ac(ii,(ii-1)*n+ns+nc+nv+nsl+(1:nt)) = 1;
+    end      
+    cc(1,K*n+2) = 1;
+           
+    Gt = -[cc;Ac];
+    ht = [dc;bc];
+        
+    G = [G;Gt];
+    h = [h;ht];
+    
+    dims.q = [dims.q K+1];
+
+end
 
 G = sparse(G);
 A = sparse(A);

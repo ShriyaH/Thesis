@@ -1,7 +1,7 @@
 function [] = first_sol_DQ()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
-global ITR CONSTANTS Switch Kleopatra;
+global ITR CONSTANTS Switch Kleopatra a;
 
 K = CONSTANTS.nodes;
 alpha0 =  CONSTANTS.alpha0;
@@ -22,15 +22,17 @@ xf = CONSTANTS.xf;
 m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
-q0 = CONSTANTS.x0(2:9);
-qf = CONSTANTS.xf(2:9);
+dq0 = CONSTANTS.x0(2:9);
+dqf = CONSTANTS.xf(2:9);
 
 w0 = CONSTANTS.x0(10:17);
 wf = CONSTANTS.xf(10:17);
 
 g = CONSTANTS.g; 
 w_ai = CONSTANTS.w_AI;
-q = ScLERP(q0, qf, ITR.t_k);
+r0 = DQ2R(dq0,2);
+rf = DQ2R(dqf,2);
+% dq = ScLERP(dq0, dqf, ITR.t_k);
 
 ITR.x_k ={};
 ITR.u_k ={};
@@ -47,25 +49,29 @@ ITR.eta_k = {};
 for k = 0:K-1
     ii = k+1;    
     % construct linearisation point states
-    m_k = ((K-k-1)/(K-1))*m0 + (k/(K-1))*mf;
-    dq_k = q(:,ii);
+%     m_k = ((K-k-1)/(K-1))*m0 + (k/(K-1))*mf;
+%     r_k = ((K-k-1)/(K-1))*r0 + (k/(K-1))*rf;
+%     dq_k = Q2DQ(dq0(1:4),r_k,2);
+%     dw_k = ((K-k-1)/(K-1)).*w0 + (k/(K-1)).*wf;
+%     F = -(m_k*quat_trans(dq_k(1:4),g,'vect'))';
+%     dF_k = [F;0;cross(r_F',F')';0];
+%     dFdot_k = zeros(8,1);
+    
+    m_k = a(1,ii);
+    r_k = a(2:4,ii);
+    q_k = a(8:11,ii);
+    dq_k = Q2DQ(q_k,r_k,2);
+    v_k = a(5:7,ii);
+    v_k = quat_trans(q_k,v_k,'n');
+    w_k = a(12:14,ii);
     dw_k = ((K-k-1)/(K-1)).*w0 + (k/(K-1)).*wf;
     F = -(m_k*quat_trans(dq_k(1:4),g,'vect'))';
     dF_k = [F;0;cross(r_F',F')';0];
     dFdot_k = zeros(8,1);
     
-    if Switch.constant_grav_on==1
-        F_GG_k = [m_k.*g;0;0;0;0;0];
-    else
-        [g_B, T_GG_B] = Get_grav(dq_k,Kleopatra);
-        F_GG_k = [m_k.*g_B;0;T_GG_B;0];
-    end
-    
     wa = quat_trans(dq_k(1:4),w_ai,'n');
     wa = [wa;0;0;0;0];
     Wa = omega_tensor(wa,4);
-    
-    R = [0;0;0;0;DQ2R(dq_k,dq_form)];
     
     x_k  = [m_k;dq_k;dw_k;dF_k;dFdot_k];
     ITR.x_k{1}(:,ii) = x_k;
@@ -81,11 +87,9 @@ for k = 0:K-1
         % construct linearisation point state differential
         mdot_k = -alpha0*norm(dF_k(1:4));
         dqdot_k = 1/2.*(omega_tensor(dw_k,3)*dq_k);
-%         dwdot_k = J_inv_k*(dF_k - omega_tensor((dw_k+wa),4)*(J_k*(dw_k+wa)) - J_k*(Wa*dw_k) - J_k*(Wa*(Wa*R)));
         gb = quat_trans(dq_k(1:4),g,'n');
         dwdot_k = J_inv_k*(dF_k - omega_tensor(dw_k,4)*(J_k*dw_k) + [m_k.*gb;0;0;0;0]);
-%         Fdot_k = mdot_k.*g;
-%         dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
+
         xdot_k = [mdot_k;dqdot_k;dwdot_k;dFdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;
     end

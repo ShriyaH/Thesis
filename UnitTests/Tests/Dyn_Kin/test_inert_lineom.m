@@ -3,7 +3,7 @@ function [tspan,tode4,y] = test_inert_lineom(I,m,x,v,q,w,Th,Th_dot,g,tl,yl,q_ine
 global k
 I_inv = inv(I);
 alpha0 = 0.1;
-r_T = [0;0;-1];
+r_T = [-1;0;0];
 
 %% Integrator
 y0 = [m;x;v;q;w;Th;Th_dot];
@@ -37,7 +37,7 @@ function dy = orb_int(t,y)
     vdot_k = (C_k*T_k)./m_k + g;
     qdot_k = 1/2.*(omega_tensor(w_k,2)*q_k);
     wdot_k = I_inv*(cross(r_T',T_k')' - cross(w_k, (I*w_k)));
-    Tdot_k = g*mdot_k;
+%     Tdot_k = g*mdot_k;
     u_k = zeros(3,1);
    
     xdot_k = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k]; 
@@ -82,42 +82,42 @@ if q_inert == 1
     legend('mass','Location','northeastoutside');
     title('m (Linearised Dynamics)');
     grid on
-    print -depsc mass_lin
+    %print -depsc mass_lin
     
     figure()
-    comet3(y(:,2),y(:,3),y(:,4));
+    comet3(y(:,3),y(:,4),y(:,2));
     hold on
     xlabel('X (m)');
     ylabel('Y (m)');
     zlabel('Z (m)');
     grid on
-    print -depsc orb_lin
+    %print -depsc orb_lin
 
     figure()
-    plot(tspan,y(:,2),'Linewidth',2); 
+    plot(tspan,y(:,3),'Linewidth',2); 
     hold on
     goodplot()
-    plot(tspan,y(:,3),'Linewidth',2); 
-    plot(tspan,y(:,4),'Linewidth',2);
+    plot(tspan,y(:,4),'Linewidth',2); 
+    plot(tspan,y(:,2),'Linewidth',2);
     xlabel('Time (s)');
     ylabel('Position (m)');
-    legend('X_x','X_y','X_z','Location','northeastoutside');
+    legend('Up','East','North','Location','northeastoutside');
     title('r^I (Linearised Dynamics)');
     grid on
-    print -depsc pos_lin
+    %print -depsc pos_lin
     
     figure()
-    plot(tspan,y(:,5),'Linewidth',2); 
+    plot(tspan,y(:,6),'Linewidth',2); 
     hold on
     goodplot()
-    plot(tspan,y(:,6),'Linewidth',2); 
-    plot(tspan,y(:,7),'Linewidth',2);
+    plot(tspan,y(:,7),'Linewidth',2); 
+    plot(tspan,y(:,5),'Linewidth',2);
     xlabel('Time (s)');
     ylabel('Velocity (m/s)');
     legend('v_x','v_y','v_z','Location','northeastoutside');
     title('v^I_{B/I} (Linearised Dynamics)');
     grid on
-    print -depsc vel_lin
+    %print -depsc vel_lin
 
     figure()
     plot(tspan,y(:,8),'Linewidth',2); 
@@ -131,45 +131,45 @@ if q_inert == 1
     legend('q_1','q_2','q_3','q_4','Location','northeastoutside');
     title('q_{B/I} (Linearised Dynamics)');
     grid on
-    print -depsc qBI_lin
+    %print -depsc qBI_lin
 
     figure()
-    plot(tspan,y(:,12),'Linewidth',2); 
+    plot(tspan,y(:,13),'Linewidth',2); 
     hold on
     goodplot()
-    plot(tspan,y(:,13),'Linewidth',2); 
-    plot(tspan,y(:,14),'Linewidth',2);
+    plot(tspan,y(:,14),'Linewidth',2); 
+    plot(tspan,y(:,15),'Linewidth',2);
     xlabel('Time (s)');
     ylabel('Omega (rad/s)');
     legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
     title('\omega^B_{B/I} (Linearised Dynamics)');
     grid on
-    print -depsc omega_lin
+    %print -depsc omega_lin
 
     figure()
-    plot(tspan,y(:,15),'Linewidth',2); 
+    plot(tspan,y(:,16),'Linewidth',2); 
     hold on
     goodplot()
-    plot(tspan,y(:,16),'Linewidth',2); 
-    plot(tspan,y(:,17),'Linewidth',2);
+    plot(tspan,y(:,17),'Linewidth',2); 
+    plot(tspan,y(:,15),'Linewidth',2);
     xlabel('Time (s)');
     ylabel('Thrust Components');
     legend('T_1','T_2','T_3','Location','northeastoutside');
     title('T_B (Linearised Dynamics)');
     grid on
-    print -depsc T_B_lin
+    %print -depsc T_B_lin
     
     figure()
-    plot(tspan,y(:,18),'Linewidth',2); 
+    plot(tspan,y(:,19),'Linewidth',2); 
     hold on
     goodplot()
-    plot(tspan,y(:,19),'Linewidth',2); 
-    plot(tspan,y(:,20),'Linewidth',2);
+    plot(tspan,y(:,20),'Linewidth',2); 
+    plot(tspan,y(:,18),'Linewidth',2);
     xlabel('Time (s)');
     ylabel('Thrust_dot Components');
     legend('dT_1','dT_2','dT_3','Location','northeastoutside');
     title('dT_B (Linearised Dynamics)');
     grid on
-    print -depsc dT_B_lin
+    %print -depsc dT_B_lin
 end
 end

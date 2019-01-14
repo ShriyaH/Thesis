@@ -22,7 +22,7 @@ for ii = 1:i
         C = Q2DCM(conj_quat(dq(1:4)));
         
         %get all positions
-        rr(4*ii-3:4*ii,k) = DQ2R(dq,2);
+        rr(4*ii-3:4*ii,k) = DQ2R(dq,1);
         
         %get torque norm
         F(ii,k) = norm(x(18:20,k));
