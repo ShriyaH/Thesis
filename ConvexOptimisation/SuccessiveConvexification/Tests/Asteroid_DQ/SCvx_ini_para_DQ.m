@@ -204,7 +204,7 @@ h = [];
 
 %Linear constraints of the form Gx <= h
 
-if Switch.mass_lower_boundary_on % m_k <= m_dry
+if Switch.mass_lower_boundary_on %  -m_dry<= -m_k
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
@@ -220,7 +220,7 @@ if Switch.mass_lower_boundary_on % m_k <= m_dry
         
 end
 
-if Switch.mass_lower_boundary_on % m_k <= m_dry
+if Switch.mass_upper_boundary_on % m_k <= m_wet
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     

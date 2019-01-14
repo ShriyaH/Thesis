@@ -50,9 +50,11 @@ for k = 0:K-1
     v_k = ((K-k-1)/(K-1))*v0 + (k/(K-1))*vf;
     q_k = [0 0 0 1]';
     w_k = zeros(3,1);
-    C_k =  Q2DCM(conj_quat(q_k));  
-    T_k = -(m_k*quat_trans(q_k,g,'vect'))';
-    Tdot_k = zeros(3,1);
+    C_k =  Q2DCM(conj_quat(q_k)); 
+    gb = quat_trans(q_k,g,'vect')';
+    T_k = -(m_k*gb);
+%     Tdot_k = zeros(3,1);
+    Tdot_k = -alpha0*norm(T_k)*gb;
     
     x_k  = [m_k;r_k;v_k;q_k;w_k;T_k;Tdot_k];
     ITR.x_k{1}(:,ii) = x_k;
@@ -67,7 +69,7 @@ for k = 0:K-1
         vdot_k = (C_k*T_k)./m_k + g';
         qdot_k = 1/2.*(omega_tensor(w_k,2)*q_k);
         wdot_k = inv(J)*(cross(r_T',T_k')' - cross(w_k, (J*w_k)));
-        Tdot_k = mdot_k.*g';
+%         Tdot_k = mdot_k.*g';
 
         xdot_k = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;

@@ -25,13 +25,16 @@ mf = CONSTANTS.xf(1);
 dq0 = CONSTANTS.x0(2:9);
 dqf = CONSTANTS.xf(2:9);
 
-w0 = CONSTANTS.x0(10:17);
-wf = CONSTANTS.xf(10:17);
+w0 = CONSTANTS.x0(10:12);
+wf = CONSTANTS.xf(10:12);
+
+v0 = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.x0(14:17),'vect')';
+vf = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.xf(14:17),'vect')'; 
 
 g = CONSTANTS.g; 
 w_ai = CONSTANTS.w_AI;
-r0 = DQ2R(dq0,2);
-rf = DQ2R(dqf,2);
+r0 = DQ2R(dq0,dq_form);
+rf = DQ2R(dqf,dq_form);
 % dq = ScLERP(dq0, dqf, ITR.t_k);
 
 ITR.x_k ={};
@@ -70,11 +73,16 @@ for k = 0:K-1
     % construct linearisation point states
     m_k = ((K-k-1)/(K-1))*m0 + (k/(K-1))*mf;
     r_k = ((K-k-1)/(K-1))*r0 + (k/(K-1))*rf;
-    dq_k = Q2DQ(dq0(1:4),r_k,2);
-    dw_k = ((K-k-1)/(K-1)).*w0 + (k/(K-1)).*wf;
-    F = -(m_k*quat_trans(dq_k(1:4),g,'vect'))';
+    dq_k = Q2DQ(dq0(1:4),r_k,dq_form);
+    v_k = ((K-k-1)/(K-1))*v0 + (k/(K-1))*vf;
+    v_k = quat_trans(dq_k(1:4),v_k,'n');
+    w_k = ((K-k-1)/(K-1))*w0 + (k/(K-1))*wf;
+    dw_k = [w_k;0;v_k];
+    gb = quat_trans(dq_k(1:4),g,'vect')';
+    F = -(m_k*gb);
     dF_k = [F;0;cross(r_F',F')';0];
-    dFdot_k = zeros(8,1);
+    Fdot_k = -alpha0*norm(dF_k(1:4))*gb;
+    dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
     
 %     m_k = sol_acik(1,ii);
 %     r_k = sol_acik(2:4,ii);
@@ -106,8 +114,7 @@ for k = 0:K-1
         % construct linearisation point state differential
         mdot_k = -alpha0*norm(dF_k(1:4));
         dqdot_k = 1/2.*(omega_tensor(dw_k,3)*dq_k);
-        gb = quat_trans(dq_k(1:4),g,'n');
-        dwdot_k = J_inv_k*(dF_k - omega_tensor(dw_k,4)*(J_k*dw_k) + [m_k.*gb;0;0;0;0]);
+        dwdot_k = J_inv_k*(dF_k - omega_tensor(dw_k,4)*(J_k*dw_k) + [m_k.*gb;0;0;0;0;0]);
 
         xdot_k = [mdot_k;dqdot_k;dwdot_k;dFdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;

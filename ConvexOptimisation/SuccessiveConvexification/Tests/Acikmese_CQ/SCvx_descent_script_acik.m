@@ -13,3 +13,5 @@ ini_models_acik;
 m_spent = xc1(1,1)-xc1(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])
 
+total_cpu_time1 = sum(cpu_time1);
+

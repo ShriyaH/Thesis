@@ -101,7 +101,6 @@ for k = 0:K-1
         Ac(12:14,:) = get_dwdot_inertial(w_k,J,r_T,ns);
         Ac(15:17,18:20) = eye(3);
 
-
         ITR.Ac_k{i}{ii} = Ac;
 
         Bc = zeros(ns,nc);

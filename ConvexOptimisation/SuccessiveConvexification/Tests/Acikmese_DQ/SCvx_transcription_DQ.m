@@ -23,12 +23,12 @@ ITR.S{1} = 0;
 ITR.ETA{1} = 0;
 
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',50);
+opts = ecosoptimset('MAXIT',500);
 % opts = ecosoptimset();
 i = 1;
 count = 1;
 
- while count < 10
+ while count < CONSTANTS.i_max
     count = i;
     
     [A,b,G,h,C,dims] = SCvx_ini_para_DQ(i);

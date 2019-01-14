@@ -15,13 +15,13 @@ Switch.Q_rel = 0;
 Switch.DQ = 0;
 Switch.DOF6 = 1;
 Switch.DOF6_lin = 0;
-Switch.DOF6_lin_DQ = 1;
+Switch.DOF6_lin_DQ = 0;
 Switch.SCvx.check = 0;
 
 %% Plot
 Switch.Q_plots = 1;
 Switch.convert_q = 0;
-Switch.q_inert = 1;
+Switch.q_inert = 0;
 Switch.kepler_el = 0;
 Switch.kepler_n= 0;
 Switch.err = 0;
@@ -45,9 +45,9 @@ elseif Switch.DOF6 || Switch.DOF6_lin || Switch.DOF6_lin_DQ
     g = CONSTANTS.g;
     x_I = [2; 1; 0];
     v_I = [-1; 0.2; 0]; 
-    q_BI =[0.8;0.7;0.8;0.9];
+    q_BI =[0;0;0;1];
     q_BI = q_BI./norm(q_BI);
-    w_BI = [3e-5; 0; 0]; 
+    w_BI = [0; 0; 0]; 
     Th_B = [2; 0; 0];
     Th_dot_B = [0;0;0];
     I = 0.5.*eye(3);

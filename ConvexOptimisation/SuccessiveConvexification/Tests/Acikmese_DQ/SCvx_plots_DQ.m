@@ -22,7 +22,7 @@ for ii = 1:i
         C = Q2DCM(conj_quat(dq(1:4)));
         
         %get all positions
-        rr(4*ii-3:4*ii,k) = DQ2R(dq,1);
+        rr(4*ii-3:4*ii,k) = DQ2R(dq,dq_form);
         
         %get torque norm
         F(ii,k) = norm(x(18:20,k));
@@ -48,7 +48,7 @@ for ii = 1:i
         Gs(ii,k) = rad2deg(atan(rr(4*ii-3,k)/norm(rr(4*ii-2:4*ii-1,k))));
         
         %get angular rate
-        vec2(3*ii-2:3*ii,k) = C*x(10:12,k);
+        vec2(3*ii-2:3*ii,k) = x(10:12,k);
         if vec2(3*ii,k) < 0 
             w(ii,k) = -rad2deg(norm(x(10:12,k)));
         else
@@ -272,7 +272,7 @@ y = [0.3766,0.06019,0.02056,0.004083,0.002399,0.001018,...
 figure()
 plot(1:i-1,diff(1:i-1),'Marker','.','Color','b')
 hold on
-plot(1:i-1,y,'Marker','.', 'Color', 'r')
+plot(1:10,y,'Marker','.', 'Color', 'r')
 xlabel('Iterations')
 ylabel('Difference in Mass Spent')
 set(gca, 'YScale', 'log')
@@ -286,7 +286,7 @@ y = [3925,2372,1127,866,523,195.7,...
 figure()
 plot(0:i-1,eta_n,'Marker','.','Color','b')
 hold on
-plot(1:i-1,y,'Marker','.', 'Color', 'r')
+plot(1:10,y,'Marker','.', 'Color', 'r')
 xlabel('Iterations')
 ylabel('Trust Region')
 set(gca, 'YScale', 'log')
@@ -300,7 +300,7 @@ y = [0.0509,0.00648,0.00515,0.002061,0.001037,1.075e-6,...
 figure()
 plot(0:i-1,v_n,'Marker','.','Color','b')
 hold on
-plot(1:i-1,y,'Marker','.', 'Color', 'r')
+plot(1:10,y,'Marker','.', 'Color', 'r')
 xlabel('Iterations')
 ylabel('Dynamic Relaxation')
 set(gca, 'YScale', 'log')

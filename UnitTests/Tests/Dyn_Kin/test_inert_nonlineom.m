@@ -40,14 +40,14 @@ function dY = orb_int(t,Y)
     ww = Y(12:14,1);
     W = omega_tensor(ww,2);
     T = Y(15:17,1);
-    Tdot_k = Y(18:20,1);
+%     Tdot_k = Y(18:20,1);
     
     mdot_k = -alpha0.*norm(T);
     rdot_k = vv;
     vdot_k = C*T./mm + g;
     qdot_k = 0.5*W*qq;
     wdot_k = I_inv*(cross(r_T',T)' - cross(ww, (I*ww)));
-%     Tdot_k = g.*mdot_k;
+    Tdot_k = -g.*mdot_k;
     u_k = [0;0;0];
     
     dY = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k]  ;  
@@ -227,81 +227,6 @@ if Switch.Q_plots
 %     print -depsc T_B_nlin
 
     figure()
-    comet3(y(:,3),y(:,4),y(:,2));
-    hold on
-    xlabel('X (m)');
-    ylabel('Y (m)');
-    zlabel('Z (m)');
-    grid on
-%     print -depsc orb_nlin
-    
-    figure()
-    plot(t,y(:,3),'Linewidth',2); 
-    hold on
-    goodplot()
-    plot(t,y(:,4),'Linewidth',2); 
-    plot(t,y(:,2),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Position (m)');
-    legend('Up','East','North','Location','northeastoutside');
-    title('r^I (Non-Linear Dynamics)');
-    grid on
-%     print -depsc pos_nlin
-%     
-    figure()
-    plot(t,y(:,6),'Linewidth',2); 
-    hold on
-    goodplot()
-    plot(t,y(:,7),'Linewidth',2); 
-    plot(t,y(:,5),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Velocity (m/s)');
-    legend('v_x','v_y','v_z','Location','northeastoutside');
-    title('v^I_{B/I} (Non-Linear Dynamics)');
-    grid on
-%     print -depsc vel_nlin
-% 
-    figure()
-    plot(t,y(:,8),'Linewidth',2); 
-    hold on
-    goodplot()
-    plot(t,y(:,9),'Linewidth',2); 
-    plot(t,y(:,10),'Linewidth',2);
-    plot(t,y(:,11),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Quat. Components');
-    legend('q_1','q_2','q_3','q_4','Location','northeastoutside');
-    title('q_{B/I} (Non-Linear Dynamics)');
-    grid on
-%     print -depsc qBI_nlin
-% 
-    figure()
-    plot(t,y(:,13),'Linewidth',2); 
-    hold on
-    goodplot()
-    plot(t,y(:,14),'Linewidth',2); 
-    plot(t,y(:,12),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Omega (rad/s)');
-    legend('\omega_x','\omega_y','\omega_z','Location','northeastoutside');
-    title('\omega^B_{B/I} (Non-Linear Dynamics)');
-    grid on
-%     print -depsc omega_nlin
-% 
-    figure()
-    plot(t,y(:,16),'Linewidth',2); 
-    hold on
-    goodplot()
-    plot(t,y(:,17),'Linewidth',2); 
-    plot(t,y(:,15),'Linewidth',2);
-    xlabel('Time (s)');
-    ylabel('Thrust Components');
-    legend('T_1','T_2','T_3','Location','northeastoutside');
-    title('T_B (Non-Linear Dynamics)');
-    grid on
-%     print -depsc T_B_nlin
-%     
-    figure()
     plot(t,y(:,18),'Linewidth',2); 
     hold on
     goodplot()
@@ -313,5 +238,14 @@ if Switch.Q_plots
     title('dT_B (Non-Linear Dynamics)');
     grid on
 %     print -depsc dT_B_nlin
+
+    figure()
+    comet3(y(:,3),y(:,4),y(:,2));
+    hold on
+    xlabel('X (m)');
+    ylabel('Y (m)');
+    zlabel('Z (m)');
+    grid on
+%     print -depsc orb_nlin
 end
 end

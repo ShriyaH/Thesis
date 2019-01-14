@@ -47,7 +47,7 @@ for ii = 1:i
         Gs(ii,k) = rad2deg(atan(x(2,k)/norm(x(3:4,k))));
         
         %get angular rate
-        vec2(3*ii-2:3*ii,k) = C*x(12:14,k);
+        vec2(3*ii-2:3*ii,k) = x(12:14,k);
         if vec2(3*ii,k) < 0 
             w(ii,k) = -rad2deg(norm(x(12:14,k)));
         else

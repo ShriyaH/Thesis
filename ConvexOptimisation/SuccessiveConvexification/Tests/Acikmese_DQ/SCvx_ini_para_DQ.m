@@ -204,7 +204,7 @@ h = [];
 
 %Linear constraints of the form Gx <= h
 
-if Switch.mass_lower_boundary_on % m_k <= m_dry
+if Switch.mass_lower_boundary_on % -m_k <= -m_dry
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
@@ -220,7 +220,7 @@ if Switch.mass_lower_boundary_on % m_k <= m_dry
         
 end
 
-if Switch.mass_lower_boundary_on % m_k <= m_dry
+if Switch.mass_lower_boundary_on % m_k <= m_wet
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
@@ -236,7 +236,7 @@ if Switch.mass_lower_boundary_on % m_k <= m_dry
         
 end
 
-if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + T_sol_k'/||T_sol_k||_2 (T_k - T_sol_k)
+if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + F_sol_k'/||F_sol_k||_2 (F_k - F_sol_k)
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     

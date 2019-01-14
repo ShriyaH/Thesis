@@ -13,3 +13,5 @@ ini_models_DQ;
 m_spent = xc(1,1)-xc(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])
 
+total_cpu_time = sum(cpu_time);
+
