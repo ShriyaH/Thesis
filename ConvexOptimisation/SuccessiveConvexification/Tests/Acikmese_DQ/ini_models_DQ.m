@@ -66,8 +66,8 @@ CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 20;
-CONSTANTS.w_tr = 0.05;
+CONSTANTS.w_vc = 67;
+CONSTANTS.w_tr = 0.1;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
 
