@@ -20,8 +20,8 @@ pd_Fg = [gb;0;0;0;0];
 
 c = omega_tensor(dw,4);
 
-d1 = pd_dJ_inv*(dF - c*(dJ*dw) + [m.*gb;0;0;0;0]) + dJ_inv*(- c*(pd_dJ*dw) + pd_Fg);
-
+d1 = pd_dJ_inv*(dF - c*(dJ*dw) + [m.*gb;0;0;0;0]) + dJ_inv*(- c*(pd_dJ*dw)+ pd_Fg);
+ 
 %partial derivative with respect to DQ
 e = omega_tensor(dJ*dw,4);
 

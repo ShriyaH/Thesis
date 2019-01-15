@@ -83,7 +83,7 @@ for k = 0:K-1
     dF_k = [F;0;cross(r_F',F')';0];
     Fdot_k = -alpha0*norm(dF_k(1:4))*gb;
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
-    
+%     
 %     m_k = sol_acik(1,ii);
 %     r_k = sol_acik(2:4,ii);
 %     q_k = sol_acik(8:11,ii);
@@ -95,7 +95,8 @@ for k = 0:K-1
 %     F = sol_acik(15:17,ii);
 %     dF_k = [F;0;cross(r_F',F')';0];
 %     dFdot_k = [sol_acik(18:20,ii);0;0;0;0;0];
-    
+%     gb = quat_trans(dq_k(1:4),g,'vect')';
+
     wa = quat_trans(dq_k(1:4),w_ai,'n');
     wa = [wa;0;0;0;0];
     Wa = omega_tensor(wa,4);
