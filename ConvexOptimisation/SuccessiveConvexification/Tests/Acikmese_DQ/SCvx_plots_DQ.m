@@ -18,7 +18,7 @@ Legend = cell(i+2,1);
 for ii = 1:i
     for k = 1:length(t)
         x = ITR.x_k{ii}; 
-        dq = x(2:9,k)./norm(x(2:9,k));
+        dq = norm_dq(x(2:9,k));
         C = Q2DCM(conj_quat(dq(1:4)));
         
         %get all positions
@@ -97,7 +97,7 @@ set(gca, 'YScale', 'log')
 axis([1 i-1 10e-10 10e0])
 grid on
 
-%plot difference in converged state
+%plot difference in converged virtual controls
 figure()
 plot(1:i-1,state_conv(1:i-1),'Marker','o')
 xlabel('Iterations')

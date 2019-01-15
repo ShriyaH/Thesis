@@ -15,3 +15,5 @@ disp(['mass spent: ',num2str(m_spent),' kg'])
 
 total_cpu_time = sum(cpu_time);
 
+save('acik_DQ')
+

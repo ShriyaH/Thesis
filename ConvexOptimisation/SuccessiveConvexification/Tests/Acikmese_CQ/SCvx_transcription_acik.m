@@ -116,7 +116,7 @@ count = 1;
     i = i+1           
 
  end
-acik_plots(i); 
+% acik_plots(i); 
 end
 
 

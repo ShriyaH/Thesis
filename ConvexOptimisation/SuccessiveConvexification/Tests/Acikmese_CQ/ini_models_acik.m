@@ -44,7 +44,8 @@ CONSTANTS.tol = 0;
 %penalty weights
 CONSTANTS.w_vc = 136; %no angular constraints
 % CONSTANTS.w_vc = 145; %10/15 max itr
-CONSTANTS.w_tr = 0.05;
+CONSTANTS.w_vc = 200; %10/15 max itr
+CONSTANTS.w_tr = 1;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
 

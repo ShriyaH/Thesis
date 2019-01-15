@@ -105,7 +105,7 @@ ylabel('Difference in Converged State')
 % axis([1 i-1 10e-10 10e0])
 grid on
 
-%plot difference in converged state
+%plot difference in converged virtual controls
 figure()
 plot(1:i-1,virt_cont(1:i-1),'Marker','o')
 xlabel('Iterations')
