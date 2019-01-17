@@ -1,4 +1,4 @@
-function [] = SCvx_CQ_DQ(i)
+function [] = SCvx_CQ_DQ_plots(i)
 %% Compare with CQ plots
 load('acik_DQ.mat')
 t = ITR.t_k;
@@ -50,9 +50,9 @@ for ii = 1:i
         %get angular rate
         vec2(3*ii-2:3*ii,k) = x(10:12,k);
         if vec2(3*ii,k) < 0 
-            w(ii,k) = -rad2deg(norm(x(10:12,k)));
+            w(ii,k) = -rad2deg(norm(x(10:13,k)));
         else
-            w(ii,k) = rad2deg(norm(x(10:12,k)));
+            w(ii,k) = rad2deg(norm(x(10:13,k)));
         end
         
         if ii < i

@@ -1,0 +1,63 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+    \begin{tikzpicture}
+
+    \begin{axis}[%
+    width=5.067in,
+    height=4.754in,
+    at={(0.85in,0.642in)},
+    scale only axis,
+    xmin=1,
+    xmax=10,
+    xlabel style={font=\color{white!15!black}},
+    xlabel={Iterations},
+    ymode=log,
+    ymin=1e-09,
+    ymax=10,
+    yminorticks=true,
+    ylabel style={font=\color{white!15!black}},
+    ylabel={Trust Region},
+    axis background/.style={fill=white},
+    xmajorgrids,
+    ymajorgrids,
+    yminorgrids,
+    legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}
+    ]
+    \addplot [color=blue, mark=*, mark options={solid, blue}]
+      table[row sep=crcr]{%
+    0	0\\
+    1	1.28338095676133\\
+    2	0.101946230693645\\
+    3	0.0381807865202476\\
+    4	0.020029781068299\\
+    5	0.0113464740044665\\
+    6	0.00694072354696546\\
+    7	0.00419689925670604\\
+    8	0.002408896764166\\
+    9	0.00160039486234709\\
+    10	0.00109789916623309\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{DQ}}$}
+
+    \addplot [color=red, mark=*, mark options={solid, red}]
+      table[row sep=crcr]{%
+    0	0\\
+    1	1.11997736454771\\
+    2	0.123333342136348\\
+    3	0.060831115867726\\
+    4	0.0391796592092463\\
+    5	0.0254209110587722\\
+    6	0.0164238192078995\\
+    7	0.0107600946346775\\
+    8	0.00646253166771697\\
+    9	0.00312480191604188\\
+    10	0.0019386351387739\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{CQ}}$}
+
+    \end{axis}
+    \end{tikzpicture}%

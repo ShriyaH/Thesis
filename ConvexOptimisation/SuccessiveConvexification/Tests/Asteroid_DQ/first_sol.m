@@ -1,4 +1,4 @@
-function [] = first_sol_DQ()
+function [] = first_sol()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 global ITR CONSTANTS Switch Kleopatra;

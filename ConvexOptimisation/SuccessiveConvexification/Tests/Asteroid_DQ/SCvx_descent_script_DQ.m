@@ -6,7 +6,7 @@ clc;
 close all; 
 
 global ITR CONSTANTS;
-ini_models_DQ;
+Initialize_models;
 
 [xc,uc,xdotc,cpu_time,status] = SCvx_transcription_DQ();
 

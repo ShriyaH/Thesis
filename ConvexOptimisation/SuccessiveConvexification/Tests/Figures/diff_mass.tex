@@ -1,0 +1,61 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+    \begin{tikzpicture}
+
+    \begin{axis}[%
+    width=5.067in,
+    height=4.754in,
+    at={(0.85in,0.642in)},
+    scale only axis,
+    xmin=1,
+    xmax=10,
+    xlabel style={font=\color{white!15!black}},
+    xlabel={Iterations},
+    ymode=log,
+    ymin=1e-19,
+    ymax=10,
+    yminorticks=true,
+    ylabel style={font=\color{white!15!black}},
+    ylabel={Difference in Mass Spent},
+    axis background/.style={fill=white},
+    xmajorgrids,
+    ymajorgrids,
+    yminorgrids,
+    legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}
+    ]
+    \addplot [color=blue, mark=*, mark options={solid, blue}]
+      table[row sep=crcr]{%
+    1	0.36187291973843\\
+    2	0.0151948075895634\\
+    3	0.00555963582903063\\
+    4	0.00358543733539607\\
+    5	0.00334770525952788\\
+    6	0.0028149045289072\\
+    7	0.00230610296099121\\
+    8	0.00179584992011184\\
+    9	0.000973659273258098\\
+    10	0.000393292361292596\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{DQ}}$}
+
+    \addplot [color=red, mark=*, mark options={solid, red}]
+      table[row sep=crcr]{%
+    1	0.357183689252071\\
+    2	0.0318235602906818\\
+    3	0.00294761851462511\\
+    4	0.00198576513650139\\
+    5	0.00249282613280943\\
+    6	0.00181942627856402\\
+    7	0.000841990230833867\\
+    8	4.62385739996574e-05\\
+    9	0.000604740172496676\\
+    10	0.000395822981242855\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{CQ}}$}
+
+    \end{axis}
+    \end{tikzpicture}%

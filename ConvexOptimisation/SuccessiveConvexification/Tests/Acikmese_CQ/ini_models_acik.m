@@ -42,7 +42,7 @@ CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 136; %no angular constraints
+% CONSTANTS.w_vc = 136; %no angular constraints
 % CONSTANTS.w_vc = 145; %10/15 max itr
 CONSTANTS.w_vc = 200; %10/15 max itr
 CONSTANTS.w_tr = 1;

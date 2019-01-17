@@ -1,0 +1,58 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+    \begin{tikzpicture}
+
+    \begin{axis}[%
+    width=5.067in,
+    height=4.754in,
+    at={(0.85in,0.642in)},
+    scale only axis,
+    xmin=1,
+    xmax=10,
+    xlabel style={font=\color{white!15!black}},
+    xlabel={Iterations},
+    ymin=0,
+    ymax=0.6,
+    ylabel style={font=\color{white!15!black}},
+    ylabel={Virtual Controls Norm},
+    axis background/.style={fill=white},
+    xmajorgrids,
+    ymajorgrids,
+    legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}
+    ]
+    \addplot [color=blue, mark=*, mark options={solid, blue}]
+      table[row sep=crcr]{%
+    1	0.359011148320397\\
+    2	0.30034152093343\\
+    3	0.278138333783631\\
+    4	0.265689292475542\\
+    5	0.258516833943211\\
+    6	0.253603820286603\\
+    7	0.25010400995675\\
+    8	0.247873512522475\\
+    9	0.246159239333593\\
+    10	0.244810223814859\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{DQ}}$}
+
+    \addplot [color=red, mark=*, mark options={solid, red}]
+      table[row sep=crcr]{%
+    1	0.545856553355508\\
+    2	0.46535583837179\\
+    3	0.435033834753969\\
+    4	0.414590358246704\\
+    5	0.399060664948925\\
+    6	0.387427955553168\\
+    7	0.378546156046183\\
+    8	0.372409323454568\\
+    9	0.370234442007997\\
+    10	0.368662452035282\\
+    };
+    \addlegendentry{$\text{SCvx}_{\text{CQ}}$}
+
+    \end{axis}
+    \end{tikzpicture}%

@@ -1,0 +1,60 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=5.067in,
+height=4.754in,
+at={(0.85in,0.642in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymin=0.8,
+ymax=1.3,
+ylabel style={font=\color{white!15!black}},
+ylabel={Mass Spent},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+1	1.25\\
+2	0.903321887851599\\
+3	0.893686716089874\\
+4	0.89171251759176\\
+5	0.891474785518229\\
+6	0.89094198478858\\
+7	0.890433183218336\\
+8	0.889922930183199\\
+9	0.889100739534779\\
+10	0.88852037262034\\
+11	0.888127080256533\\
+};
+\addlegendentry{$\text{SCvx}_{\text{DQ}}$}
+
+\addplot [color=red, mark=*, mark options={solid, red}]
+  table[row sep=crcr]{%
+1	1.25\\
+2	0.92463987102879\\
+3	0.895763929253681\\
+4	0.890830545608649\\
+5	0.890323484611362\\
+6	0.890996884466632\\
+7	0.891974320511938\\
+8	0.892862549319322\\
+9	0.893421050918669\\
+10	0.893212133722107\\
+11	0.892816310740021\\
+};
+\addlegendentry{$\text{SCvx}_{\text{CQ}}$}
+
+\end{axis}
+\end{tikzpicture}%
