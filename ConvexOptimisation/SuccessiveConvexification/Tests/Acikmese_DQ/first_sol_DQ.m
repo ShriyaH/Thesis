@@ -1,7 +1,7 @@
 function [] = first_sol_DQ()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
-global ITR CONSTANTS Switch Kleopatra;
+global ITR CONSTANTS;
 
 K = CONSTANTS.nodes;
 alpha0 =  CONSTANTS.alpha0;
@@ -32,7 +32,6 @@ v0 = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.x0(14:17),'vect')';
 vf = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.xf(14:17),'vect')'; 
 
 g = CONSTANTS.g; 
-w_ai = CONSTANTS.w_AI;
 r0 = DQ2R(dq0,dq_form);
 rf = DQ2R(dqf,dq_form);
 % dq = ScLERP(dq0, dqf, ITR.t_k);
@@ -83,7 +82,7 @@ for k = 0:K-1
     dF_k = [F;0;cross(r_F',F')';0];
     Fdot_k = -alpha0*norm(dF_k(1:4))*gb;
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
-%     
+     
 %     m_k = sol_acik(1,ii);
 %     r_k = sol_acik(2:4,ii);
 %     q_k = sol_acik(8:11,ii);
@@ -96,10 +95,6 @@ for k = 0:K-1
 %     dF_k = [F;0;cross(r_F',F')';0];
 %     dFdot_k = [sol_acik(18:20,ii);0;0;0;0;0];
 %     gb = quat_trans(dq_k(1:4),g,'vect')';
-
-    wa = quat_trans(dq_k(1:4),w_ai,'n');
-    wa = [wa;0;0;0;0];
-    Wa = omega_tensor(wa,4);
     
     x_k  = [m_k;dq_k;dw_k;dF_k;dFdot_k];
     ITR.x_k{1}(:,ii) = x_k;

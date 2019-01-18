@@ -1,4 +1,4 @@
-function [A,b,G,h,C,dims] = SCvx_ini_para_DQ(i,Asteroid)
+function [A,b,G,h,C,dims] = SCvx_ini_para(i,Asteroid)
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 
@@ -24,9 +24,7 @@ xf = CONSTANTS.xf;
 m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
-wa = CONSTANTS.w_AI;
-%considering constant gravitational field
-
+wa = CONSTANTS.dw_AI;
 w_vc = CONSTANTS.w_vc;
 ITR.w_tr{1} = CONSTANTS.w_tr;
 
@@ -96,8 +94,10 @@ for k = 0:K-1
         % construct continuous-time matrices at linearisation point
         Ac = zeros(ns,ns);
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
-        Ac(2:9,:) = get_dDQdot(dw_k,dq_k,ns);
-        Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,r_F,ns,Asteroid);
+%         Ac(2:9,:) = get_dDQdot(dw_k,dq_k,ns);
+%         Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,r_F,ns);
+        Ac(2:9,:) = get_dQdot(dw_k,dq_k,ns);
+        Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns,Asteroid);
         Ac(18:25,26:33) = eye(8);
 
 
@@ -204,7 +204,7 @@ h = [];
 
 %Linear constraints of the form Gx <= h
 
-if Switch.mass_lower_boundary_on %  -m_dry<= -m_k
+if Switch.mass_lower_boundary_on % -m_k <= -m_dry
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
@@ -220,7 +220,7 @@ if Switch.mass_lower_boundary_on %  -m_dry<= -m_k
         
 end
 
-if Switch.mass_upper_boundary_on % m_k <= m_wet
+if Switch.mass_lower_boundary_on % m_k <= m_wet
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     
@@ -236,7 +236,7 @@ if Switch.mass_upper_boundary_on % m_k <= m_wet
         
 end
 
-if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + T_sol_k'/||T_sol_k||_2 (T_k - T_sol_k)
+if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + F_sol_k'/||F_sol_k||_2 (F_k - F_sol_k)
     Gt = zeros(K,K*n+2);
     ht = zeros(K,1);
     

@@ -1,7 +1,7 @@
-function [] = first_sol(Asteroid)
+function [] = first_sol()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
-global ITR CONSTANTS Switch;
+global ITR CONSTANTS Switch Kleopatra;
 
 K = CONSTANTS.nodes;
 alpha0 =  CONSTANTS.alpha0;
@@ -25,16 +25,10 @@ mf = CONSTANTS.xf(1);
 dq0 = CONSTANTS.x0(2:9);
 dqf = CONSTANTS.xf(2:9);
 
-w0 = CONSTANTS.x0(10:12);
-wf = CONSTANTS.xf(10:12);
+w0 = CONSTANTS.x0(10:17);
+wf = CONSTANTS.xf(10:17);
 
-v0 = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.x0(14:17),'vect')';
-vf = quat_trans(conj_quat(dq0(1:4)),CONSTANTS.xf(14:17),'vect')'; 
-
-r0 = DQ2R(dq0,dq_form);
-rf = DQ2R(dqf,dq_form);
-
-dwa = CONSTANTS.dw_AI;
+w_ai = CONSTANTS.w_AI;
 q = ScLERP(dq0, dqf, ITR.t_k);
 
 ITR.x_k ={};
@@ -52,6 +46,15 @@ ITR.eta_k = {};
 for k = 0:K-1
     ii = k+1;  
     
+    if Switch.constant_grav_on==1
+        g = CONSTANTS.g; 
+        gb = quat_trans(dq_k(1:4),g,'n');
+        dFg_k = [m_k.*gb;0;0;0;0;0];
+    else
+        [gb, Tgb] = Get_grav(dq_k,Asteroid);
+        dFg_k = [m_k.*gb;0;Tgb;0];
+    end
+    
     % construct linearisation point states
     m_k = ((K-k-1)/(K-1))*m0 + (k/(K-1))*mf;
     r_k = ((K-k-1)/(K-1))*r0 + (k/(K-1))*rf;
@@ -60,23 +63,13 @@ for k = 0:K-1
     v_k = quat_trans(dq_k(1:4),v_k,'n');
     w_k = ((K-k-1)/(K-1))*w0 + (k/(K-1))*wf;
     dw_k = [w_k;0;v_k];
-    
-    if Switch.constant_grav==1
-        g = CONSTANTS.g; 
-        gb = quat_trans(dq_k(1:4),g,'vect')';
-        dFg_k = [m_k.*gb;0;0;0;0;0];
-    else
-        [gb, Tgb] = Get_grav(dq_k,Asteroid);
-        dFg_k = [m_k.*gb;0;Tgb;0];
-    end
-    
-    F = -(m_k.*gb);
+    F = -(m_k*gb);
     dF_k = [F;0;cross(r_F',F')';0];
-    Fdot_k = -alpha0.*norm(dF_k(1:4)).*gb;
+    Fdot_k = -alpha0*norm(dF_k(1:4))*gb;
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
     
-    wab = dq_trans(dq_k,dwa);
-    Wab = omega_tensor(wab,4);
+    wa = dq_trans(dq_k(1:4),w_ai,'n');
+    Wa = omega_tensor(wa,4);
     
     R = [0;0;0;0;DQ2R(dq_k,dq_form)];
     
@@ -94,7 +87,7 @@ for k = 0:K-1
         % construct linearisation point state differential
         mdot_k = -alpha0*norm(dF_k(1:4));
         dqdot_k = 1/2.*(omega_tensor(dw_k,3)*dq_k);
-        dwdot_k = J_inv_k*(dF_k + dFg_k - omega_tensor((dw_k+wab),4)*(J_k*(dw_k+wab)) - J_k*(Wab*dw_k) - J_k*(Wab*(Wab*R)));
+        dwdot_k = J_inv_k*(dF_k + dFg_k - omega_tensor((dw_k+wa),4)*(J_k*(dw_k+wa)) - J_k*(Wa*dw_k) - J_k*(Wa*(Wa*R)));
 
         xdot_k = [mdot_k;dqdot_k;dwdot_k;dFdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;

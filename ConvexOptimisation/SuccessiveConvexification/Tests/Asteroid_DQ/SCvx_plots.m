@@ -1,4 +1,4 @@
-function [] = SCvx_plots_DQ(i)
+function [] = SCvx_plots(i)
 global CONSTANTS ITR
 dq_form = CONSTANTS.dq_form;
 t = ITR.t_k;

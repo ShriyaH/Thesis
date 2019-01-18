@@ -1,12 +1,11 @@
-% function[] = Initialize_models
+function[] = Initialize_models()
 %%-----Initialize Models------%%
-
 % Change switch values to 0/1 for enabling respective parameters
 % Set Integrator initial and final times as required
-% Build asteroid model using required key names (Kleopatra,Kleopatra,Itokawa,Churyumov). For Cuboid Asteroid,input dimensions xyz.
+% Build Kleopatra model using required key names (Kleopatra,Kleopatra,Itokawa,Churyumov). For Cuboid Kleopatra,input dimensions xyz.
 % Build SC model using required key names (Rosetta,Osiris)
 
-global CONSTANTS Switch T Sun SC Samples Constraints Kleopatra
+global CONSTANTS PARAMS Switch T Sun SC Samples Constraints Kleopatra
 
 %% Astronomical Constants
 CONSTANTS.G = 6.67408e-11;       %gravitational constant
@@ -18,28 +17,29 @@ CONSTANTS.flux = 1361;           %sun flux 1AU, W/m2
 CONSTANTS.ge = 9.807;            %earth grav acc
 
 %% Dynamics controls
-Switch.constant_grav = 0;
+Switch.constant_grav = 1;
 Switch.SRP = 0;
 Switch.TBP = 0;
 Switch.GG = 0;
 Switch.Ast_rot = 0;
 Switch.Control = 0;
 Switch.Mapping =0;
-Switch.Descent = 0;
+Switch.Descent =1;
 
 %% SC Model
 [SC] = Get_SC( 'Rosetta' );                  %Get the SC polyhedron model and its properties
 
-%% Asteroid Model
-[Kleopatra] = Get_Asteroid('Kleopatra',1);   %Get the asteroid polyhedron and properties
+%% Kleopatra Model
+[Kleopatra] = Get_Asteroid('Kleopatra',1);   %Get the Kleopatra polyhedron and properties
 Kleopatra.n_lm = 20;                                %number of landmarks
-[Kleopatra.lm_coord,Kleopatra.lm_n,Kleopatra.lm_r] = Get_landmarks(Kleopatra,Kleopatra.n_lm);     %Get the landmarks on the asteroid surface
+[Kleopatra.lm_coord,Kleopatra.lm_n,Kleopatra.lm_r] = Get_landmarks(Kleopatra,Kleopatra.n_lm);     %Get the landmarks on the Kleopatra surface
 
-CONSTANTS.g = CONSTANTS.G*Kleopatra.mu;
+%  CONSTANTS.g = CONSTANTS.G*Kleopatra.mu.*[-1;0;0];
+CONSTANTS.g = [-1;0;0];
 % Ast_model(Kleopatra);
 
 %% Sun Model
-[Sun] = Get_sun(Kleopatra,CONSTANTS.mu_s);              %Get the orbit of asteroid, sun position in the inertial frame 
+[Sun] = Get_sun(Kleopatra,CONSTANTS.mu_s);              %Get the orbit of Kleopatra, sun position in the inertial frame 
 
 %% Motion Planning 
 if Switch.Mapping
@@ -60,93 +60,98 @@ end
 
 %% Successive Convexification
 if Switch.Descent
-    %% Successive Convexification
-%if gravity is constant
+%     CONSTANTS.alpha0 = 1/SC.v_exh;
 
+%     CONSTANTS.m0 = SC.mass.m_i;
+%     CONSTANTS.mf = SC.mass.dry; 
+%     CONSTANTS.J = SC.I.I_total;
+% 
+%     CONSTANTS.F1 = 200;
+%     CONSTANTS.F2 = 100;
+    CONSTANTS.alpha0 = 0.1;
 
+    CONSTANTS.m0 = 2;
+    CONSTANTS.mf = 0.75; 
+    CONSTANTS.J = 0.5*eye(3);
 
-CONSTANTS.alpha0 = 0.1;
+    CONSTANTS.F1 = 0.5;
+    CONSTANTS.F2 = 3;
+    CONSTANTS.r_F = [-1;0;0];
 
-CONSTANTS.m0 = 2;
-CONSTANTS.mf = 0.75; 
-CONSTANTS.J = 0.5*eye(3);
+    CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
 
-CONSTANTS.F1 = 0.5;
-CONSTANTS.F2 = 3;
-CONSTANTS.r_F = [-1;0;0];
+    CONSTANTS.q0 = [0;0;0;1];
+    CONSTANTS.qf = [0;0;0;1];
+    CONSTANTS.r0 = [2;1;0];  %I-frame
+    CONSTANTS.rf = [0;0;0];
+    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[-1; 0.2; 0],'n');
+    CONSTANTS.vf = quat_trans(CONSTANTS.qf,[-0.1; 0; 0],'n');
+    CONSTANTS.w0 = [0;0;0;0];
+    CONSTANTS.wf = [0;0;0;0];
+    CONSTANTS.F0 = [2;0;0;0];
+    CONSTANTS.Ff = [0.75;0;0;0];
 
-CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
+    CONSTANTS.dq0 = Q2DQ(CONSTANTS.q0,CONSTANTS.r0,CONSTANTS.dq_form); 
+    CONSTANTS.dw0 = [CONSTANTS.w0;CONSTANTS.v0]; 
+    CONSTANTS.dF0 = [CONSTANTS.F0;cross(CONSTANTS.r_F,CONSTANTS.F0(1:3));0]; 
+    CONSTANTS.dF_dot0 = [0; 0; 0; 0; 0; 0; 0; 0];
 
-q0 = [0;0;0;1];
-qf = [0;0;0;1];
-r0 = [2;1;0];  %I-frame
-rf = [0;0;0];
-v0 = quat_trans(q0,[-1; 0.2; 0],'n');
-vf =  quat_trans(qf,[-0.1; 0; 0],'n');
-w0 = [0;0;0;0];
-wf = [0;0;0;0];
-F0 = [2;0;0;0];
-Ff = [0.75;0;0;0];
+    CONSTANTS.dqf = Q2DQ(CONSTANTS.qf,CONSTANTS.rf,CONSTANTS.dq_form);
+    CONSTANTS.dwf = [CONSTANTS.wf;CONSTANTS.vf]; 
+    CONSTANTS.dFf = [CONSTANTS.Ff;cross(CONSTANTS.r_F,CONSTANTS.Ff(1:3));0]; 
+    CONSTANTS.dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
+    
+%     CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
+    CONSTANTS.dw_AI = [0;0;0;0;0;0;0;0];
+    
+    CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
+    CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
+    CONSTANTS.t0 = 0;  %initial time
+    CONSTANTS.tf = 5;  %closed time
+    CONSTANTS.nodes = 30;
 
-dq0 = Q2DQ(q0,r0,CONSTANTS.dq_form); 
-dw0 = [w0;v0]; 
-dF0 = [F0;cross(CONSTANTS.r_F,F0(1:3));0]; 
-dF_dot0 = [0; 0; 0; 0; 0; 0; 0; 0];
+    CONSTANTS.w_max = deg2rad(30);
+    CONSTANTS.theta_gs = deg2rad(10);
+    CONSTANTS.theta_tilt = deg2rad(20);
+    CONSTANTS.theta_gm = deg2rad(10);
 
-dqf = Q2DQ(qf,rf,CONSTANTS.dq_form);
-dwf = [wf;vf]; 
-dFf = [Ff;cross(CONSTANTS.r_F,Ff(1:3));0]; 
-dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
+    %trust region cost change ratio constraints
+    CONSTANTS.rho0 = 0;
+    CONSTANTS.rho1 = 0.25;
+    CONSTANTS.rho2 = 0.9;
+    CONSTANTS.Alpha = 1.22;
+    CONSTANTS.Beta = 3;
+    CONSTANTS.i_max = 10;
+    CONSTANTS.tol = 0;
 
-dw_AI = Kleopatra;
-CONSTANTS.x0 = [CONSTANTS.m0; dq0; dw0; dF0; dF_dot0];  %state bounds
-CONSTANTS.xf = [CONSTANTS.mf; dqf; dwf; dFf; dF_dotf];
-CONSTANTS.t0 = 0;  %initial time
-CONSTANTS.tf = 5;  %closed time
-CONSTANTS.nodes = 30;
+    %penalty weights
+    CONSTANTS.w_vc = 105;%for 10 itr
+    % CONSTANTS.w_vc = 100;
+    CONSTANTS.w_tr = 0.5;
+    Switch.virtual_control_on = 1;
+    Switch.trust_region_on = 1;
 
-CONSTANTS.w_max = deg2rad(30);
-CONSTANTS.theta_gs = deg2rad(10);
-CONSTANTS.theta_tilt = deg2rad(20);
-CONSTANTS.theta_gm = deg2rad(10);
+    %linear constraints control
+    Switch.discrete_higherorder_on = 0;
+    Switch.mass_lower_boundary_on = 1;
+    Switch.mass_upper_boundary_on = 1;
+    Switch.thrust_upper_boundary_on = 1;
+    Switch.thrust_lower_boundary_on = 1;
 
-%trust region cost change ratio constraints
-CONSTANTS.rho0 = 0;
-CONSTANTS.rho1 = 0.25;
-CONSTANTS.rho2 = 0.9;
-CONSTANTS.Alpha = 1.2;
-CONSTANTS.Beta = 3;
-CONSTANTS.i_max = 10;
-CONSTANTS.tol = 0;
+    %conic constraints control
+    Switch.ang_rate_on = 1;
+    Switch.glideslope_on = 0;
+    Switch.tilt_ang_on = 1;
+    Switch.gimbal_ang_on = 1;
 
-%penalty weights
-CONSTANTS.w_vc = 25;
-CONSTANTS.w_tr = 0.05;
-Switch.virtual_control_on = 1;
-Switch.trust_region_on = 1;
+    %initialize iter 1 state solution
+    PARAMS.n_state = length(CONSTANTS.x0);
+    PARAMS.n_control = length(CONSTANTS.dF_dotf);
+    PARAMS.n_virt = length(CONSTANTS.x0);
+    PARAMS.n_slack = 1;
+    PARAMS.n_tr = 1;
 
-%linear constraints control
-Switch.constant_grav_on = 1;
-Switch.discrete_higherorder_on = 0;
-Switch.mass_lower_boundary_on = 1;
-Switch.mass_upper_boundary_on = 1;
-Switch.thrust_upper_boundary_on = 1;
-Switch.thrust_lower_boundary_on = 1;
-
-%conic constraints control
-Switch.ang_rate_on = 1;
-Switch.glideslope_on = 0;
-Switch.tilt_ang_on = 1;
-Switch.gimbal_ang_on = 1;
-
-%initialize iter 1 state solution
-PARAMS.n_state = length(CONSTANTS.x0);
-PARAMS.n_control = length(dF_dotf);
-PARAMS.n_virt = length(CONSTANTS.x0);
-PARAMS.n_slack = 1;
-PARAMS.n_tr = 1;
-
-
-first_sol;
+    first_sol(Kleopatra); 
 end
-% end
+
+end

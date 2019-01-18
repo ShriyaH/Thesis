@@ -9,7 +9,6 @@ global CONSTANTS PARAMS Switch;
 %if gravity is constant
 CONSTANTS.g = [-1; 0; 0];
 CONSTANTS.G = 6.67408e-11;
-CONSTANTS.w_AI =[0;0;0;0;0;0;0;0];
 
 CONSTANTS.alpha0 = 0.1;
 
@@ -65,8 +64,7 @@ CONSTANTS.i_max = 10;
 CONSTANTS.tol = 0;
 
 %penalty weights
-CONSTANTS.w_vc = 105;%for 10 itr
-% CONSTANTS.w_vc = 100;
+CONSTANTS.w_vc = 105; %for 10 itr
 CONSTANTS.w_tr = 0.5;
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;

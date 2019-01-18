@@ -12,7 +12,7 @@ r_A = DQ2R(q_BA,dq_form);
 
 if Switch.poly_grav == 1
     r_A = C_BA'*r_B;
-    [g_A, U, Wf] = Poly_g_new(r_A,Asteroid.rho,Asteroid.Polyhedron.Vertices,Asteroid.Polyhedron.Facets,Asteroid.Polyhedron.Edges,Asteroid.Polyhedron.F_tilde,Asteroid.Polyhedron.E_tilde,CONSTANTS.G);
+    [g_A, U, Wf] = Poly_gravity(r_A,Asteroid.rho,Asteroid.Polyhedron.Vertices,Asteroid.Polyhedron.Facets,Asteroid.Polyhedron.Edges,Asteroid.Polyhedron.F_tilde,Asteroid.Polyhedron.E_tilde,CONSTANTS.G);
     g_B = C_BA*g_A;
 else
     r = norm(r_B);

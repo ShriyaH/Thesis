@@ -24,9 +24,6 @@ xf = CONSTANTS.xf;
 m0 = CONSTANTS.x0(1);
 mf = CONSTANTS.xf(1);
 
-wa = CONSTANTS.w_AI;
-%considering constant gravitational field
-
 w_vc = CONSTANTS.w_vc;
 ITR.w_tr{1} = CONSTANTS.w_tr;
 

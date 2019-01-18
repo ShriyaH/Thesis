@@ -1,7 +1,7 @@
 function[xc,uc,xdotc,cpu_time,status] = SCvx_transcription_DQ()
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
-global CONSTANTS PARAMS ITR Kleopatra;
+global CONSTANTS PARAMS ITR;
 
 K = CONSTANTS.nodes;
 rho0 = CONSTANTS.rho0;

@@ -6,9 +6,9 @@ clc;
 close all; 
 
 global ITR CONSTANTS;
-Initialize_models;
+Initialize_models();
 
-[xc,uc,xdotc,cpu_time,status] = SCvx_transcription_DQ();
+[xc,uc,xdotc,cpu_time,status] = SCvx_transcription();
 
 m_spent = xc(1,1)-xc(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])

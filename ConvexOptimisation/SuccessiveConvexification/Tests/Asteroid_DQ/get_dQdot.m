@@ -1,4 +1,4 @@
-function [dDQdot] = get_dDQdot(dw,dq,ns)
+function [dDQdot] = get_dQdot(dw,dq,ns)
 
 %initialise
 dDQdot = zeros(8,ns);
