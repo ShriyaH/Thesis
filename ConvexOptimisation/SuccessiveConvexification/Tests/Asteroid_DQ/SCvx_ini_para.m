@@ -94,8 +94,6 @@ for k = 0:K-1
         % construct continuous-time matrices at linearisation point
         Ac = zeros(ns,ns);
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
-%         Ac(2:9,:) = get_dDQdot(dw_k,dq_k,ns);
-%         Ac(10:17,:) = get_dDWdot(m_k,dw_k,dJ_k,dq_k,dF_k,r_F,ns);
         Ac(2:9,:) = get_dQdot(dw_k,dq_k,ns);
         Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns,Asteroid);
         Ac(18:25,26:33) = eye(8);

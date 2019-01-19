@@ -66,7 +66,7 @@ for k = 0:K-1
         gb = quat_trans(dq_k(1:4),g,'vect')';
         dFg_k = [m_k.*gb;0;0;0;0;0];
     else
-        [gb, Tgb] = Get_grav(dq_k,Asteroid);
+        [gb, Tgb] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Asteroid);
         dFg_k = [m_k.*gb;0;Tgb;0];
     end
     

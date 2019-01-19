@@ -1,4 +1,4 @@
-function[] = Initialize_models()
+function[] = ini_models_dyn()
 %%-----Initialize Models------%%
 % Change switch values to 0/1 for enabling respective parameters
 % Set Integrator initial and final times as required
@@ -20,11 +20,11 @@ CONSTANTS.ge = 9.807;            %earth grav acc
 Switch.constant_grav = 0;
 Switch.SRP = 0;
 Switch.TBP = 0;
-Switch.GG = 1;
+Switch.GG = 0;
 Switch.Ast_rot = 0;
 Switch.Control = 0;
 Switch.Mapping =0;
-Switch.Descent =1;
+Switch.Descent =0;
 
 %% SC Model
 [SC] = Get_SC( 'Rosetta' );                  %Get the SC polyhedron model and its properties
@@ -34,8 +34,8 @@ Switch.Descent =1;
 Kleopatra.n_lm = 20;                                %number of landmarks
 [Kleopatra.lm_coord,Kleopatra.lm_n,Kleopatra.lm_r] = Get_landmarks(Kleopatra,Kleopatra.n_lm);     %Get the landmarks on the Kleopatra surface
 
-%  CONSTANTS.g = CONSTANTS.G*Kleopatra.mu.*[-1;0;0];
-CONSTANTS.g = [-1;0;0];
+CONSTANTS.g = CONSTANTS.G*Kleopatra.mu.*[-1;0;0];
+% CONSTANTS.g = [-1;0;0];
 % Ast_model(Kleopatra);
 
 %% Sun Model
@@ -60,24 +60,29 @@ end
 
 %% Successive Convexification
 if Switch.Descent
-    Switch.SRP = 0;
-    Switch.TBP = 0;
-    
-    CONSTANTS.alpha0 = 1/SC.v_exh;
+%     CONSTANTS.alpha0 = 1/SC.v_exh;
 
-    CONSTANTS.m0 = SC.mass.m_i;
-    CONSTANTS.mf = SC.mass.dry; 
-    CONSTANTS.J = SC.I.I_total;
+%     CONSTANTS.m0 = SC.mass.m_i;
+%     CONSTANTS.mf = SC.mass.dry; 
+%     CONSTANTS.J = SC.I.I_total;
+% 
+%     CONSTANTS.F1 = 200;
+%     CONSTANTS.F2 = 100;
+    CONSTANTS.alpha0 = 0.1;
 
-    CONSTANTS.F1 = 200;
-    CONSTANTS.F2 = 100;
+    CONSTANTS.m0 = 2;
+    CONSTANTS.mf = 0.75; 
+    CONSTANTS.J = 0.5*eye(3);
+
+    CONSTANTS.F1 = 0.5;
+    CONSTANTS.F2 = 3;
     CONSTANTS.r_F = [-1;0;0];
 
     CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
 
     CONSTANTS.q0 = [0;0;0;1];
     CONSTANTS.qf = [0;0;0;1];
-    CONSTANTS.r0 = [2;1;0];  %A-frame
+    CONSTANTS.r0 = [2;1;0];  %I-frame
     CONSTANTS.rf = [0;0;0];
     CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[-1; 0.2; 0],'n');
     CONSTANTS.vf = quat_trans(CONSTANTS.qf,[-0.1; 0; 0],'n');
@@ -96,13 +101,14 @@ if Switch.Descent
     CONSTANTS.dFf = [CONSTANTS.Ff;cross(CONSTANTS.r_F,CONSTANTS.Ff(1:3));0]; 
     CONSTANTS.dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
     
-    CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
-     
+%     CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
+    CONSTANTS.dw_AI = [0;0;0;0;0;0;0;0];
+    
     CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
-    CONSTANTS.tf = 50;  %closed time
-    CONSTANTS.nodes = 100;
+    CONSTANTS.tf = 5;  %closed time
+    CONSTANTS.nodes = 30;
 
     CONSTANTS.w_max = deg2rad(30);
     CONSTANTS.theta_gs = deg2rad(10);
@@ -120,6 +126,7 @@ if Switch.Descent
 
     %penalty weights
     CONSTANTS.w_vc = 105.5;%for 10 itr
+    % CONSTANTS.w_vc = 100;
     CONSTANTS.w_tr = 0.5;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
@@ -145,35 +152,6 @@ if Switch.Descent
     PARAMS.n_tr = 1;
 
     first_sol(Kleopatra); 
-    
-    
-    %%acik_test_case
-%     Switch.constant_grav = 1;
-%     CONSTANTS.alpha0 = 0.1;
-% 
-%     CONSTANTS.m0 = 2;
-%     CONSTANTS.mf = 0.75; 
-%     CONSTANTS.J = 0.5*eye(3);
-% 
-%     CONSTANTS.F1 = 0.5;
-%     CONSTANTS.F2 = 3;
-%     CONSTANTS.r_F = [-1;0;0];
-% 
-%     CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
-% 
-%     CONSTANTS.q0 = [0;0;0;1];
-%     CONSTANTS.qf = [0;0;0;1];
-%     CONSTANTS.r0 = [2;1;0];  %I-frame
-%     CONSTANTS.rf = [0;0;0];
-%     CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[-1; 0.2; 0],'n');
-%     CONSTANTS.vf = quat_trans(CONSTANTS.qf,[-0.1; 0; 0],'n');
-%     CONSTANTS.w0 = [0;0;0;0];
-%     CONSTANTS.wf = [0;0;0;0];
-%     CONSTANTS.F0 = [2;0;0;0];
-%     CONSTANTS.Ff = [0.75;0;0;0];
-%     CONSTANTS.dw_AI = [0;0;0;0;0;0;0;0];
-%     CONSTANTS.w_vc = 105.5;%for 10 itr
-%     CONSTANTS.w_tr = 0.5;
 end
 
 end

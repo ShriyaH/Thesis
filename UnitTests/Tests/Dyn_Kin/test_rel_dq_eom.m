@@ -1,5 +1,5 @@
-function [t,y,r_At,r_Bt] = test_rel_dq_eom(dI,w_AI,dq_rel,dw_rel)
-global Sun Kleopatra Switch
+function [t,y,r_At,r_Bt,T_g,TT] = test_rel_dq_eom(dI,w_AI,dq_rel,dw_rel)
+global Sun Kleopatra Switch Var
 
 %% Initial Values
 if Switch.Razgus
@@ -16,7 +16,7 @@ dI_inv = V*(S\U');
 %% Integrator
 Y0 = [dq_rel';dw_rel'];
 T = [0 20000];
-
+i =1;
 %Opt = odeset('Events', @stopevent);
 tic
 Opt = odeset('RelTol',1e-10,'AbsTol',1e-12);
@@ -29,7 +29,10 @@ toc
 [r_At,r_Bt] = convt_r(y);
 
 %% Differential Function
-function dY = orb_int_dqin(T,Y)       
+function [dY] = orb_int_dqin(T,Y)   
+  
+    i = i+1;
+    TT(i)=T;
     m = 2108.3836;
     
     Y(1:8) = norm_dq(Y(1:8));
@@ -46,15 +49,15 @@ function dY = orb_int_dqin(T,Y)
     dw_BI_B = dw_AI_B + Y(9:16);
     W_BI = omega_tensor(dw_BI_B,4);
 
-    r_B = 2.*cross_quat(Y(5:8),conj_quat(Y(1:4)));
+    r_B = DQ2R(Y(1:8),1);
     
     C_AI = Q2DCM([0;0;sin((w_AI(3)*T)/2);cos((w_AI(3)*T)/2)]);
     rs_B = C_BA*C_AI*Sun.rs_I(1:3);
     e_B = rs_B./norm(rs_B);
     
-    [F_D,T_D] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu);
+    [F_D,T_D] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu,Kleopatra);
     dF_B = [F_D; T_D];
-    
+    T_g(:,i) =T_D;
     A = [zeros(4,1); r_B(1:4)];
     
     dw_dot = dI_inv*(dF_B - W_BI*(dI*dw_BI_B)) - W_AI_B*(W_AI_B*A) - W_AI_B*Y(9:16); %omega_BA dot

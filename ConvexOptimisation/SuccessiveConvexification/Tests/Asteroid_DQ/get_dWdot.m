@@ -13,7 +13,7 @@ if Switch.constant_grav
     dFg = [m.*gb;0;0;0;0];
 else
     %polyhedron gravity field
-    [gb, Tgb] = Get_grav(q_k,Asteroid);
+    [gb, Tgb] = Get_pertforces(q_k,Asteroid);
     dFg = [m.*gb;0;Tgb;0];
 end
 

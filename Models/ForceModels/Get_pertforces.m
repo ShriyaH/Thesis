@@ -1,6 +1,7 @@
 function [F_D, T_D] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Asteroid)
 %%Get all accelerations and torques in the body reference frame
-global CONSTANTS Switch SC Sun
+global CONSTANTS Switch SC Sun Var
+
 
 c = CONSTANTS.c;
 AU = CONSTANTS.AU;
@@ -17,7 +18,7 @@ C = SC.Polyhedron.C;
 V = SC.Polyhedron.Vertices;
 
 rs_I = Sun.rs_I(1:3);
-
+r_B = r_B(1:3);
 %% Solar Radiation Pressure
 if Switch.SRP
     
@@ -65,9 +66,11 @@ if Switch.poly_grav
     r_A = C_BA'*r_B;
     [g_A] = Poly_g(r_A,Asteroid.rho,Asteroid.Polyhedron.Vertices,Asteroid.Polyhedron.Facets,Asteroid.Polyhedron.Edges,Asteroid.Polyhedron.F_tilde,Asteroid.Polyhedron.E_tilde);
     F_B = [m.*(C_BA*g_A); 0];
-else
+elseif Switch.GG ~=1
     r = norm(r_B);
     F_B = [-(m*mu).*r_B(1:3)./r^3; 0];
+elseif Switch.GG
+    F_B = [0;0;0;0];
 end
 
 if Switch.GG
@@ -80,7 +83,7 @@ if Switch.GG
 
     %Position of point masses wrt body frame
     r_pm = [ V(1:8,:); C(1:12,:); V(9:48,:); C(13:32,:) ];
-    r_pm_B = r_pm + r_B';
+    r_pm_B = -r_pm + r_B';
 
     %Grav accl, gradient torque  of point masses wrt body frame
     for i = 1:length(m_pm)
@@ -92,16 +95,18 @@ if Switch.GG
             r = norm(r_pm_B(i,:));
             g_pm_B(:,i) = (-(mu).*r_pm_B(i,:)./r^3)';
         end
-        F_g(i,:) = (m_pm(i) .* g_pm_B(:,i))';
-        T_GG(i,:) = cross(r_pm(i,:),F_g(i,:),2);
+        F_GG(i,:) = (m_pm(i) .* g_pm_B(:,i))';
+        T_GG(i,:) = cross(r_pm(i,:),F_GG(i,:),2);
     end
     
+    F_GG_B = [sum(F_GG)';0];
     T_GG_B = [sum(T_GG)';0];
 else
     T_GG_B = [0;0;0;0];
+    F_GG_B = [0;0;0;0];
 end 
 
-F_D = F_B + F_SRP_B + F_3BP_B;
+F_D = F_B + F_SRP_B + F_3BP_B + F_GG_B;
 T_D = T_GG_B + T_SRP_B;
 
 end

@@ -298,6 +298,15 @@ end
 
 if Switch.DQ
     figure()
+    comet3(Var.dqr_I(:,1),Var.dqr_I(:,2),Var.dqr_I(:,3));
+    hold on
+    xlabel('X (m)');
+    ylabel('Y (m)');
+    zlabel('Z (m)');
+    grid on
+    %print -depsc dqorba 
+    
+    figure()
     comet3(Var.dqr_A(:,1),Var.dqr_A(:,2),Var.dqr_A(:,3));
     hold on
     xlabel('X (m)');
@@ -314,6 +323,19 @@ if Switch.DQ
     zlabel('Z (m)');
     grid on
     %print -depsc dqorbb
+    
+    figure()
+    plot(Var.t3,Var.dqr_I(:,1),'Linewidth',2); 
+    hold on
+    %goodplot
+    plot(Var.t3,Var.dqr_I(:,2),'Linewidth',2); 
+    plot(Var.t3,Var.dqr_I(:,3),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Position (m)');
+    legend('X_x','X_y','X_z','Location','northeastoutside');
+    title('r^I (DQ-Integrator)');
+    %print -depsc dqposdb
+   
 
     figure()
     plot(Var.t3,Var.dqr_A(:,1),'Linewidth',2); 
@@ -376,6 +398,28 @@ if Switch.DQ
     ylabel('Velocity (m/s)');
     legend('v_x','v_y','v_z','Location','northeastoutside');
     title('v_{B/A}^B (DQ-Integrator)');
+    grid on
+    %print -depsc dqvelb
+    
+    figure()
+    plot(Var.TT,Var.T_D(1,:),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Torque (Nm)');
+    legend('T_x','Location','northeastoutside');
+    grid on
+    
+    figure()
+    plot(Var.TT,Var.T_D(2,:),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Torque (Nm)');
+    legend('T_y','Location','northeastoutside');
+    grid on
+    
+    figure()
+    plot(Var.TT,Var.T_D(3,:),'Linewidth',2);
+    xlabel('Time (s)');
+    ylabel('Torque (Nm)');
+    legend('T_z','Location','northeastoutside');
     grid on
     %print -depsc dqvelb
 end

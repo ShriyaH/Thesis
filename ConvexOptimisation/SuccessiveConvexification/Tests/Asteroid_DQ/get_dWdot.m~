@@ -13,7 +13,7 @@ if Switch.constant_grav
     dFg = [m.*gb;0;0;0;0];
 else
     %polyhedron gravity field
-    [gb, Tgb] = Get_grav(q_k,Asteroid);
+    [gb, Tgb] = Get_pertforces(q_k,Asteroid);
     dFg = [m.*gb;0;Tgb;0];
 end
 
@@ -53,7 +53,12 @@ e = omega_tensor(dJ*dw,4);
 f = omega_tensor(dJ*dW,4);
 
 [pd_dW,pd_R] = quat_rot_pde(dq,wa);
-[pd_g] = get_dg_const(dq,g); 
+if Switch.constant_grav
+    [pd_g] = get_dg_const(dq,g); 
+else
+    [dgac,dgbc,dgaf,dgbf] = get_dG(dq,h);
+    pd_g = [dgbc;0;0;0;0;];
+end
 
 d2 = dJ_inv*(pd_g - c*(dJ*pd_dW) + e*pd_dW + f*pd_dW - b*(dJ*pd_dW) + dJ*(c*pd_dW) ...
              - dJ*(b*(b*pd_R)) + dJ*(b*(d*pd_dW)) - dJ*(omega_tensor(b*R,4)*pd_dW));
