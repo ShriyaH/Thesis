@@ -192,4 +192,11 @@ SC.pm_ratio = round(SC.pm_ratio);
 SC.phi = deg2rad(27);    %cant angle
 SC.I_sp = 225;           %sp. impulse
 SC.n_e = 6;              %no. of thrusters
+
+%% TAG sampler
+eb = [1,-1,-1];
+SC.e_TAG = eb./norm(eb);
+p = atan2(SC.e_TAG (2),SC.e_TAG (1));
+t = atan2(SC.e_TAG (3),norm(SC.e_TAG ));
+SC.q_TAGB = Eul2Q([-p,t+pi/2-0.09,-p],'ZYZ');
 end

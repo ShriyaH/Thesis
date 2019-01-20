@@ -1,6 +1,7 @@
 function [] = SCvx_CQ_DQ_plots(i)
 %% Compare with CQ plots
-load('acik_DQ.mat')
+global CONSTANTS ITR
+
 t = ITR.t_k;
 f1 = ones(1,length(t)).*CONSTANTS.F1;
 f2 = ones(1,length(t)).*CONSTANTS.F2;
@@ -14,7 +15,7 @@ wm = CONSTANTS.w_max;
 wm = ones(1,length(t)).*rad2deg(wm);
 
 dq_form=2;
-
+load('acik_DQ.mat')
 for ii = 1:i
     for k = 1:length(t)
         x = ITR.x_k{ii}; 

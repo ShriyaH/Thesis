@@ -43,9 +43,9 @@ CONSTANTS.tol = 0;
 
 %penalty weights
 % CONSTANTS.w_vc = 136; %no angular constraints
-% CONSTANTS.w_vc = 145; %10/15 max itr
-CONSTANTS.w_vc = 200; %10/15 max itr
-CONSTANTS.w_tr = 1;
+% CONSTANTS.w_vc = 160; %10/15 max itr
+CONSTANTS.w_vc = 150; %10/15 max itr %%%for all angular constraints and acik plots
+CONSTANTS.w_tr = 0.05; %%%for all angular constraints and acik plots 
 Switch.virtual_control_on = 1;
 Switch.trust_region_on = 1;
 
@@ -58,7 +58,7 @@ Switch.thrust_lower_boundary_on = 1;
 
 %conic constraints control
 Switch.ang_rate_on = 1;
-Switch.glideslope_on = 0;
+Switch.glideslope_on = 1;
 Switch.tilt_ang_on = 1;
 Switch.gimbal_ang_on = 1;
 

@@ -4,7 +4,7 @@ function [lm_coord,lm_n,lm_r] = Get_landmarks(Asteroid,n)
 v = Asteroid.Polyhedron.Vertices;
 f = Asteroid.Polyhedron.Facets;
 a = Asteroid.Polyhedron.A_facet';
-nf = Asteroid.Polyhedron.normalsf/norm(Asteroid.Polyhedron.normalsf);
+nf = Asteroid.Polyhedron.normalsf;
 
 a_norm = a/sum(a);  %norm of facet areas to put more weight on larger areas
 [N,~,index] = histcounts(rand(n,1),cumsum([0,a_norm]));  %get index of facets with number of landmarks(N) in them

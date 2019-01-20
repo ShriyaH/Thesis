@@ -1,9 +1,9 @@
-function [A,b,G,h,C,dims] = SCvx_ini_para(i,Asteroid)
-% Asteroid descent problem for ECOS with Successive Convexification
+function [A,b,G,h,C,dims] = SCvx_ini_para(i)
+% Kleopatra descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 
 % Standard formulation
-global CONSTANTS PARAMS Switch ITR;
+global CONSTANTS PARAMS Switch ITR Kleopatra;
 
 % load parameters & compute constants
 alpha0 =  CONSTANTS.alpha0;
@@ -42,6 +42,9 @@ Ed(1:nv,1:nv) = eye(nv);
 % define the final elements we impose
 X_f_flag = [0;ones(ns-1,1)];
 n_flag = sum(X_f_flag);
+% X_f_flag = [0;ones(ns-9,1)];
+% n_flag = sum(X_f_flag);
+
 
 %% COST FUNCTION
 % the formulation of the control vector is [X0 U0 nu0 s0 eta0 X1 U1 nu1 s1 eta1... XN UN nuN sN etaN S ETA]
@@ -70,7 +73,7 @@ b(1:ns,1) = x0; %initial state
 
 A(K*ns+(1:n_flag),(K-1)*(n)+1+(1:n_flag)) = eye(n_flag); 
 b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
-
+% b(K*ns+(1:n_flag),1) = xf(2:ns-8,1); %final state
 
 % Construct all the LTV continuous time matrices for initial iteration
 % state (K-1 time steps)
@@ -95,7 +98,7 @@ for k = 0:K-1
         Ac = zeros(ns,ns);
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
         Ac(2:9,:) = get_dQdot(dw_k,dq_k,ns);
-        Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns,Asteroid);
+        Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns);
         Ac(18:25,26:33) = eye(8);
 
 

@@ -55,7 +55,7 @@ for k = 0:K-1
     % construct linearisation point states
     m_k = ((K-k-1)/(K-1))*m0 + (k/(K-1))*mf;
     r_k = ((K-k-1)/(K-1))*r0 + (k/(K-1))*rf;
-    dq_k = Q2DQ(dq0(1:4),r_k,dq_form);
+    dq_k = q(:,ii);
     v_k = ((K-k-1)/(K-1))*v0 + (k/(K-1))*vf;
     v_k = quat_trans(dq_k(1:4),v_k,'n');
     w_k = ((K-k-1)/(K-1))*w0 + (k/(K-1))*wf;
@@ -66,19 +66,28 @@ for k = 0:K-1
         gb = quat_trans(dq_k(1:4),g,'vect')';
         dFg_k = [m_k.*gb;0;0;0;0;0];
     else
-        [gb, Tgb] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Asteroid);
-        dFg_k = [m_k.*gb;0;Tgb;0];
+        r_B = quat_trans(dq_k(1:4),r_k,'n');
+        C_BA = Q2DCM(dq_k(1:4));
+        rs_B = [0,0,0];
+        e_B =[0,0,0];
+        [Fgb, Tgb] = Get_pertforces(m_k,C_BA,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
+        dFg_k = [Fgb;Tgb];
+        r_k = r_k(1:3);
+        [ga,gb] = Poly_g_new(r_k,dq_k(1:4),Asteroid);
     end
     
     F = -(m_k.*gb);
+    F = F(1:3);
     dF_k = [F;0;cross(r_F',F')';0];
-    Fdot_k = -alpha0.*norm(dF_k(1:4)).*gb;
+    Fdot_k = -alpha0.*norm(dF_k(1:3)).*gb;
+    Fdot_k = Fdot_k(1:3);
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
     
-    wab = dq_trans(dq_k,dwa);
+    wab = quat_trans(dq_k(1:4),dwa(1:4),'n');
+    wab = [wab;0;0;0;0];
     Wab = omega_tensor(wab,4);
     
-    R = [0;0;0;0;DQ2R(dq_k,dq_form)];
+    R = [0;0;0;0;DQ2R(dq_k,dq_form-1)];
     
     x_k  = [m_k;dq_k;dw_k;dF_k;dFdot_k];
     ITR.x_k{1}(:,ii) = x_k;

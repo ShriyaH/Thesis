@@ -18,6 +18,7 @@ CONSTANTS.ge = 9.807;            %earth grav acc
 
 %% Dynamics controls
 Switch.constant_grav = 0;
+Switch.sp_grav = 0;
 Switch.SRP = 0;
 Switch.TBP = 0;
 Switch.GG = 1;
@@ -62,29 +63,49 @@ end
 if Switch.Descent
     Switch.SRP = 0;
     Switch.TBP = 0;
+    Switch.poly_grav = 0;
+    
+    CONSTANTS.lm_i = 1;
+    CONSTANTS.r_lmA = Kleopatra.lm_coord(CONSTANTS.lm_i,:);
+    CONSTANTS.n_lmA = Kleopatra.lm_n(CONSTANTS.lm_i,:);
+    p = atan2(CONSTANTS.n_lmA(2),CONSTANTS.n_lmA(1));
+    t = atan2(CONSTANTS.n_lmA(3),norm(CONSTANTS.n_lmA));
+    q1 = Eul2Q([-p,t+pi/2,-p],'ZYZ');
+    x1 = quat_trans(q1,[1,0,0],'vect');
+    x1 = x1./norm(x1);
+    q2 = [x1';0];
+    CONSTANTS.q_lmA =cross_quat(q2,q1);
     
     CONSTANTS.alpha0 = 1/SC.v_exh;
 
-    CONSTANTS.m0 = SC.mass.m_i;
+%     CONSTANTS.m0 = SC.mass.m_i;
+    CONSTANTS.m0 = 3000;
     CONSTANTS.mf = SC.mass.dry; 
     CONSTANTS.J = SC.I.I_total;
 
-    CONSTANTS.F1 = 200;
-    CONSTANTS.F2 = 100;
-    CONSTANTS.r_F = [-1;0;0];
+    CONSTANTS.F1 = 500;
+    CONSTANTS.F2 = 80;
+    CONSTANTS.r_F = [0;0;-1];
 
     CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
 
     CONSTANTS.q0 = [0;0;0;1];
-    CONSTANTS.qf = [0;0;0;1];
-    CONSTANTS.r0 = [2;1;0];  %A-frame
-    CONSTANTS.rf = [0;0;0];
-    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[-1; 0.2; 0],'n');
-    CONSTANTS.vf = quat_trans(CONSTANTS.qf,[-0.1; 0; 0],'n');
+    CONSTANTS.qf = cross_quat(conj_quat(SC.q_TAGB),CONSTANTS.q_lmA);
+    
+    CONSTANTS.r0 = 2e3.*cos(deg2rad(30)).*CONSTANTS.n_lmA'+CONSTANTS.r_lmA';  %A-frame
+    [ga0,CONSTANTS.gb0] = Poly_g_new(CONSTANTS.r0 ,CONSTANTS.q0,Kleopatra);
+    
+    CONSTANTS.rf = CONSTANTS.r_lmA'+ 1.5.*CONSTANTS.n_lmA';
+    [gaf,CONSTANTS.gbf] = Poly_g_new(CONSTANTS.rf ,CONSTANTS.qf,Kleopatra);
+    
+    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[10; 7; 7],'n');
+    CONSTANTS.vf = quat_trans(CONSTANTS.qf,[0; 0; 0],'n');
+    
     CONSTANTS.w0 = [0;0;0;0];
     CONSTANTS.wf = [0;0;0;0];
-    CONSTANTS.F0 = [2;0;0;0];
-    CONSTANTS.Ff = [0.75;0;0;0];
+    
+    CONSTANTS.F0 = -CONSTANTS.m0.*CONSTANTS.gb0;
+    CONSTANTS.Ff = -CONSTANTS.mf*CONSTANTS.gbf;
 
     CONSTANTS.dq0 = Q2DQ(CONSTANTS.q0,CONSTANTS.r0,CONSTANTS.dq_form); 
     CONSTANTS.dw0 = [CONSTANTS.w0;CONSTANTS.v0]; 
@@ -102,12 +123,12 @@ if Switch.Descent
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
     CONSTANTS.tf = 50;  %closed time
-    CONSTANTS.nodes = 100;
+    CONSTANTS.nodes = 50;
 
     CONSTANTS.w_max = deg2rad(30);
     CONSTANTS.theta_gs = deg2rad(10);
-    CONSTANTS.theta_tilt = deg2rad(20);
-    CONSTANTS.theta_gm = deg2rad(10);
+    CONSTANTS.theta_tilt = deg2rad(30);
+    CONSTANTS.theta_gm = deg2rad(30);
 
     %trust region cost change ratio constraints
     CONSTANTS.rho0 = 0;
@@ -119,8 +140,8 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 105.5;%for 10 itr
-    CONSTANTS.w_tr = 0.5;
+    CONSTANTS.w_vc = 1000;%for 10 itr
+    CONSTANTS.w_tr = 1;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
 
@@ -145,7 +166,7 @@ if Switch.Descent
     PARAMS.n_tr = 1;
 
     first_sol(Kleopatra); 
-    
+
     
     %%acik_test_case
 %     Switch.constant_grav = 1;

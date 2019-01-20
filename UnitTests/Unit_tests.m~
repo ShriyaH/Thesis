@@ -1,14 +1,11 @@
-eb = [-0.216846275957216	0.972739379179911	0.0821936299001812];
+eb = [22746.9272805937	20075.6850122564	-8806.40885794989];
 eb = eb./norm(eb);
 p = atan2(eb(2),eb(1));
 t = atan2(eb(3),norm(eb));
 % C = Eul2DCM([-p,t+pi/2,-p],'ZYZ');
 % q = DCM2Q(C);
-q1 = Eul2Q([-p,t+pi/2,-p],'ZYZ');
-x1 = quat_trans(q1,[1,0,0],'vect');
-x1 = x1./norm(x1);
-q2 = [x1';0];
-q =cross_quat(q2,q1);
+q = Eul2Q([-p,t+pi/2,-p],'ZYZ');
+
 zz = quat_trans(q,[0,0,1],'vect');
 zz1 = quat_trans(q,[0,0,-1],'vect');
 yy = quat_trans(q,[0,1,0],'vect');

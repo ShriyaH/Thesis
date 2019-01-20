@@ -115,8 +115,8 @@ count = 1;
      end
     i = i+1 
  end
-%  SCvx_plots_DQ(i);
-  SCvx_CQ_DQ_plots(i)  
+%   SCvx_plots_DQ(i);
+SCvx_CQ_DQ_plots(i)  
 end
 
 

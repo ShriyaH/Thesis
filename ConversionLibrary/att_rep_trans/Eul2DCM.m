@@ -35,8 +35,8 @@ for j =1:3
 end
 
 % 
-% %Compute the DCM matrix for the rotation
-% DCM = R{3}*R{2}*R{1};
+%Compute the DCM matrix for the rotation
+DCM = R{3}*R{2}*R{1};
 % 
 % %Compute the Quaternion for the rotation
 % q1 = sqrt(1/4*(1 + DCM(1,1) - DCM(2,2) - DCM(3,3)));
