@@ -45,7 +45,7 @@ a = omega_tensor((dw+dW),4);
 b = omega_tensor(dW,4);
 c = omega_tensor(dw,4);
 
-d1 = pd_dJ_inv*(dF + dFg -a*(dJ*(dw+dW))- dJ*(b*dw) - dJ*(b*(b*R))) + ...
+d1 = pd_dJ_inv*(dF + dFg -a*(dJ*(dw+dW)) - dJ*(b*dw) - dJ*(b*(b*R))) + ...
      dJ_inv*(pd_Fg - a*(pd_dJ*(dw+dW)) - pd_dJ*(b*dw) - pd_dJ*(b*(b*R)));
 
 %% partial derivative with respect to DQ

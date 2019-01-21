@@ -78,8 +78,8 @@ if Switch.Descent
     
     CONSTANTS.alpha0 = 1/SC.v_exh;
 
-%     CONSTANTS.m0 = SC.mass.m_i;
-    CONSTANTS.m0 = 3000;
+    CONSTANTS.m0 = SC.mass.m_i;
+%     CONSTANTS.m0 = 000;
     CONSTANTS.mf = SC.mass.dry; 
     CONSTANTS.J = SC.I.I_total;
 
@@ -125,10 +125,10 @@ if Switch.Descent
     CONSTANTS.tf = 50;  %closed time
     CONSTANTS.nodes = 50;
 
-    CONSTANTS.w_max = deg2rad(30);
+    CONSTANTS.w_max = deg2rad(50);
     CONSTANTS.theta_gs = deg2rad(10);
-    CONSTANTS.theta_tilt = deg2rad(30);
-    CONSTANTS.theta_gm = deg2rad(30);
+    CONSTANTS.theta_tilt = deg2rad(50);
+    CONSTANTS.theta_gm = deg2rad(50);
 
     %trust region cost change ratio constraints
     CONSTANTS.rho0 = 0;
@@ -140,8 +140,8 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 1000;%for 10 itr
-    CONSTANTS.w_tr = 1;
+    CONSTANTS.w_vc = 10;%for 10 itr
+    CONSTANTS.w_tr = 0.05;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
 
