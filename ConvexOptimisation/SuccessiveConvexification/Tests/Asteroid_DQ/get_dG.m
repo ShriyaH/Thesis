@@ -1,11 +1,11 @@
-function [F_GG_Bc,T_GG_Bc] = get_dG(m,dq)
+function [F_GG_Bc,T_GG_Bc,g_Bc] = get_dG(m,dq)
 global Kleopatra SC
 C = SC.Polyhedron.C;
 V = SC.Polyhedron.Vertices;
 
-dga =[];
-% dga2 = [];
-dgb =[];
+% dga =[];
+% % dga2 = [];
+% dgb =[];
 % dgb2=[];
 count = 1;
 %     for h = 10.^(-1:16)
@@ -22,10 +22,10 @@ h = 10^-13;
         r_Bc = quat_trans(dqc(1:4),r_Ac,'vect');
         C_BAc = Q2DCM(q_BAc);
         
-%         [g_Ac(1:3,count), g_Bc(1:4,count), Wfc(count), Uc(count)] = Poly_g_new(r_Ac, q_BAc,Kleopatra);
-% 
-%         dga(1:3,count) = imag(g_Ac(1:3,count))./h;
-%         dgb(1:4,count) = imag(g_Bc(1:4,count))./h;
+        [g_Ac(1:3,count), g_Bc(1:4,count), Wfc(count), Uc(count)] = Poly_g_new(r_Ac, q_BAc,Kleopatra);
+
+        g_Ac(1:3,count) = imag(g_Ac(1:3,count))./h;
+        g_Bc(1:4,count) = imag(g_Bc(1:4,count))./h;
         
         
         n_block = 8 + 12; %8 vertices, 12 facet centres
@@ -42,16 +42,15 @@ h = 10^-13;
         for i = 1:length(m_pm)
             r_pm_Ac(:,i) = C_BAc'*r_pm_Bc(i,:)';
             [g_pm_Ac(:,i),g_pm_Bc(:,i)] = Poly_g_new(r_pm_Ac(:,i),q_BAc,Kleopatra);
+%             dga_pm(:,i) = imag(g_pm_Ac(:,i))./h;
+%             dgb_pm(:,i) = imag(g_pm_Bc(:,i))./h;
             
-            dga(:,i) = imag(g_pm_Ac(:,i))./h;
-            dgb(:,i) = imag(g_pm_Bc(:,i))./h;
-            
-            F_GGc(i,:) = (m_pm(i) .* dga(:,i))';
+            F_GGc(i,:) = (m_pm(i) .* g_pm_Bc(1:3,i)');
             T_GGc(i,:) = cross(r_pm(i,:),F_GGc(i,:),2);
         end
 
-        F_GG_Bc = [sum(F_GGc)';0];
-        T_GG_Bc = [sum(T_GGc)';0];
+        F_GG_Bc = [imag(sum(F_GGc)')./h;0];
+        T_GG_Bc = [imag(sum(T_GGc)')./h;0];
 
 %         %% finite differentiation
 %         dqc2(1:8,count) = dq + h;

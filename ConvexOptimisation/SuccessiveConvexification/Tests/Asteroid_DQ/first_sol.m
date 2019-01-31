@@ -61,6 +61,8 @@ for k = 0:K-1
     w_k = ((K-k-1)/(K-1))*w0 + (k/(K-1))*wf;
     dw_k = [w_k;0;v_k];
     
+%     [gA,gB] = Poly_g_new(r_k(1:3),dq_k(1:4),Asteroid);
+    
     if Switch.constant_grav==1
         g = CONSTANTS.g; 
         gb = quat_trans(dq_k(1:4),g,'vect')';
@@ -70,21 +72,20 @@ for k = 0:K-1
         C_BA = Q2DCM(dq_k(1:4));
         rs_B = [0,0,0];
         e_B =[0,0,0];
-        [Fgb, Tgb] = Get_pertforces(m_k,C_BA,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
+        [Fgb,Tgb,gb] = Get_pertforces(m_k,C_BA,r_k,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
         dFg_k = [Fgb;Tgb];
-        r_k = r_k(1:3);
-        [ga,gb] = Poly_g_new(r_k,dq_k(1:4),Asteroid);
     end
     
-    F = -(m_k.*gb);
+%     F = -(m_k.*gb');
+    F = -Fgb;
     F = F(1:3);
     dF_k = [F;0;cross(r_F',F')';0];
     Fdot_k = -alpha0.*norm(dF_k(1:3)).*gb;
     Fdot_k = Fdot_k(1:3);
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
     
-    wab = quat_trans(dq_k(1:4),dwa(1:4),'n');
-    wab = [wab;0;0;0;0];
+    wab1 = quat_trans(dq_k(1:4),dwa(1:4),'n');
+    wab = [wab1;0;0;0;0];
     Wab = omega_tensor(wab,4);
     
     R = [0;0;0;0;r_B];

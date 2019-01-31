@@ -99,7 +99,8 @@ for k = 0:K-1
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
         Ac(2:9,:) = get_dQdot(dw_k,dq_k,ns);
         Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns);
-        Ac(18:25,26:33) = eye(8);
+        Ac(18:20,26:28) = eye(3);
+        Ac(22:24,30:32) = eye(3);
 
 
         ITR.Ac_k{i}{ii} = Ac;
@@ -115,7 +116,7 @@ for k = 0:K-1
 
     % Discretisation
         % state transition matrix for each time step
-        p = 3; %number of terms included in the series expansion 
+        p = 4; %number of terms included in the series expansion 
         Psi = zeros(size(Ac));
         for pp = 0:1:p
             dPsi = (dt^pp/factorial(pp+1))*Ac^pp;
@@ -319,7 +320,7 @@ if Switch.gimbal_ang_on
         Ac(1:3,(ii-1)*n+(18:20)) = eye(3);
           
         cc = s;
-        cc(1,(ii-1)*n+(18:20)) = [1/cos(theta_gm) 0 0];
+        cc(1,(ii-1)*n+(18:20)) = [0 0 1/cos(theta_gm)];
         
         Gt = -[cc;Ac];
         ht = [dc;bc];
@@ -364,11 +365,11 @@ if Switch.glideslope_on
     dc = 0;
     for ii = 1:K
         Ac = S;
-        Ac(1,(ii-1)*n+(2:4)) = [0 1 0];
-        Ac(2,(ii-1)*n+(2:4)) = [0 0 1];
+        Ac(1,(ii-1)*n+(2:4)) = [1 0 0];
+        Ac(2,(ii-1)*n+(2:4)) = [0 1 0];
         
         cc = s;
-        cc(1,(ii-1)*n+(2:4)) = [1/tan(theta_gs) 0 0];
+        cc(1,(ii-1)*n+(2:4)) = [0 0 1/tan(theta_gs)];
         
         Gt = -[cc;Ac];
         ht = [dc;bc];

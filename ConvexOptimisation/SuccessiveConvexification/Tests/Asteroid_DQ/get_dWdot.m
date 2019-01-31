@@ -9,8 +9,9 @@ dDWdot = zeros(8,ns);
 
 if Switch.constant_grav 
     g = CONSTANTS.g;
-    gb = quat_trans(dq(1:4),g,'vect');
-    dFg = [m.*gb';0;0;0;0;0];
+    gb = quat_trans(dq(1:4),g,'n');
+    gb = gb(1:3);
+    dFg = [m.*gb;0;0;0;0;0];
 else
     %polyhedron gravity field
     r_A = DQ2R(dq,dq_form);
@@ -18,7 +19,7 @@ else
     C_BA = Q2DCM(dq(1:4));
     rs_B = [0,0,0];
     e_B =[0,0,0];
-    [Fgb, Tgb,gb] = Get_pertforces(m,C_BA,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
+    [Fgb,Tgb,gb] = Get_pertforces(m,C_BA,r_A,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
     dFg = [Fgb;Tgb];
 end
 
@@ -39,7 +40,7 @@ pd_dJ(1:3,5:7) = eye(3);
 pd_dJ_inv = zeros(8,8);
 pd_dJ_inv(5:7,1:3) = -(1/m^2)*eye(3);
 
-pd_Fg = [gb';0;0;0;0;0];
+pd_Fg = [gb;0;0;0;0;0];
 
 a = omega_tensor((dw+dW),4);
 b = omega_tensor(dW,4);
@@ -58,9 +59,9 @@ if Switch.constant_grav
     [pd_g] = get_dg_const(dq,g); 
     pd_g = m.*pd_g;
 else
-%     [F_GG_Bc,T_GG_Bc] = get_dG(m,dq);
-%     pd_g = [F_GG_Bc;T_GG_Bc];
-    pd_g = [0;0;0;0;0;0;0;0];
+    [F_GG_Bc,T_GG_Bc] = get_dG(m,dq);
+    pd_g = [F_GG_Bc;T_GG_Bc];
+%     pd_g = [0;0;0;0;0;0;0;0];
 end
 
 d2 = dJ_inv*(pd_g - c*(dJ*pd_dW) + e*pd_dW + f*pd_dW - b*(dJ*pd_dW) + dJ*(c*pd_dW) ...
@@ -77,6 +78,7 @@ d3 = dJ_inv*(-c*(dJ*pd_dw) + e*pd_dw - b*(dJ*pd_dw) + f*pd_dw - dJ*(b*pd_dw));
 pd_dF = zeros(8,8);
 pd_dF(1:3,1:3) = eye(3);
 pd_dF(5:7,1:3) = omega_tensor(r_F,1);
+% pd_dF(5:7,5:7) = eye(3);
 
 d4 = dJ_inv*pd_dF;
 

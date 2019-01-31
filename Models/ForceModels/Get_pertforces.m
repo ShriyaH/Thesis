@@ -1,4 +1,4 @@
-function [F_D, T_D, g_B] = Get_pertforces(m,C_BA,r_B,rs_B,e_B,mu,Asteroid)
+function [F_D, T_D, g_B] = Get_pertforces(m,C_BA,r_A,r_B,rs_B,e_B,mu,Asteroid)
 %%Get all accelerations and torques in the body reference frame
 global CONSTANTS Switch SC Sun 
 
@@ -17,6 +17,7 @@ a_d = SC.a_d;
 C = SC.Polyhedron.C;
 V = SC.Polyhedron.Vertices;
 rs_I = Sun.rs_I(1:3);
+r_A = r_A(1:3);
 r_B = r_B(1:3);
 %% Solar Radiation Pressure
 if Switch.SRP
@@ -62,7 +63,6 @@ end
 
 %% Gravitational acceleration and torques
 if Switch.poly_grav 
-    r_A = C_BA'*r_B;
     q_BA = DCM2Q(C_BA);
     [g_A] = Poly_g_new(r_A,q_BA,Asteroid);
     F_B = [m.*(C_BA*g_A); 0];
@@ -99,7 +99,8 @@ if Switch.GG
         F_GG(i,:) = (m_pm(i) .* g(i,:));
         T_GG(i,:) = cross(r_pm(i,:),F_GG(i,:),2);
     end
-    g_B = sum(g);
+    [g_A,g_B] = Poly_g_new(r_A,q_BA,Asteroid); 
+    g_B = g_B(1:3);
     F_GG_B = [sum(F_GG)';0];
     T_GG_B = [sum(T_GG)';0];
 else

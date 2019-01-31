@@ -10,6 +10,7 @@ function [omega_pde,R_pde] = quat_rot_pde(p,q)
                      -pq(2) pq(1) -pq(4) pq(3) 
                      0 0 0 0];
          omega_pde = 2.*omega_pde;
+    
     elseif length(p)== 8 && length(q)== 8
         p1=p(1); p2=p(2); p3=p(3); p4=p(4);
         p5=p(5); p6=p(6); p7=p(7); p8=p(8);

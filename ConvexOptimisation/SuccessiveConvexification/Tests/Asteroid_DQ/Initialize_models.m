@@ -78,13 +78,12 @@ if Switch.Descent
     
     CONSTANTS.alpha0 = 1/SC.v_exh;
 
-    CONSTANTS.m0 = SC.mass.m_i;
-%     CONSTANTS.m0 = 000;
+    CONSTANTS.m0 = SC.mass.m_i-500;
     CONSTANTS.mf = SC.mass.dry; 
     CONSTANTS.J = SC.I.I_total;
 
-    CONSTANTS.F1 = 500;
-    CONSTANTS.F2 = 80;
+    CONSTANTS.F1 = 50;
+    CONSTANTS.F2 = 120;
     CONSTANTS.r_F = [0;0;-1];
 
     CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
@@ -92,13 +91,13 @@ if Switch.Descent
     CONSTANTS.q0 = [0;0;0;1];
     CONSTANTS.qf = cross_quat(conj_quat(SC.q_TAGB),CONSTANTS.q_lmA);
     
-    CONSTANTS.r0 = 2e3.*cos(deg2rad(30)).*CONSTANTS.n_lmA'+CONSTANTS.r_lmA';  %A-frame
+    CONSTANTS.r0 = 2e3.*CONSTANTS.n_lmA'+CONSTANTS.r_lmA';  %A-frame
     [ga0,CONSTANTS.gb0] = Poly_g_new(CONSTANTS.r0 ,CONSTANTS.q0,Kleopatra);
     
-    CONSTANTS.rf = CONSTANTS.r_lmA'+ 1.5.*CONSTANTS.n_lmA';
+    CONSTANTS.rf = CONSTANTS.r_lmA'+ (SC.l_TAG + SC.dim.block(3)/2).*CONSTANTS.n_lmA';
     [gaf,CONSTANTS.gbf] = Poly_g_new(CONSTANTS.rf ,CONSTANTS.qf,Kleopatra);
     
-    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[10; 7; 7],'n');
+    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[10; 10; 10],'n');
     CONSTANTS.vf = quat_trans(CONSTANTS.qf,[0; 0; 0],'n');
     
     CONSTANTS.w0 = [0;0;0;0];
@@ -122,10 +121,10 @@ if Switch.Descent
     CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
-    CONSTANTS.tf = 50;  %closed time
-    CONSTANTS.nodes = 50;
+    CONSTANTS.tf = 100;  %closed time
+    CONSTANTS.nodes = 10;
 
-    CONSTANTS.w_max = deg2rad(50);
+    CONSTANTS.w_max = deg2rad(30);
     CONSTANTS.theta_gs = deg2rad(10);
     CONSTANTS.theta_tilt = deg2rad(50);
     CONSTANTS.theta_gm = deg2rad(50);
@@ -140,8 +139,8 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 10;%for 10 itr
-    CONSTANTS.w_tr = 0.05;
+    CONSTANTS.w_vc = 100;%for 10 itr
+    CONSTANTS.w_tr = 0.5;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
 
@@ -155,8 +154,8 @@ if Switch.Descent
     %conic constraints control
     Switch.ang_rate_on = 1;
     Switch.glideslope_on = 0;
-    Switch.tilt_ang_on = 1;
-    Switch.gimbal_ang_on = 1;
+    Switch.tilt_ang_on = 0;
+    Switch.gimbal_ang_on = 0;
 
     %initialize iter 1 state solution
     PARAMS.n_state = length(CONSTANTS.x0);
@@ -164,9 +163,10 @@ if Switch.Descent
     PARAMS.n_virt = length(CONSTANTS.x0);
     PARAMS.n_slack = 1;
     PARAMS.n_tr = 1;
-
+    
+    Ast_model(Kleopatra,SC,CONSTANTS.dq0,CONSTANTS.dqf,CONSTANTS.dq_form);
+    
     first_sol(Kleopatra); 
-
     
     %%acik_test_case
 %     Switch.constant_grav = 1;

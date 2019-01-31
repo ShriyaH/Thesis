@@ -86,7 +86,14 @@ SA1 = [0 d1 -sz
   
 SA2 = -SA1;
 
-Polyhedron.Vertices = [block;SA1;SA2];
+[X,Y,Z] = cylinder(0.025);
+X = [X(1,1:length(X)),X(2,1:length(X))];
+Y = [Y(1,1:length(Y)),Y(2,1:length(Y))];
+Z = -Z-z;
+Z = [Z(1,1:length(Z)),Z(2,1:length(Z))-2];
+TAG = [X'+x,Y',Z'];
+
+Polyhedron.Vertices = [block;SA1;SA2;TAG];
        
 Polyhedron.Facets = [1 2 6
     1 6 5
@@ -119,7 +126,49 @@ Polyhedron.Facets = [1 2 6
     41 44 42
     41 43 44
     45 48 46
-    45 47 48];
+    45 47 48
+    49 70 71
+    49 50 71
+    50 71 72
+    50 51 72
+    51 72 73
+    51 52 73
+    52 73 74
+    52 53 74
+    53 74 75
+    53 54 75
+    54 75 76
+    54 55 76
+    55 76 77
+    55 56 77
+    56 77 78
+    56 57 78
+    57 78 79
+    57 58 79
+    58 79 80
+    58 59 80
+    59 80 81
+    59 60 81
+    60 81 82
+    60 61 82
+    61 82 83
+    61 62 83
+    62 83 84
+    62 63 84
+    63 84 85
+    63 64 85
+    64 85 86
+    64 65 86
+    65 86 87
+    65 66 87
+    66 87 88 
+    66 67 88
+    67 88 89
+    67 68 89
+    68 89 90
+    68 69 90
+    69 90 70
+    69 49 90];
 
 % [Polyhedron.Facets, Polyhedron.Vertices] = stlread('Rosetta.stl');
 % [nf,nv] = reducepatch(SC.Polyhedron.Facets,SC.Polyhedron.Vertices,0.02);
@@ -194,9 +243,10 @@ SC.I_sp = 225;           %sp. impulse
 SC.n_e = 6;              %no. of thrusters
 
 %% TAG sampler
-eb = [1,-1,-1];
-SC.e_TAG = eb./norm(eb);
-p = atan2(SC.e_TAG (2),SC.e_TAG (1));
-t = atan2(SC.e_TAG (3),norm(SC.e_TAG ));
-SC.q_TAGB = Eul2Q([-p,t+pi/2-0.09,-p],'ZYZ');
+SC.e_TAG  = [0,0,-1];
+SC.l_TAG = 3;
+% p = atan2(SC.e_TAG (2),SC.e_TAG (1));
+% t = atan2(SC.e_TAG (3),norm(SC.e_TAG ));
+% SC.q_TAGB = Eul2Q([-p,t+pi/2-0.09,-p],'ZYZ');
+SC.q_TAGB = [0;0;0;-1];
 end

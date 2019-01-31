@@ -1,11 +1,11 @@
-%%----Ast_descent_script----%%
+ %%----Ast_descent_script----%%
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
 clear all; 
 clc; 
 close all; 
 
-global ITR CONSTANTS;
+global ITR CONSTANTS Kleopatra SC Samples Constraints Switch Sun T;
 tic
 Initialize_models();
 toc
