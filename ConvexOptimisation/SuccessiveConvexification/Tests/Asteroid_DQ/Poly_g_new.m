@@ -85,10 +85,7 @@ end
         wf=2*atan2(num,den);
     
     end
-
-        
-    
-    
+  
     Rf=(Ri+Rj+Rk)/3;
 
     U_fac=wf*Rf'*F_tilde(:,:,i)*Rf+U_fac;

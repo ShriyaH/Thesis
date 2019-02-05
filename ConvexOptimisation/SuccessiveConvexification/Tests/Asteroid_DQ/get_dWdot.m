@@ -27,7 +27,7 @@ end
 dW(1:4) = quat_trans(dq(1:4),wa(1:4),'n');
 dW(5:8) = quat_trans(dq(1:4),wa(5:8),'n');
 dW=dW';
-% R = DQ2R(dq,dq_form-1);
+
 R = [0;0;0;0;r_B];
 
 %% partial derivative with respect to mass 
@@ -40,7 +40,7 @@ pd_dJ(1:3,5:7) = eye(3);
 pd_dJ_inv = zeros(8,8);
 pd_dJ_inv(5:7,1:3) = -(1/m^2)*eye(3);
 
-pd_Fg = [gb;0;0;0;0;0];
+pd_Fg = dFg./m;
 
 a = omega_tensor((dw+dW),4);
 b = omega_tensor(dW,4);
@@ -54,7 +54,7 @@ d = omega_tensor(R,4);
 e = omega_tensor(dJ*dw,4);
 f = omega_tensor(dJ*dW,4);
 
-[pd_dW,pd_R] = quat_rot_pde(dq,wa);
+[pd_dwq,pd_dW,pd_R] = quat_rot_pde(dq,dw,wa);
 if Switch.constant_grav
     [pd_g] = get_dg_const(dq,g); 
     pd_g = m.*pd_g;
@@ -65,7 +65,8 @@ else
 end
 
 d2 = dJ_inv*(pd_g - c*(dJ*pd_dW) + e*pd_dW + f*pd_dW - b*(dJ*pd_dW) + dJ*(c*pd_dW) ...
-             - dJ*(b*(b*pd_R)) + dJ*(b*(d*pd_dW)) - dJ*(omega_tensor(b*R,4)*pd_dW));
+             - dJ*(b*(b*pd_R)) + dJ*(b*(d*pd_dW)) - dJ*(omega_tensor(b*R,4)*pd_dW)...
+             - b*(dJ*pd_dwq) + f*pd_dwq - c*(dJ*pd_dwq) + e*pd_dwq - dJ*(b*pd_dwq));
 
 %% partial derivative with respect to dual ang. vel. vector
 pd_dw = zeros(8,8);
@@ -78,7 +79,6 @@ d3 = dJ_inv*(-c*(dJ*pd_dw) + e*pd_dw - b*(dJ*pd_dw) + f*pd_dw - dJ*(b*pd_dw));
 pd_dF = zeros(8,8);
 pd_dF(1:3,1:3) = eye(3);
 pd_dF(5:7,1:3) = omega_tensor(r_F,1);
-% pd_dF(5:7,5:7) = eye(3);
 
 d4 = dJ_inv*pd_dF;
 

@@ -14,6 +14,7 @@ tol = CONSTANTS.tol;
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
 nv = PARAMS.n_virt;
+% nv=8;
 nsl = PARAMS.n_slack;
 nt = PARAMS.n_tr;
 
@@ -23,7 +24,7 @@ ITR.S{1} = 0;
 ITR.ETA{1} = 0;
 
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',50);
+opts = ecosoptimset('MAXIT',100,'FEASTOL', 1e-01, 'RELTOL',1e-01);
 % opts = ecosoptimset();
 i = 1;
 count = 1;

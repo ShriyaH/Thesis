@@ -3,7 +3,7 @@ function [A,b,G,h,C,dims] = SCvx_ini_para(i)
 % Shriya Hazra, 31-Jul-2018 
 
 % Standard formulation
-global CONSTANTS PARAMS Switch ITR Kleopatra;
+global CONSTANTS PARAMS Switch ITR Kleopatra SC;
 
 % load parameters & compute constants
 alpha0 =  CONSTANTS.alpha0;
@@ -32,12 +32,13 @@ ITR.w_tr{1} = CONSTANTS.w_tr;
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
 nv = PARAMS.n_virt;
+% nv = 8;
 nsl = PARAMS.n_slack;
 nt = PARAMS.n_tr;
 n = ns+nc+nv+nsl+nt;
 
 Ed = zeros(ns,nv+nsl);
-Ed(1:nv,1:nv) = eye(nv);
+Ed(ns-nv+1:ns,1:nv) = eye(nv);
 
 % define the final elements we impose
 X_f_flag = [0;ones(ns-1,1)];
@@ -86,7 +87,8 @@ for k = 0:K-1
     dw_k = x_k(10:17,1); 
     dF_k = x_k(18:25,1);
     
-    dJ_k = dq_inertia(m_k,J);
+    J_k = Get_Jupdate(m_k);
+    dJ_k = dq_inertia(m_k,J_k);
         
     if ii<K
         
@@ -106,7 +108,8 @@ for k = 0:K-1
         ITR.Ac_k{i}{ii} = Ac;
 
         Bc = zeros(ns,nc);
-        Bc(26:33,:) = eye(nc);
+        Bc(26:28,1:3) = eye(3);
+        Bc(30:32,5:7) = eye(3);
 
         ITR.Bc_k{i}{ii} = Bc;
 
@@ -116,7 +119,7 @@ for k = 0:K-1
 
     % Discretisation
         % state transition matrix for each time step
-        p = 4; %number of terms included in the series expansion 
+        p = 3; %number of terms included in the series expansion 
         Psi = zeros(size(Ac));
         for pp = 0:1:p
             dPsi = (dt^pp/factorial(pp+1))*Ac^pp;
@@ -382,6 +385,30 @@ if Switch.glideslope_on
     end
 end
 
+if Switch.virtual_control_on %||u_k||_2 <= umax
+    S = zeros(nc,K*n+2);
+    s = zeros(1,K*n+2);
+    bc = zeros(nc,1);
+    dc = 5;
+    for ii = 1:K
+        Ac = S;
+        Ac(1:nc,(ii-1)*n+ns+(1:nc)) = eye(nc);
+          
+        cc = s;
+%         cc(1,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
+        
+       
+        Gt = -[cc;Ac];
+        ht = [dc;bc];
+        
+        G = [G;Gt];
+        h = [h;ht];
+    
+        dims.q = [dims.q (nc+1)];
+        
+    end
+end
+
 if Switch.virtual_control_on %||v_k||_2 <= s_k
     S = zeros(nv,K*n+2);
     s = zeros(1,K*n+2);
@@ -405,6 +432,7 @@ if Switch.virtual_control_on %||v_k||_2 <= s_k
         
     end
 end
+
 
 if Switch.virtual_control_on % ||s_k||_2 <= S
     Ac = zeros(K,K*n+2);

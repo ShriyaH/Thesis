@@ -5,7 +5,7 @@ clear all;
 clc; 
 close all; 
 
-global ITR CONSTANTS Kleopatra SC Samples Constraints Switch Sun T;
+global ITR CONSTANTS Kleopatra SC Samples Constraints Switch Sun T PARAMS;
 tic
 Initialize_models();
 toc
