@@ -41,10 +41,10 @@ Ed = zeros(ns,nv+nsl);
 Ed(ns-nv+1:ns,1:nv) = eye(nv);
 
 % define the final elements we impose
-% X_f_flag = [0;ones(ns-1,1)];
-% n_flag = sum(X_f_flag);
-X_f_flag = [0;ones(ns-9,1)];
+X_f_flag = [0;ones(ns-1,1)];
 n_flag = sum(X_f_flag);
+% X_f_flag = [0;ones(ns-9,1)];
+% n_flag = sum(X_f_flag);
 
 
 %% COST FUNCTION
@@ -73,8 +73,8 @@ end
 b(1:ns,1) = x0; %initial state
 
 A(K*ns+(1:n_flag),(K-1)*(n)+1+(1:n_flag)) = eye(n_flag); 
-% b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
-b(K*ns+(1:n_flag),1) = xf(2:ns-8,1); %final state
+b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
+% b(K*ns+(1:n_flag),1) = xf(2:ns-8,1); %final state
 
 % Construct all the LTV continuous time matrices for initial iteration
 % state (K-1 time steps)
@@ -119,9 +119,9 @@ for k = 0:K-1
 
     % Discretisation
         % state transition matrix for each time step
-        p = 2; %number of terms included in the series expansion 
+        p = 1; %number of terms included in the series expansion 
         Psi = zeros(size(Ac));
-        for pp = 0:1:p
+        for pp = 0:p
             dPsi = (dt^pp/factorial(pp+1)).*Ac^pp;
             Psi = Psi+dPsi;
         end
@@ -239,50 +239,6 @@ if Switch.mass_lower_boundary_on % m_k <= m_wet
     h = [h;ht];
     dims.l =  size(G,1);
         
-end
-
-if Switch.virtual_control_on % S <= S_max
-    Gt = zeros(1,K*n+2);
-    Gt(1,end-1) = 1;
-    
-    ht = 10;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.virtual_control_on % 0 <= S
-    Gt = zeros(1,K*n+2);
-    Gt(1,end-1) = -1;
-    
-    ht = 0;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.trust_region_on % ETA <= ETA_max
-    Gt = zeros(1,K*n+2);
-    Gt(1,end) = 1;
-    
-    ht = 100;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.trust_region_on % 0 <= ETA
-    Gt = zeros(1,K*n+2);
-    Gt(1,end) = -1;
-    
-    ht = 0;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
 end
 
 if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + F_sol_k'/||F_sol_k||_2 (F_k - F_sol_k)

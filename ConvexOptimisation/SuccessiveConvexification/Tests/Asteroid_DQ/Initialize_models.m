@@ -66,8 +66,10 @@ if Switch.Descent
     Switch.poly_grav = 0;
     
     CONSTANTS.lm_i = 1;
-    CONSTANTS.r_lmA = Kleopatra.lm_coord(CONSTANTS.lm_i,:);
-    CONSTANTS.n_lmA = Kleopatra.lm_n(CONSTANTS.lm_i,:);
+%     CONSTANTS.r_lmA = Kleopatra.lm_coord(CONSTANTS.lm_i,:);
+    CONSTANTS.r_lmA =[88903.2435806491,-40276.7243886882,-3578.08318258192];
+%     CONSTANTS.n_lmA = Kleopatra.lm_n(CONSTANTS.lm_i,:);
+    CONSTANTS.n_lmA = [0.580066621532630,-0.670389639535245,-0.462709893764469];
     p = atan2(CONSTANTS.n_lmA(2),CONSTANTS.n_lmA(1));
     t = atan2(CONSTANTS.n_lmA(3),norm(CONSTANTS.n_lmA));
     q1 = Eul2Q([-p,t+pi/2,-p],'ZYZ');
@@ -98,7 +100,7 @@ if Switch.Descent
     CONSTANTS.rf = CONSTANTS.r_lmA'+ (SC.l_TAG + SC.dim.block(3)/2).*CONSTANTS.n_lmA';
     [gaf,CONSTANTS.gbf] = Poly_g_new(CONSTANTS.rf ,CONSTANTS.qf,Kleopatra);
     
-    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[0; 5; 5],'n');
+    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[0; 0; 7],'n');
     CONSTANTS.vf = quat_trans(CONSTANTS.qf,[0; 0; 0],'n');
     
     CONSTANTS.w0 = [0;0;0;0];
@@ -123,13 +125,13 @@ if Switch.Descent
     CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
-    CONSTANTS.tf = 250;  %closed time
+    CONSTANTS.tf = 100;  %closed time
     CONSTANTS.nodes = 10;
 
-    CONSTANTS.w_max = deg2rad(30);
+    CONSTANTS.w_max = deg2rad(60);
     CONSTANTS.theta_gs = deg2rad(10);
-    CONSTANTS.theta_tilt = deg2rad(50);
-    CONSTANTS.theta_gm = deg2rad(50);
+    CONSTANTS.theta_tilt = deg2rad(150);
+    CONSTANTS.theta_gm = deg2rad(100);
 
     %trust region cost change ratio constraints
     CONSTANTS.rho0 = 0;
@@ -141,9 +143,9 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 500;%for 10 itr
-    CONSTANTS.w_tr = 0.5;
-    Switch.virtual_control_on = 1;
+    CONSTANTS.w_vc = 10000;%for 10 itr
+    CONSTANTS.w_tr = 10;
+    Switch.virtual_control_on = 0;
     Switch.trust_region_on = 1;
 
     %linear constraints control
