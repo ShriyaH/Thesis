@@ -122,13 +122,8 @@ for k = 0:K-1
         p = 2; %number of terms included in the series expansion 
         Psi = zeros(size(Ac));
         for pp = 0:1:p
-<<<<<<< HEAD
-            dPsi = (dt^pp/factorial(pp+1))*Ac^pp;
-            Psi = Psi + dPsi;
-=======
             dPsi = (dt^pp/factorial(pp+1)).*Ac^pp;
             Psi = Psi+dPsi;
->>>>>>> d686017f403dc02c1cb3a4fab142131d2f1d200f
         end
 
         % construct discrete-time matrices at linearisation points

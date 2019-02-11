@@ -4,30 +4,30 @@
 [ Kleopatra ] = Get_Asteroid( 'Kleopatra', 1 );
 [F,V]=stlread('Rosetta.stl');
 r=[10e3,50e3,50e3];
-V = 200.*V+r;
+V = 500.*V+r;
 % t = [0;1];
 % [X,Y,Z] = cylinder(t);
 % x= 50.*X;
 % y=50.*Y;
 % z=50.*Z; 
 
-figure();
-clf;
-hold on
-patch('Vertices',Kleopatra.Polyhedron.Vertices,'Faces',Kleopatra.Polyhedron.Facets,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
-patch('Vertices',V,'Faces',F,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
-quiver3(0,0,0,200e3,0,0,'Color','r','Linewidth',2);
-quiver3(0,0,0,0,200e3,0,'Color','g','Linewidth',2);
-quiver3(0,0,0,0,0,200e3,'Color','b','Linewidth',2);
-quiver3(0,0,0,10e3,70e3,120e3,'Color','k','Linewidth',2);
-% surf(x,y,z);
-% alpha(.5)
-xlabel('X-axis (m)')
-ylabel('Y-axis (m)')
-zlabel('Z-axis (m)')
-axis equal
-grid on
-
+% figure();
+% clf;
+% hold on
+% patch('Vertices',Kleopatra.Polyhedron.Vertices,'Faces',Kleopatra.Polyhedron.Facets,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
+% % patch('Vertices',V,'Faces',F,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
+% quiver3(0,0,0,200e3,0,0,'Color','r','Linewidth',2);
+% quiver3(0,0,0,0,200e3,0,'Color','g','Linewidth',2);
+% quiver3(0,0,0,0,0,200e3,'Color','b','Linewidth',2);
+% quiver3(0,0,0,10e3,70e3,120e3,'Color','k','Linewidth',2);
+% % surf(x,y,z);
+% % alpha(.5)
+% xlabel('X-axis (m)')
+% ylabel('Y-axis (m)')
+% zlabel('Z-axis (m)')
+% axis equal
+% grid on
+% hold on
 
 % %LOS
 
@@ -52,23 +52,26 @@ grid on
 % axis equal
 % grid on
 
-% %Gimbal
+%Gimbal
 % t = [0;1];
 % [X,Y,Z] = cylinder(t);
-% x= 3.*X;
-% y=3.*Y;
-% z=10.*Z; 
-% V(:,:)=V(:,:)./2;
+% x= 500*(3.*X)+r(1);
+% y=500*(3.*Y)+r(2);
+% z=100*(10.*Z)+r(3); 
+% % V(:,:)=V(:,:)./2;
 % 
 % figure();
-% clf;
+% % clf;
+% hold on
+% surf(-x,-y,-z);
+% hold on
+% alpha(.5)
+% hold on
 % patch('Vertices',V,'Faces',F,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
 % hold on
 % quiver3(0,0,0,25,0,0,'Color','r','Linewidth',2);
 % quiver3(0,0,0,0,5,0,'Color','g','Linewidth',2);
 % quiver3(0,0,0,0,0,5,'Color','b','Linewidth',2);
-% surf(-x,-y,-z);
-% alpha(.5)
 % xlabel('X-axis (m)')
 % ylabel('Y-axis (m)')
 % zlabel('Z-axis (m)')

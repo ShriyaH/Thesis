@@ -143,7 +143,7 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 100;%for 10 itr
+    CONSTANTS.w_vc = 500;%for 10 itr
     CONSTANTS.w_tr = 1;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
@@ -156,7 +156,7 @@ if Switch.Descent
     Switch.thrust_lower_boundary_on = 1;
 
     %conic constraints control
-    Switch.ang_rate_on = 0;
+    Switch.ang_rate_on = 1;
     Switch.glideslope_on = 0;
     Switch.tilt_ang_on = 0;
     Switch.gimbal_ang_on = 0;
