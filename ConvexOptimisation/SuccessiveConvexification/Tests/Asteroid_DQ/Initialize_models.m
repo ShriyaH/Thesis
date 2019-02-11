@@ -66,8 +66,10 @@ if Switch.Descent
     Switch.poly_grav = 0;
     
     CONSTANTS.lm_i = 1;
-    CONSTANTS.r_lmA = Kleopatra.lm_coord(CONSTANTS.lm_i,:);
-    CONSTANTS.n_lmA = Kleopatra.lm_n(CONSTANTS.lm_i,:);
+%     CONSTANTS.r_lmA = Kleopatra.lm_coord(CONSTANTS.lm_i,:);
+    CONSTANTS.r_lmA =[88903.2435806491,-40276.7243886882,-3578.08318258192];
+%     CONSTANTS.n_lmA = Kleopatra.lm_n(CONSTANTS.lm_i,:);
+    CONSTANTS.n_lmA = [0.580066621532630,-0.670389639535245,-0.462709893764469];
     p = atan2(CONSTANTS.n_lmA(2),CONSTANTS.n_lmA(1));
     t = atan2(CONSTANTS.n_lmA(3),norm(CONSTANTS.n_lmA));
     q1 = Eul2Q([-p,t+pi/2,-p],'ZYZ');
@@ -78,27 +80,27 @@ if Switch.Descent
     
     CONSTANTS.alpha0 = 1/SC.v_exh;
 
-    CONSTANTS.m0 = SC.mass.m_i;
-%     CONSTANTS.m0 = 000;
+    CONSTANTS.m0 = SC.mass.m_i-500;
     CONSTANTS.mf = SC.mass.dry; 
     CONSTANTS.J = SC.I.I_total;
 
-    CONSTANTS.F1 = 500;
-    CONSTANTS.F2 = 80;
+    CONSTANTS.F1 = 20;
+    CONSTANTS.F2 = 500;
     CONSTANTS.r_F = [0;0;-1];
 
     CONSTANTS.dq_form = 2; %0.5*q_bi*r_i
 
-    CONSTANTS.q0 = [0;0;0;1];
+%     CONSTANTS.q0 = [0;0;0;1];
+    CONSTANTS.q0 = cross_quat(conj_quat(SC.q_TAGB),CONSTANTS.q_lmA);
     CONSTANTS.qf = cross_quat(conj_quat(SC.q_TAGB),CONSTANTS.q_lmA);
     
-    CONSTANTS.r0 = 2e3.*cos(deg2rad(30)).*CONSTANTS.n_lmA'+CONSTANTS.r_lmA';  %A-frame
+    CONSTANTS.r0 = 2e3.*CONSTANTS.n_lmA'+CONSTANTS.r_lmA';  %A-frame
     [ga0,CONSTANTS.gb0] = Poly_g_new(CONSTANTS.r0 ,CONSTANTS.q0,Kleopatra);
     
-    CONSTANTS.rf = CONSTANTS.r_lmA'+ 1.5.*CONSTANTS.n_lmA';
+    CONSTANTS.rf = CONSTANTS.r_lmA'+ (SC.l_TAG + SC.dim.block(3)/2).*CONSTANTS.n_lmA';
     [gaf,CONSTANTS.gbf] = Poly_g_new(CONSTANTS.rf ,CONSTANTS.qf,Kleopatra);
     
-    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[10; 7; 7],'n');
+    CONSTANTS.v0 = quat_trans(CONSTANTS.q0,[0; 0; 7],'n');
     CONSTANTS.vf = quat_trans(CONSTANTS.qf,[0; 0; 0],'n');
     
     CONSTANTS.w0 = [0;0;0;0];
@@ -115,33 +117,34 @@ if Switch.Descent
     CONSTANTS.dqf = Q2DQ(CONSTANTS.qf,CONSTANTS.rf,CONSTANTS.dq_form);
     CONSTANTS.dwf = [CONSTANTS.wf;CONSTANTS.vf]; 
     CONSTANTS.dFf = [CONSTANTS.Ff;cross(CONSTANTS.r_F,CONSTANTS.Ff(1:3));0]; 
+%     CONSTANTS.dFf = [CONSTANTS.Ff;0;0;0;0]; 
     CONSTANTS.dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
     
-    CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
-     
+%     CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
+    CONSTANTS.dw_AI = [0;0;0;0;0;0;0;0]; 
     CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
-    CONSTANTS.tf = 50;  %closed time
-    CONSTANTS.nodes = 50;
+    CONSTANTS.tf = 100;  %closed time
+    CONSTANTS.nodes = 10;
 
-    CONSTANTS.w_max = deg2rad(50);
+    CONSTANTS.w_max = deg2rad(60);
     CONSTANTS.theta_gs = deg2rad(10);
-    CONSTANTS.theta_tilt = deg2rad(50);
-    CONSTANTS.theta_gm = deg2rad(50);
+    CONSTANTS.theta_tilt = deg2rad(150);
+    CONSTANTS.theta_gm = deg2rad(100);
 
     %trust region cost change ratio constraints
     CONSTANTS.rho0 = 0;
     CONSTANTS.rho1 = 0.25;
     CONSTANTS.rho2 = 0.9;
-    CONSTANTS.Alpha = 1.22;
+    CONSTANTS.Alpha = 1.1;
     CONSTANTS.Beta = 3;
     CONSTANTS.i_max = 10;
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 10;%for 10 itr
-    CONSTANTS.w_tr = 0.05;
+    CONSTANTS.w_vc = 100;%for 10 itr
+    CONSTANTS.w_tr = 1;
     Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
 
@@ -153,20 +156,22 @@ if Switch.Descent
     Switch.thrust_lower_boundary_on = 1;
 
     %conic constraints control
-    Switch.ang_rate_on = 1;
+    Switch.ang_rate_on = 0;
     Switch.glideslope_on = 0;
-    Switch.tilt_ang_on = 1;
-    Switch.gimbal_ang_on = 1;
+    Switch.tilt_ang_on = 0;
+    Switch.gimbal_ang_on = 0;
 
     %initialize iter 1 state solution
     PARAMS.n_state = length(CONSTANTS.x0);
     PARAMS.n_control = length(CONSTANTS.dF_dotf);
     PARAMS.n_virt = length(CONSTANTS.x0);
+%     PARAMS.n_virt = 8;
     PARAMS.n_slack = 1;
     PARAMS.n_tr = 1;
-
+    
+    Ast_model(Kleopatra,SC,CONSTANTS.dq0,CONSTANTS.dqf,CONSTANTS.dq_form);
+    
     first_sol(Kleopatra); 
-
     
     %%acik_test_case
 %     Switch.constant_grav = 1;

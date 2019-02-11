@@ -1,7 +1,7 @@
 function [] = first_sol(Asteroid)
 % Asteroid descent problem for ECOS with Successive Convexification
 % Shriya Hazra, 31-Jul-2018 
-global ITR CONSTANTS Switch;
+global ITR CONSTANTS Switch SC;
 
 K = CONSTANTS.nodes;
 alpha0 =  CONSTANTS.alpha0;
@@ -61,6 +61,8 @@ for k = 0:K-1
     w_k = ((K-k-1)/(K-1))*w0 + (k/(K-1))*wf;
     dw_k = [w_k;0;v_k];
     
+%     [gA,gB] = Poly_g_new(r_k(1:3),dq_k(1:4),Asteroid);
+    
     if Switch.constant_grav==1
         g = CONSTANTS.g; 
         gb = quat_trans(dq_k(1:4),g,'vect')';
@@ -70,21 +72,22 @@ for k = 0:K-1
         C_BA = Q2DCM(dq_k(1:4));
         rs_B = [0,0,0];
         e_B =[0,0,0];
-        [Fgb, Tgb] = Get_pertforces(m_k,C_BA,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
+        [Fgb,Tgb,gb] = Get_pertforces(m_k,C_BA,r_k,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
+        ITR.gb{1}{:,ii} = gb;
         dFg_k = [Fgb;Tgb];
-        r_k = r_k(1:3);
-        [ga,gb] = Poly_g_new(r_k,dq_k(1:4),Asteroid);
     end
     
-    F = -(m_k.*gb);
+%     F = -(m_k.*gb');
+    F = -Fgb;
     F = F(1:3);
     dF_k = [F;0;cross(r_F',F')';0];
     Fdot_k = -alpha0.*norm(dF_k(1:3)).*gb;
     Fdot_k = Fdot_k(1:3);
     dFdot_k = [Fdot_k;0;cross(r_F',Fdot_k')';0];
+%     dFdot_k = [0;0;0;0;0;0;0;0];
     
-    wab = quat_trans(dq_k(1:4),dwa(1:4),'n');
-    wab = [wab;0;0;0;0];
+    wab1 = quat_trans(dq_k(1:4),dwa(1:4),'n');
+    wab = [wab1;0;0;0;0];
     Wab = omega_tensor(wab,4);
     
     R = [0;0;0;0;r_B];
@@ -95,15 +98,17 @@ for k = 0:K-1
     u_k = zeros(8,1);
     ITR.u_k{1}(:,ii) = u_k;
         
-    if k<K-1       
-        J_k = dq_inertia(m_k,J);
-        [U, S, V] = svd(J_k);
-        J_inv_k = V*(S\U');
+    if k<K-1     
+        J_k = Get_Jupdate(m_k);
+%         ITR.J_k{1} = J_k;
+        dJ_k = dq_inertia(m_k,J_k);
+        [U, S, V] = svd(dJ_k);
+        dJ_inv_k = V*(S\U');
         
         % construct linearisation point state differential
         mdot_k = -alpha0*norm(dF_k(1:3));
         dqdot_k = 1/2.*(omega_tensor(dw_k,3)*dq_k);
-        dwdot_k = J_inv_k*(dF_k + dFg_k - omega_tensor((dw_k+wab),4)*(J_k*(dw_k+wab)) - J_k*(Wab*dw_k) - J_k*(Wab*(Wab*R)));
+        dwdot_k = dJ_inv_k*(dF_k + dFg_k - omega_tensor((dw_k+wab),4)*(dJ_k*(dw_k+wab)) - dJ_k*(Wab*dw_k) - dJ_k*(Wab*(Wab*R)));
 
         xdot_k = [mdot_k;dqdot_k;dwdot_k;dFdot_k;u_k];
         ITR.xdot_k{1}(:,ii) = xdot_k;

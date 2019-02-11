@@ -1,5 +1,5 @@
 function [g_A, g_B, Wf, U] = Poly_g_new(r_A, q_BA,Asteroid)
-
+%r_A=3X1 ,q_BA = 4x1
 G=6.67408e-11;
 
 V=Asteroid.Polyhedron.Vertices;
@@ -85,10 +85,7 @@ end
         wf=2*atan2(num,den);
     
     end
-
-        
-    
-    
+  
     Rf=(Ri+Rj+Rk)/3;
 
     U_fac=wf*Rf'*F_tilde(:,:,i)*Rf+U_fac;

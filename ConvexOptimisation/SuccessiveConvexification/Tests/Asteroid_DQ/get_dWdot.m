@@ -9,8 +9,9 @@ dDWdot = zeros(8,ns);
 
 if Switch.constant_grav 
     g = CONSTANTS.g;
-    gb = quat_trans(dq(1:4),g,'vect');
-    dFg = [m.*gb';0;0;0;0;0];
+    gb = quat_trans(dq(1:4),g,'n');
+    gb = gb(1:3);
+    dFg = [m.*gb;0;0;0;0;0];
 else
     %polyhedron gravity field
     r_A = DQ2R(dq,dq_form);
@@ -18,9 +19,13 @@ else
     C_BA = Q2DCM(dq(1:4));
     rs_B = [0,0,0];
     e_B =[0,0,0];
+<<<<<<< HEAD
     [Fgb, Tgb] = Get_pertforces(m,C_BA,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
     [ga,gb] = Poly_g_new(r_A(1:3),dq(1:4),Kleopatra); 
     gb = gb(1:3)';
+=======
+    [Fgb,Tgb,gb] = Get_pertforces(m,C_BA,r_A,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
+>>>>>>> d686017f403dc02c1cb3a4fab142131d2f1d200f
     dFg = [Fgb;Tgb];
 end
 
@@ -28,7 +33,7 @@ end
 dW(1:4) = quat_trans(dq(1:4),wa(1:4),'n');
 dW(5:8) = quat_trans(dq(1:4),wa(5:8),'n');
 dW=dW';
-% R = DQ2R(dq,dq_form-1);
+
 R = [0;0;0;0;r_B];
 
 %% partial derivative with respect to mass 
@@ -41,7 +46,7 @@ pd_dJ(1:3,5:7) = eye(3);
 pd_dJ_inv = zeros(8,8);
 pd_dJ_inv(5:7,1:3) = -(1/m^2)*eye(3);
 
-pd_Fg = [gb';0;0;0;0;0];
+pd_Fg = dFg./m;
 
 a = omega_tensor((dw+dW),4);
 b = omega_tensor(dW,4);
@@ -55,18 +60,19 @@ d = omega_tensor(R,4);
 e = omega_tensor(dJ*dw,4);
 f = omega_tensor(dJ*dW,4);
 
-[pd_dW,pd_R] = quat_rot_pde(dq,wa);
+[pd_dwq,pd_dW,pd_R] = quat_rot_pde(dq,dw,wa);
 if Switch.constant_grav
     [pd_g] = get_dg_const(dq,g); 
     pd_g = m.*pd_g;
 else
-%     [F_GG_Bc,T_GG_Bc] = get_dG(m,dq);
-%     pd_g = [F_GG_Bc;T_GG_Bc];
-    pd_g = [0;0;0;0;0;0;0;0];
+    [F_GG_Bc,T_GG_Bc] = get_dG(m,dq);
+    pd_g = [F_GG_Bc;T_GG_Bc];
+%     pd_g = [0;0;0;0;0;0;0;0];
 end
 
 d2 = dJ_inv*(pd_g - c*(dJ*pd_dW) + e*pd_dW + f*pd_dW - b*(dJ*pd_dW) + dJ*(c*pd_dW) ...
-             - dJ*(b*(b*pd_R)) + dJ*(b*(d*pd_dW)) - dJ*(omega_tensor(b*R,4)*pd_dW));
+             - dJ*(b*(b*pd_R)) + dJ*(b*(d*pd_dW)) - dJ*(omega_tensor(b*R,4)*pd_dW)...
+             - b*(dJ*pd_dwq) + f*pd_dwq - c*(dJ*pd_dwq) + e*pd_dwq - dJ*(b*pd_dwq));
 
 %% partial derivative with respect to dual ang. vel. vector
 pd_dw = zeros(8,8);

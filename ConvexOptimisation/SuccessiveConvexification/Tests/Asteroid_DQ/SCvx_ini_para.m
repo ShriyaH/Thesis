@@ -3,7 +3,7 @@ function [A,b,G,h,C,dims] = SCvx_ini_para(i)
 % Shriya Hazra, 31-Jul-2018 
 
 % Standard formulation
-global CONSTANTS PARAMS Switch ITR Kleopatra;
+global CONSTANTS PARAMS Switch ITR Kleopatra SC;
 
 % load parameters & compute constants
 alpha0 =  CONSTANTS.alpha0;
@@ -32,18 +32,19 @@ ITR.w_tr{1} = CONSTANTS.w_tr;
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
 nv = PARAMS.n_virt;
+% nv = 8;
 nsl = PARAMS.n_slack;
 nt = PARAMS.n_tr;
 n = ns+nc+nv+nsl+nt;
 
 Ed = zeros(ns,nv+nsl);
-Ed(1:nv,1:nv) = eye(nv);
+Ed(ns-nv+1:ns,1:nv) = eye(nv);
 
 % define the final elements we impose
-X_f_flag = [0;ones(ns-1,1)];
-n_flag = sum(X_f_flag);
-% X_f_flag = [0;ones(ns-9,1)];
+% X_f_flag = [0;ones(ns-1,1)];
 % n_flag = sum(X_f_flag);
+X_f_flag = [0;ones(ns-9,1)];
+n_flag = sum(X_f_flag);
 
 
 %% COST FUNCTION
@@ -72,8 +73,8 @@ end
 b(1:ns,1) = x0; %initial state
 
 A(K*ns+(1:n_flag),(K-1)*(n)+1+(1:n_flag)) = eye(n_flag); 
-b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
-% b(K*ns+(1:n_flag),1) = xf(2:ns-8,1); %final state
+% b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
+b(K*ns+(1:n_flag),1) = xf(2:ns-8,1); %final state
 
 % Construct all the LTV continuous time matrices for initial iteration
 % state (K-1 time steps)
@@ -86,7 +87,8 @@ for k = 0:K-1
     dw_k = x_k(10:17,1); 
     dF_k = x_k(18:25,1);
     
-    dJ_k = dq_inertia(m_k,J);
+    J_k = Get_Jupdate(m_k);
+    dJ_k = dq_inertia(m_k,J_k);
         
     if ii<K
         
@@ -99,13 +101,15 @@ for k = 0:K-1
         Ac(1,18:20) = -alpha0.*(dF_k(1:3)'./norm(dF_k(1:3)));
         Ac(2:9,:) = get_dQdot(dw_k,dq_k,ns);
         Ac(10:17,:) = get_dWdot(m_k,dw_k,dJ_k,dq_k,dF_k,wa,ns);
-        Ac(18:25,26:33) = eye(8);
+        Ac(18:20,26:28) = eye(3);
+        Ac(22:24,30:32) = eye(3);
 
 
         ITR.Ac_k{i}{ii} = Ac;
 
         Bc = zeros(ns,nc);
-        Bc(26:33,:) = eye(nc);
+        Bc(26:28,1:3) = eye(3);
+        Bc(30:32,5:7) = eye(3);
 
         ITR.Bc_k{i}{ii} = Bc;
 
@@ -115,11 +119,16 @@ for k = 0:K-1
 
     % Discretisation
         % state transition matrix for each time step
-        p = 3; %number of terms included in the series expansion 
+        p = 2; %number of terms included in the series expansion 
         Psi = zeros(size(Ac));
         for pp = 0:1:p
+<<<<<<< HEAD
             dPsi = (dt^pp/factorial(pp+1))*Ac^pp;
             Psi = Psi + dPsi;
+=======
+            dPsi = (dt^pp/factorial(pp+1)).*Ac^pp;
+            Psi = Psi+dPsi;
+>>>>>>> d686017f403dc02c1cb3a4fab142131d2f1d200f
         end
 
         % construct discrete-time matrices at linearisation points
@@ -236,6 +245,50 @@ if Switch.mass_lower_boundary_on % m_k <= m_wet
     dims.l =  size(G,1);
         
 end
+% 
+% if Switch.virtual_control_on % S <= S_max
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end-1) = 1;
+%     
+%     ht = 10;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
+% 
+% if Switch.virtual_control_on % 0 <= S
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end-1) = -1;
+%     
+%     ht = 0;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
+
+% if Switch.trust_region_on % ETA <= ETA_max
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end) = 1;
+%     
+%     ht = 10;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
+% 
+% if Switch.trust_region_on % 0 <= ETA
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end) = -1;
+%     
+%     ht = 0;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
 
 if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + F_sol_k'/||F_sol_k||_2 (F_k - F_sol_k)
     Gt = zeros(K,K*n+2);
@@ -319,7 +372,7 @@ if Switch.gimbal_ang_on
         Ac(1:3,(ii-1)*n+(18:20)) = eye(3);
           
         cc = s;
-        cc(1,(ii-1)*n+(18:20)) = [1/cos(theta_gm) 0 0];
+        cc(1,(ii-1)*n+(18:20)) = [0 0 1/cos(theta_gm)];
         
         Gt = -[cc;Ac];
         ht = [dc;bc];
@@ -364,11 +417,11 @@ if Switch.glideslope_on
     dc = 0;
     for ii = 1:K
         Ac = S;
-        Ac(1,(ii-1)*n+(2:4)) = [0 1 0];
-        Ac(2,(ii-1)*n+(2:4)) = [0 0 1];
+        Ac(1,(ii-1)*n+(2:4)) = [1 0 0];
+        Ac(2,(ii-1)*n+(2:4)) = [0 1 0];
         
         cc = s;
-        cc(1,(ii-1)*n+(2:4)) = [1/tan(theta_gs) 0 0];
+        cc(1,(ii-1)*n+(2:4)) = [0 0 1/tan(theta_gs)];
         
         Gt = -[cc;Ac];
         ht = [dc;bc];
@@ -380,6 +433,30 @@ if Switch.glideslope_on
         
     end
 end
+
+% if Switch.virtual_control_on %||u_k||_2 <= umax
+%     S = zeros(nc,K*n+2);
+%     s = zeros(1,K*n+2);
+%     bc = zeros(nc,1);
+%     dc = 5;
+%     for ii = 1:K
+%         Ac = S;
+%         Ac(1:nc,(ii-1)*n+ns+(1:nc)) = eye(nc);
+%           
+%         cc = s;
+% %         cc(1,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
+%         
+%        
+%         Gt = -[cc;Ac];
+%         ht = [dc;bc];
+%         
+%         G = [G;Gt];
+%         h = [h;ht];
+%     
+%         dims.q = [dims.q (nc+1)];
+%         
+%     end
+% end
 
 if Switch.virtual_control_on %||v_k||_2 <= s_k
     S = zeros(nv,K*n+2);
@@ -405,6 +482,7 @@ if Switch.virtual_control_on %||v_k||_2 <= s_k
     end
 end
 
+
 if Switch.virtual_control_on % ||s_k||_2 <= S
     Ac = zeros(K,K*n+2);
     cc = zeros(1,K*n+2);
@@ -424,6 +502,8 @@ if Switch.virtual_control_on % ||s_k||_2 <= S
     dims.q = [dims.q K+1];
 
 end
+
+
 
 if Switch.trust_region_on % ||(1 - (2x_sol'x_k + eta_k) + x_sol'x_sol)/2; Ax_k||_2 <= (1 + (2x_sol'x_k + eta_k) - x_sol'x_sol)/2
     

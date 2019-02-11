@@ -14,6 +14,7 @@ tol = CONSTANTS.tol;
 ns = PARAMS.n_state;
 nc = PARAMS.n_control;
 nv = PARAMS.n_virt;
+% nv=8;
 nsl = PARAMS.n_slack;
 nt = PARAMS.n_tr;
 
@@ -21,9 +22,11 @@ ITR.v_k{1} = zeros(nv+nsl,K);
 ITR.eta_k{1} = 0;
 ITR.S{1} = 0;
 ITR.ETA{1} = 0;
-
+ITR.y = {};
+ITR.s = {};
+ITR.z = {};
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',50);
+opts = ecosoptimset('MAXIT',100,'FEASTOL', 1e-01, 'RELTOL',1e-01);
 % opts = ecosoptimset();
 i = 1;
 count = 1;
@@ -34,8 +37,10 @@ count = 1;
     [A,b,G,h,C,dims] = SCvx_ini_para(i);
     toc
     [x, y, info_, s, z] = ecos(C, G, h, dims, A, b, opts);
-    y =  -y(ns+(1:(K-1)*ns));
-
+    ITR.y{i} = y;
+    ITR.s{i} = s;
+    ITR.z{i} = z;
+    
     if strcmp(info_.infostring,'Optimal solution found')
        status(i) = 1;
     else
