@@ -120,8 +120,8 @@ if Switch.Descent
 %     CONSTANTS.dFf = [CONSTANTS.Ff;0;0;0;0]; 
     CONSTANTS.dF_dotf = [0; 0; 0; 0; 0; 0; 0; 0];
     
-    CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
-     
+%     CONSTANTS.dw_AI = [Kleopatra.w_AI';0;0;0;0;0];
+    CONSTANTS.dw_AI = [0;0;0;0;0;0;0;0]; 
     CONSTANTS.x0 = [CONSTANTS.m0; CONSTANTS.dq0; CONSTANTS.dw0; CONSTANTS.dF0; CONSTANTS.dF_dot0];  %state bounds
     CONSTANTS.xf = [CONSTANTS.mf; CONSTANTS.dqf; CONSTANTS.dwf; CONSTANTS.dFf; CONSTANTS.dF_dotf];
     CONSTANTS.t0 = 0;  %initial time
@@ -143,9 +143,9 @@ if Switch.Descent
     CONSTANTS.tol = 0;
 
     %penalty weights
-    CONSTANTS.w_vc = 10000;%for 10 itr
-    CONSTANTS.w_tr = 10;
-    Switch.virtual_control_on = 0;
+    CONSTANTS.w_vc = 100;%for 10 itr
+    CONSTANTS.w_tr = 1;
+    Switch.virtual_control_on = 1;
     Switch.trust_region_on = 1;
 
     %linear constraints control

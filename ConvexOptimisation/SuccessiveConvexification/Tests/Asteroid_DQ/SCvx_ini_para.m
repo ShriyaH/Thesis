@@ -240,50 +240,50 @@ if Switch.mass_lower_boundary_on % m_k <= m_wet
     dims.l =  size(G,1);
         
 end
+% 
+% if Switch.virtual_control_on % S <= S_max
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end-1) = 1;
+%     
+%     ht = 10;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
+% 
+% if Switch.virtual_control_on % 0 <= S
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end-1) = -1;
+%     
+%     ht = 0;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
 
-if Switch.virtual_control_on % S <= S_max
-    Gt = zeros(1,K*n+2);
-    Gt(1,end-1) = 1;
-    
-    ht = 10;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.virtual_control_on % 0 <= S
-    Gt = zeros(1,K*n+2);
-    Gt(1,end-1) = -1;
-    
-    ht = 0;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.trust_region_on % ETA <= ETA_max
-    Gt = zeros(1,K*n+2);
-    Gt(1,end) = 1;
-    
-    ht = 100;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
-
-if Switch.trust_region_on % 0 <= ETA
-    Gt = zeros(1,K*n+2);
-    Gt(1,end) = -1;
-    
-    ht = 0;
-    
-    G = [G;Gt];
-    h = [h;ht];
-    dims.l =  size(G,1);       
-end
+% if Switch.trust_region_on % ETA <= ETA_max
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end) = 1;
+%     
+%     ht = 10;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
+% 
+% if Switch.trust_region_on % 0 <= ETA
+%     Gt = zeros(1,K*n+2);
+%     Gt(1,end) = -1;
+%     
+%     ht = 0;
+%     
+%     G = [G;Gt];
+%     h = [h;ht];
+%     dims.l =  size(G,1);       
+% end
 
 if Switch.thrust_lower_boundary_on % F_min <= ||F_sol_k||_2 + F_sol_k'/||F_sol_k||_2 (F_k - F_sol_k)
     Gt = zeros(K,K*n+2);
@@ -429,29 +429,29 @@ if Switch.glideslope_on
     end
 end
 
-if Switch.virtual_control_on %||u_k||_2 <= umax
-    S = zeros(nc,K*n+2);
-    s = zeros(1,K*n+2);
-    bc = zeros(nc,1);
-    dc = 5;
-    for ii = 1:K
-        Ac = S;
-        Ac(1:nc,(ii-1)*n+ns+(1:nc)) = eye(nc);
-          
-        cc = s;
-%         cc(1,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
-        
-       
-        Gt = -[cc;Ac];
-        ht = [dc;bc];
-        
-        G = [G;Gt];
-        h = [h;ht];
-    
-        dims.q = [dims.q (nc+1)];
-        
-    end
-end
+% if Switch.virtual_control_on %||u_k||_2 <= umax
+%     S = zeros(nc,K*n+2);
+%     s = zeros(1,K*n+2);
+%     bc = zeros(nc,1);
+%     dc = 5;
+%     for ii = 1:K
+%         Ac = S;
+%         Ac(1:nc,(ii-1)*n+ns+(1:nc)) = eye(nc);
+%           
+%         cc = s;
+% %         cc(1,(ii-1)*n+ns+nc+nv+(1:nsl)) = 1;
+%         
+%        
+%         Gt = -[cc;Ac];
+%         ht = [dc;bc];
+%         
+%         G = [G;Gt];
+%         h = [h;ht];
+%     
+%         dims.q = [dims.q (nc+1)];
+%         
+%     end
+% end
 
 if Switch.virtual_control_on %||v_k||_2 <= s_k
     S = zeros(nv,K*n+2);

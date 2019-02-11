@@ -73,6 +73,7 @@ for k = 0:K-1
         rs_B = [0,0,0];
         e_B =[0,0,0];
         [Fgb,Tgb,gb] = Get_pertforces(m_k,C_BA,r_k,r_B,rs_B,e_B,Asteroid.mu,Asteroid);
+        ITR.gb{1}{:,ii} = gb;
         dFg_k = [Fgb;Tgb];
     end
     
