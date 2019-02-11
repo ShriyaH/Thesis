@@ -119,7 +119,7 @@ for k = 0:K-1
         Psi = zeros(size(Ac));
         for pp = 0:1:p
             dPsi = (dt^pp/factorial(pp+1))*Ac^pp;
-            Psi = Psi+dPsi;
+            Psi = Psi + dPsi;
         end
 
         % construct discrete-time matrices at linearisation points

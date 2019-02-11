@@ -18,7 +18,9 @@ else
     C_BA = Q2DCM(dq(1:4));
     rs_B = [0,0,0];
     e_B =[0,0,0];
-    [Fgb, Tgb,gb] = Get_pertforces(m,C_BA,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
+    [Fgb, Tgb] = Get_pertforces(m,C_BA,r_B,rs_B,e_B,Kleopatra.mu,Kleopatra);
+    [ga,gb] = Poly_g_new(r_A(1:3),dq(1:4),Kleopatra); 
+    gb = gb(1:3)';
     dFg = [Fgb;Tgb];
 end
 
