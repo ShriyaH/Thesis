@@ -25,7 +25,7 @@ ITR.S{1} = 0;
 ITR.ETA{1} = 0;
 
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',100); %,'FEASTOL',1e-6,'RELTOL',1e-6,'FEASTOL',1e-6,'RELTOL',1e-6
+opts = ecosoptimset('MAXIT',50,'FEASTOL',1e-6,'RELTOL',1e-6);
 % opts = ecosoptimset();
 i = 1;
 count = 1;
@@ -77,9 +77,9 @@ count = 1;
 %     ITR.state_conv{i} = sum(sum(abs((ITR.x_k{i+1}-ITR.x_k{i})))) + sum(sum(abs((ITR.u_k{i+1}-ITR.u_k{i}))));
 %     ITR.virt_cont{i} = sum(abs(ITR.v_k{i+1}(end,:)));
     for ii = 1:K 
-        ITR.st_conv{i}(ii) = (ITR.x_k{i+1}(:,ii)-ITR.x_k{i}(:,ii))'*(ITR.x_k{i+1}(:,ii)-ITR.x_k{i}(:,ii)) + (ITR.u_k{i+1}(:,ii)-ITR.u_k{i}(:,ii))'*(ITR.u_k{i+1}(:,ii)-ITR.u_k{i}(:,ii));   
+        ITR.st_conv{i}(ii) = (ITR.x_k{i+1}(:,ii)-ITR.x_k{i}(:,ii))'*(ITR.x_k{i+1}(:,ii)-ITR.x_k{i}(:,ii)) + (ITR.u_k{i+1}(:,ii)-ITR.u_k{i}(:,ii))'*(ITR.u_k{i+1}(:,ii)-ITR.u_k{i}(:,ii));
+    
     end
-    ITR.state_conv{i} = norm(ITR.st_conv{i});
     ITR.virt_cont{i} = norm(ITR.v_k{i+1}(end,:));
 
      if ITR.state_conv{i} < tol && ITR.virt_cont{i} < tol
