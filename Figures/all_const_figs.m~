@@ -3,7 +3,7 @@
 % %Glide-slope
 [ Kleopatra ] = Get_Asteroid( 'Kleopatra', 1 );
 % [F,V]=stlread('Rosetta.stl');
-r=[10e3,50e3,50e3];
+r=[10e3,-50e3,50e3];
 % V = 500.*V+r;
 % t = [0;1];
 % [X,Y,Z] = cylinder(t);
@@ -32,23 +32,29 @@ r=[10e3,50e3,50e3];
 % %LOS
 
 [F,V]=stlread('Rosetta.stl');
-V(:,:)=V(:,:)./2;
-r = [10e3,50e3,50e3];
+% V(:,:)=V(:,:)./2;
+r = [10e3,-50e3,50e3];
 V = 500.*V+r;
 % X1=[0 0 0];
-X1=r;
-X2=500.*[0 -5 10];
-r=[0 3];
+X1=-r;
+X2=500.*[0 -5 10]-r;
+r=500.*[0 3];
 n=20;
 cyl_color='g';
 closed=0;
 Cone(-X1,-X2,r,n,cyl_color,closed,lines)
 alpha(0.5)
 hold on
-patch('Vertices',V,'Faces',F,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
-quiver3(0,0,0,500*25+10e3,50e3,50e3,'Color','r','Linewidth',2);
-quiver3(0,0,0,10e3,500*10+50e3,50e3,'Color','g','Linewidth',2);
-quiver3(0,0,0,0,0,500*5+,'Color','b','Linewidth',2);
+patch('Vertices',V,'Faces',F,'FaceVertexCData',[0.5 0.6 0.7],'FaceColor','flat','FaceAlpha',0.9);
+quiver3(10e3,-50e3,50e3,500*25,0,0,'Color','r','Linewidth',2);
+quiver3(10e3,-50e3,50e3,0,500*10,0,'Color','g','Linewidth',2);
+quiver3(10e3,-50e3,50e3,0,0,500*5,'Color','b','Linewidth',2);
+hold on
+patch('Vertices',Kleopatra.Polyhedron.Vertices,'Faces',Kleopatra.Polyhedron.Facets,'FaceVertexCData',[0.7 0.7 0.7],'FaceColor','flat','FaceAlpha',0.9);
+quiver3(0,0,0,500*25,0,0,'Color','r','Linewidth',2);
+quiver3(10e3,-50e3,50e3,0,500*10,0,'Color','g','Linewidth',2);
+quiver3(10e3,-50e3,50e3,0,0,500*5,'Color','b','Linewidth',2);
+% 
 xlabel('X-axis (m)')
 ylabel('Y-axis (m)')
 zlabel('Z-axis (m)')

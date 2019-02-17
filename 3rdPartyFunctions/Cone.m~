@@ -95,7 +95,7 @@ set(Cone,'YData',get(Cone,'YData')+X1(2))
 set(Cone,'ZData',get(Cone,'ZData')+X1(3))
 
 % Setting the color to the Cone and the end plates
-set(Cone,'AmbientStrength',1,'FaceColor',cyl_color,'FaceLighting','gouraud','EdgeColor','k','FaceAlpha',a);%,'EdgeColor','none')
+set(Cone,'AmbientStrength',1,'FaceColor',cyl_color,'FaceLighting','gouraud','EdgeColor','k','FaceAlpha');%,'EdgeColor','none')
 if closed==1
     set([EndPlate1 EndPlate2],'AmbientStrength',1,'FaceColor',cyl_color,'FaceLighting','gouraud');%,'EdgeColor','none')
 else
