@@ -7,22 +7,22 @@ clc
 global CONSTANTS PARAMS Switch ITR; 
 
 %% Successive Convexification
-CONSTANTS.g = [-0.09; 0; 0]';
+CONSTANTS.g = [-1; 0; 0]';
 CONSTANTS.alpha0 = 0.0001;
 CONSTANTS.m0 = 2000; %mass bounds
 CONSTANTS.mf = 750;
 CONSTANTS.J = 3*CONSTANTS.m0/12.*eye(3); %5 .* eye(3) 
 
-CONSTANTS.T1 = 50;
-CONSTANTS.T2 = 500;
+CONSTANTS.T1 = 500;
+CONSTANTS.T2 = 3000;
 
 CONSTANTS.r_T = [-1;0;0];
 
-CONSTANTS.x0 = [CONSTANTS.m0; 2000; 1000; 0; -10; 2; 0; 0; 0; 0; 1; 0; 0; 0; 200; 0; 0; 0; 0; 0];  %state bounds
-CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.1; 0; 0; 0; 0; 0; 1; 0; 0; 0; 75; 0; 0; 0; 0; 0];
+CONSTANTS.x0 = [CONSTANTS.m0; 2000; 1000; 0; -100; 20; 0; 0; 0; 0; 1; 0; 0; 0; 2000; 0; 0; 0; 0; 0];  %state bounds
+CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.1; 0; 0; 0; 0; 0; 1; 0; 0; 0; 750; 0; 0; 0; 0; 0];
 
 CONSTANTS.t0 = 0;  %initial time
-CONSTANTS.tf = 100;  %closed time
+CONSTANTS.tf = 28;  %closed time
 CONSTANTS.nodes = 50;
 
 CONSTANTS.w_max = deg2rad(20);
