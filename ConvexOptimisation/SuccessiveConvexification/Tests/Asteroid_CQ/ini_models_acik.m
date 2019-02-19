@@ -18,12 +18,12 @@ CONSTANTS.T2 = 3000;
 
 CONSTANTS.r_T = [-1;0;0];
 
-CONSTANTS.x0 = [CONSTANTS.m0; 2000; 1000; 0; -100; 20; 0; 0; 0; 0; 1; 0; 0; 0; 2000; 0; 0; 0; 0; 0];  %state bounds
+CONSTANTS.x0 = [CONSTANTS.m0; 2000; 1000; 0; -50; 0; 0; 0; 0; 0; 1; 0; 0; 0; 2000; 0; 0; 0; 0; 0];  %state bounds
 CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.1; 0; 0; 0; 0; 0; 1; 0; 0; 0; 750; 0; 0; 0; 0; 0];
 
 CONSTANTS.t0 = 0;  %initial time
-CONSTANTS.tf = 28;  %closed time
-CONSTANTS.nodes = 50;
+CONSTANTS.tf = 40;  %closed time
+CONSTANTS.nodes = 100;
 
 CONSTANTS.w_max = deg2rad(20);
 CONSTANTS.theta_gs = deg2rad(20);

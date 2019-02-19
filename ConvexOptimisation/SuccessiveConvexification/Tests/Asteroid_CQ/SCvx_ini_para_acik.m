@@ -43,10 +43,10 @@ Ed = zeros(ns,nv+nsl);
 Ed(1:nv,1:nv) = eye(nv);
 
 % define the final elements we impose
-X_f_flag = [0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1];
-n_flag = sum(X_f_flag);
-% X_f_flag = [0;1;1;1;1;1;1;1;1;1;1;1;1;1;0;0;0;0;0;0];
+% X_f_flag = [0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1];
 % n_flag = sum(X_f_flag);
+X_f_flag = [0;1;1;1;1;1;1;1;1;1;1;1;1;1;0;0;0;0;0;0];
+n_flag = sum(X_f_flag);
 
 %% COST FUNCTION
 % the formulation of the control vector is [X0 U0 nu0 s0 eta0 X1 U1 nu1 s1 eta1... XN UN nuN sN etaN S ETA]
@@ -74,8 +74,8 @@ end
 b(1:ns,1) = x0; %initial state
 
 A(K*ns+(1:n_flag),(K-1)*(n)+1+(1:n_flag)) = eye(n_flag); 
-b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
-% b(K*ns+(1:n_flag),1) = xf(2:ns-6,1); %final state
+% b(K*ns+(1:n_flag),1) = xf(2:ns,1); %final state
+b(K*ns+(1:n_flag),1) = xf(2:ns-6,1); %final state
 
 % Construct all the LTV continuous time matrices for initial iteration
 % state (K-1 time steps)
