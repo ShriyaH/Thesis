@@ -25,7 +25,7 @@ ITR.S{1} = 0;
 ITR.ETA{1} = 0;
 
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',50); %,'FEASTOL',1e-6,'RELTOL',1e-6,'FEASTOL',1e-6,'RELTOL',1e-6
+opts = ecosoptimset('MAXIT',1000); %,'FEASTOL',1e-6,'RELTOL',1e-6,'FEASTOL',1e-6,'RELTOL',1e-6
 % opts = ecosoptimset();
 i = 1;
 count = 1;
