@@ -1,0 +1,47 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.344in,
+height=1in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={\footnotesize Iterations},
+ymode=log,
+ymin=1e-09,
+ymax=100000000000,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={\footnotesize Trust Region},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	0\\
+1	316.643249747657\\
+2	4.30644660663708\\
+3	0.817699790189965\\
+4	0.526598537630842\\
+5	0.000153960911972268\\
+6	2.79585037783483e-05\\
+7	8.47718840773509e-06\\
+8	1.25459888398348e-05\\
+9	1.06212876987831e-05\\
+10	1.07262726683134e-05\\
+};
+\addlegendentry{\footnotesize $\text{Converged}_{\text{sol}}$}
+
+\end{axis}
+\end{tikzpicture}%

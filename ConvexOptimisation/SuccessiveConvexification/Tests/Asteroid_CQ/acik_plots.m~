@@ -37,7 +37,7 @@ for ii = 1:i
         if vec1(3) < 0 
             Ta(ii,k) = rad2deg(acos(Ta_norm(k))); 
         else
-            Ta(ii,k) = rad2deg(acos(Ta_norm(k)));
+            Ta(ii,k) = -rad2deg(acos(Ta_norm(k)));
         end
         
         %get all positions
@@ -130,17 +130,15 @@ ylabel('Thrust (N)');
 legend(Legend,'Location','northeastoutside')
 grid on
 
-Legend ={};
 %plot gimbal angles
 figure()
 plot(t,gm,'LineWidth',2, 'Color', 'red');
 hold on
-% plot(t,-gm,'LineWidth',2, 'Color', 'red');
+plot(t,-gm,'LineWidth',2, 'Color', 'red');
 Legend{1}= strcat('\theta_{gm_{max}}');
-% Legend{2}= strcat('\theta_{gm_{min}}');
+Legend{2}= strcat('\theta_{gm_{min}}');
 for j = 1:i 
     plot(t,Gm(j,:),'Marker','.');
-    Legend{j+1}=strcat('Itr', num2str(j));
 end
 xlabel('Time (s)');
 ylabel('Gimbal Angle (Deg)');
@@ -151,12 +149,11 @@ grid on
 figure()
 plot(t,ta,'LineWidth',2, 'Color', 'red');
 hold on
-% plot(t,-ta,'LineWidth',2, 'Color', 'red');
+plot(t,-ta,'LineWidth',2, 'Color', 'red');
 Legend{1}= strcat('\delta_{ta_{max}}');
-% Legend{2}= strcat('\delta_{ta_{min}}');
+Legend{2}= strcat('\delta_{ta_{min}}');
 for j = 1:i 
     plot(t,Ta(j,:),'Marker','.');
-    Legend{j+1}=strcat('Itr', num2str(j));
 end
 xlabel('Time (s)');
 ylabel('Tilt Angle (Deg)');
@@ -169,10 +166,9 @@ plot(t,wm,'LineWidth',2, 'Color', 'red');
 hold on
 plot(t,-wm,'LineWidth',2, 'Color', 'red');
 Legend{1}= strcat('\omega_{max}');
-% Legend{2}= strcat('\omega_{min}');
+Legend{2}= strcat('\omega_{min}');
 for j = 1:i
     plot(t,w(j,:),'Marker','.');
-    Legend{j+1}=strcat('Itr', num2str(j));
 end
 xlabel('Time (s)');
 ylabel('Angular rate (deg/s)');

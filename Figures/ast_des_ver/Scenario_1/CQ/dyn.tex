@@ -1,0 +1,47 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.028in,
+height=4.754in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Iterations},
+ymode=log,
+ymin=0.0001,
+ymax=10,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={Dynamic Relaxation},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	0\\
+1	0.0374062185833904\\
+2	0.0366816642581644\\
+3	0.0365540166025388\\
+4	0.0364565320469608\\
+5	0.0364801894333876\\
+6	0.03650276361026\\
+7	0.0365385728739528\\
+8	0.0365783676319195\\
+9	0.0366317139635626\\
+10	0.036646984729678\\
+};
+\addlegendentry{$\text{Converged}_{\text{sol}}$}
+
+\end{axis}
+\end{tikzpicture}%

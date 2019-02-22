@@ -1,0 +1,45 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.344in,
+height=1in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={\footnotesize Iterations},
+ymin=15,
+ymax=19,
+ylabel style={font=\color{white!15!black}},
+ylabel={\footnotesize Dynamic Relaxation},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+1	18.8562514874337\\
+2	17.899015886389\\
+3	17.3347849259236\\
+4	16.5686257703026\\
+5	16.4058681386073\\
+6	15.8689828826382\\
+7	15.7694990143833\\
+8	15.331890200013\\
+9	15.1880885794523\\
+10	15.0786572433175\\
+};
+%\addlegendentry{data1}
+
+\end{axis}
+\end{tikzpicture}%

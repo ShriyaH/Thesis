@@ -1,0 +1,45 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=1.7in,
+height=1.7in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={\footnotesize Iterations},
+ymin=0,
+ymax=2500,
+ylabel style={font=\color{white!15!black}},
+ylabel={\footnotesize Difference in Converged State},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=o, mark options={solid, blue}]
+  table[row sep=crcr]{%
+1	2454.76189873175\\
+2	26.2854337866538\\
+3	13.2173654944619\\
+4	10.0681832387362\\
+5	11.5156868512265\\
+6	11.1228050794407\\
+7	9.90270116238156\\
+8	10.8519589573795\\
+9	11.6657438836741\\
+10	11.2286463122561\\
+};
+\addlegendentry{\footnotesize SCvx_{dynamic}}
+
+\end{axis}
+\end{tikzpicture}%

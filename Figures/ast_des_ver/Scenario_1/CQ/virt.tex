@@ -1,0 +1,45 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.344in,
+height=1in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=1,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={\footnotesize Iterations},
+ymin=6,
+ymax=6.4,
+ylabel style={font=\color{white!15!black}},
+ylabel={\footnotesize Dynamic Relaxation},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue, mark=*, mark options={solid, blue}]
+  table[row sep=crcr]{%
+1	6.35021720154303\\
+2	6.09244800181946\\
+3	6.1001055659073\\
+4	6.08945401680108\\
+5	6.08143856584863\\
+6	6.07288677119216\\
+7	6.06557638181476\\
+8	6.05868381487995\\
+9	6.05171233502967\\
+10	6.04502403028716\\
+};
+\addlegendentry{\footnotesize $\text{Converged}_{\text{sol}}$}
+
+\end{axis}
+\end{tikzpicture}%
