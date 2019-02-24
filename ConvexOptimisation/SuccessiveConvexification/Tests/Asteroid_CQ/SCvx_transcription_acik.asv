@@ -25,7 +25,7 @@ ITR.S{1} = 0;
 ITR.ETA{1} = 0;
 
 %% TRANSCRIPTION - Successive Convexification
-opts = ecosoptimset('MAXIT',100, 'FEASTOL',1e-6,'RELTOL',1e-6); 
+opts = ecosoptimset('MAXIT',500, 'FEASTOL',1e-7,'RELTOL',1e-7); 
 % opts = ecosoptimset();
 i = 1;
 count = 1;
@@ -105,19 +105,18 @@ count = 1;
            % Ratio
            rho = dN/dL; 
            ITR.rho(i) = rho;
-            
-           ITR.w_tr{i+1} = Alpha*ITR.w_tr{i};
+
            % Update trust region radius 
-%            if rho <= rho0
-%               ITR.w_tr{i} = Alpha*ITR.w_tr{i}; 
-%                 continue;
-%            elseif rho > rho0 || rho < rho1
-%               ITR.w_tr{i+1} = Alpha*ITR.w_tr{i};
-%            elseif rho1 <= rho || rho < rho2
-%               ITR.w_tr{i+1} = ITR.w_tr{i};
-%            elseif rho2 <= rho
-%               ITR.w_tr{i+1} = ITR.w_tr{i}/Beta;
-%            end  
+           if rho <= rho0
+              ITR.w_tr{i} = Alpha*ITR.w_tr{i}; 
+                continue;
+           elseif rho > rho0 || rho < rho1
+              ITR.w_tr{i+1} = Alpha*ITR.w_tr{i};
+           elseif rho1 <= rho || rho < rho2
+              ITR.w_tr{i+1} = ITR.w_tr{i};
+           elseif rho2 <= rho
+              ITR.w_tr{i+1} = ITR.w_tr{i}/Beta;
+           end  
         end
      end
     i = i+1           

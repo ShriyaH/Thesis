@@ -28,7 +28,7 @@ for ii = 1:i
         if x(16,k) < 0
             Gm(ii,k) = rad2deg(acos(d(k)));
         else
-            Gm(ii,k) = rad2deg(acos(d(k)));
+            Gm(ii,k) = -rad2deg(acos(d(k)));
         end
         
         %get tilt angle
@@ -37,7 +37,7 @@ for ii = 1:i
         if vec1(3) < 0 
             Ta(ii,k) = rad2deg(acos(Ta_norm(k))); 
         else
-            Ta(ii,k) = rad2deg(acos(Ta_norm(k)));
+            Ta(ii,k) = -rad2deg(acos(Ta_norm(k)));
         end
         
         %get all positions
@@ -51,7 +51,7 @@ for ii = 1:i
         if vec2(3*ii,k) < 0 
             w(ii,k) = rad2deg(norm(x(12:14,k)));
         else
-            w(ii,k) = rad2deg(norm(x(12:14,k)));
+            w(ii,k) = -rad2deg(norm(x(12:14,k)));
         end
         
         if ii < i
@@ -321,7 +321,7 @@ plot(t,T1,'LineWidth',2, 'Color', 'red');
 hold on
 plot(t,T2,'LineWidth',2, 'Color', 'red');
 % plot(t,y,'Marker','.', 'Color', 'b');
-plot(t,T(11,:),'Marker','.')
+plot(t,T(end,:),'Marker','.')
 xlabel('Time (s)');
 ylabel('Thrust (N)');
 legend('T_{max}','T_{min}','Converged_{sol}','Location','northeastoutside')
@@ -336,7 +336,7 @@ plot(t,gm,'LineWidth',2, 'Color', 'red');
 hold on
 % plot(t,-gm,'LineWidth',2, 'Color', 'red');
 % plot(t,y,'Marker','.', 'Color', 'b');
-plot(t,Gm(11,:),'Marker','.');
+plot(t,Gm(end,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Gimbal Angle (Deg)');
 legend('\theta_{gm_{max}}','Converged_{sol}','Location','northeastoutside')
@@ -351,7 +351,7 @@ plot(t,ta,'LineWidth',2, 'Color', 'red');
 hold on
 % plot(t,-ta,'LineWidth',2, 'Color', 'red');
 % plot(t,y,'Marker','.', 'Color', 'b');
-plot(t,Ta(11,:),'Marker','.');
+plot(t,Ta(end,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Tilt Angle (Deg)');
 legend('\delta_{ta_{max}}','Converged_{sol}','Location','northeastoutside')
@@ -366,7 +366,7 @@ plot(t,wm,'LineWidth',2, 'Color', 'red');
 hold on
 % plot(t,-wm,'LineWidth',2, 'Color', 'red');
 % plot(t,y,'Marker','.', 'Color', 'b');
-plot(t,w(11,:),'Marker','.');
+plot(t,w(end,:),'Marker','.');
 xlabel('Time (s)');
 ylabel('Angular rate (deg/s)');
 legend('\omega_{max}','Converged_{sol}','Location','northeastoutside')

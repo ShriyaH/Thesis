@@ -87,7 +87,7 @@ for k = 0:K-1
     q_k = x_k(8:11,1);
     w_k = x_k(12:14,1); 
     T_k = x_k(15:17,1);
-    J_k = (3*m_k/12).*eye(3);
+    J_k = (30*m_k/12).*eye(3);
     if ii<K
         
         % construct linearisation point state differential
