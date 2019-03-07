@@ -1,5 +1,5 @@
 function [g_A, Wf, U] = Poly_g(r_A, rho, Vert, Fac, Edg, F_tilde, E_tilde)
-
+tic
 G=6.67408e-11;
 
 V=Vert;
@@ -20,7 +20,6 @@ U_fac=0;
 S=r_A;
 
 for j=1:1:size(E,1)
-    
     R1=V(E(j,1),:);    
     R2=V(E(j,2),:);    
 
@@ -45,11 +44,9 @@ for j=1:1:size(E,1)
     U_edg=(Le*Re1'*E_tilde(:,:,j)*Re1)+U_edg;
 
     Edges=(Le*E_tilde(:,:,j)*Re1)+Edges;
-
 end
 
  for i=1:1:(size(F,1))
-      
     R1=V(F(i,1),:);    
     R2=V(F(i,2),:);    
     R3=V(F(i,3),:);
@@ -74,7 +71,6 @@ end
     Facets=wf*F_tilde(:,:,i)*Rf+Facets;
     
     Wf=wf+Wf;
-  
  end
 
 g_A = G*rho*(-Edges+Facets);
@@ -82,6 +78,6 @@ g_A = G*rho*(-Edges+Facets);
 % g_B = quat_trans(q_BI,g_I,'n');
 
 U = 0.5*G*rho*(U_edg-U_fac);
-
+toc
 end
 

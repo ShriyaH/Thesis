@@ -1,0 +1,57 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=2500,
+xlabel style={font=\color{white!15!black}},
+xlabel={CPU time (secs)},
+ymin=65,
+ymax=100,
+ylabel style={font=\color{white!15!black}},
+ylabel={Accuracy Percentage},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=o, mark options={solid, mycolor1},  mark size=0.5]
+  table[row sep=crcr]{%
+43.1645	65.5687156559297\\
+};
+\addlegendentry{File 1}
+
+\addplot [color=mycolor2, mark=asterisk, mark options={solid, mycolor2},  mark size=0.5]
+  table[row sep=crcr]{%
+552.8545	99.7227354432758\\
+};
+\addlegendentry{File 2}
+
+\addplot [color=mycolor3, mark=*, mark options={solid, mycolor3},  mark size=0.5]
+  table[row sep=crcr]{%
+2277.968	100\\
+};
+\addlegendentry{File 3}
+
+\addplot [color=blue, forget plot]
+  table[row sep=crcr]{%
+43.1645	65.5687156559297\\
+552.8545	99.7227354432758\\
+2277.968	100\\
+};
+\end{axis}
+\end{tikzpicture}%

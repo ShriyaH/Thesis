@@ -66,7 +66,7 @@ switch name
     otherwise
          disp('Selected non-existing asteroid');
 end
-
+tic
 [Asteroid.v,Asteroid.f] = Find_index(Asteroid.file); % This function finds the indices of vertices and faces, usually in the files they are specified in one column, well actually three :)
 
 Data=importdata(Asteroid.file);
@@ -90,6 +90,6 @@ clear Data
 
 Asteroid.mu=G*Asteroid.mass;
 Asteroid.Polyhedron=Polyhedron;
-
+toc
 end
 
