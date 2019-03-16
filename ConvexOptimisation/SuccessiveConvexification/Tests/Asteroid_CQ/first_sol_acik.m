@@ -55,7 +55,7 @@ for k = 0:K-1
     T_k = -(m_k*gb);
 %     Tdot_k = zeros(3,1);
     Tdot_k = -alpha0*norm(T_k)*gb;
-    J_k = (3*m_k/12).*eye(3);
+%     J_k = (3*m_k/12).*eye(3);
     
     x_k  = [m_k;r_k;v_k;q_k;w_k;T_k;Tdot_k];
     ITR.x_k{1}(:,ii) = x_k;
@@ -69,7 +69,7 @@ for k = 0:K-1
         rdot_k = v_k;
         vdot_k = (C_k*T_k)./m_k + g';
         qdot_k = 1/2.*(omega_tensor(w_k,2)*q_k);
-        wdot_k = inv(J_k)*(cross(r_T',T_k')' - cross(w_k, (J_k*w_k)));
+        wdot_k = inv(J)*(cross(r_T',T_k')' - cross(w_k, (J*w_k)));
 %         Tdot_k = mdot_k.*g';
 
         xdot_k = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k];

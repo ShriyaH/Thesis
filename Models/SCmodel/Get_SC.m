@@ -6,6 +6,7 @@ function [ SC ] = Get_SC( name )
 Rosetta.name = 'Rosetta';
 Rosetta.dim.block = [2.1 2 2.8]; %SC dimensions, m
 Rosetta.dim.SA = [0 14 2.28]; %Solar array dimensions, m
+Rosetta.dim.SA2 = [2.28 14/5 0];
 Rosetta.dim.tank = [2.8/2 1.197/2]; %Fuel tank dimensions(height and radius), m
 Rosetta.volumet = [1.106 1.106]; %Volume of fuel tank, m^3
 Rosetta.mass.wet = 3000; %Total mass of SC, kg
@@ -15,7 +16,7 @@ Rosetta.mass.fuel = [660 1060]; %InitialMass of fuel, kg
 Rosetta.fuel_rho = [880 1440]; %Propellant and Oxidiser densities respectively, kg/m3
 Rosetta.fuel_ratio = 1.65; %Ratio of propellant to oxidiser 
 Rosetta.v_exh = 2200; %Thruster exhaust velocity, m/s  
-Rosetta.dv_i = 776; %DeltaV at insertion at 100km altitude, m/s
+Rosetta.dv_i = 826; %DeltaV at insertion at 100km altitude, m/s
 Rosetta.model = {'Rosetta.stl'}; %filename to read SC 3D model
 
 Osiris.name = 'Osiris';
@@ -94,7 +95,6 @@ Z = [Z(1,1:length(Z)),Z(2,1:length(Z))-2];
 TAG = [X'+x,Y',Z'];
 
 Polyhedron.Vertices = [block;SA1;SA2;TAG];
-       
 Polyhedron.Facets = [1 2 6
     1 6 5
     2 3 7
@@ -106,7 +106,7 @@ Polyhedron.Facets = [1 2 6
     4 3 2
     4 2 1
     5 6 7
-    5 7 8
+    5 7 8       % block
     9 11 12
     9 12 10
     13 15 16
@@ -170,6 +170,43 @@ Polyhedron.Facets = [1 2 6
     69 90 70
     69 49 90];
 
+SA11 = [-sz d1 0 
+      sz d1 0 
+      -sz d1+sy 0  
+      sz d1+sy 0]; 
+  
+SA22 = -SA11;
+Polyhedron.Vertices2 = [block;SA11;SA22;TAG];
+       
+Polyhedron.Facets2 = [1 2 6
+    1 6 5
+    2 3 7
+    2 7 6
+    3 4 8
+    3 8 7
+    4 1 5
+    4 5 8
+    4 3 2
+    4 2 1
+    5 6 7
+    5 7 8
+    9 11 12
+    9 12 10
+    13 15 16
+    13 16 14
+    17 19 20
+    17 20 18
+    21 23 24
+    21 24 22
+    25 27 28
+    25 28 26
+    29 32 30
+    29 31 32
+    33 36 34
+    33 35 36
+    37 40 38
+    37 39 40];
+
 % [Polyhedron.Facets, Polyhedron.Vertices] = stlread('Rosetta.stl');
 % [nf,nv] = reducepatch(SC.Polyhedron.Facets,SC.Polyhedron.Vertices,0.02);
 [Polyhedron.normalsf,Polyhedron.R_1,Polyhedron.R_2,Polyhedron.R_3,Polyhedron.C,Polyhedron.A_facet] = SC_prop(Polyhedron);
@@ -195,8 +232,17 @@ Izz_s = (1/12)*SC.mass.SA*(SC.dim.SA(1)^2 + SC.dim.SA(2)^2) + SC.mass.SA*(d1+7)^
 SC.I.I_solar = [Ixx_s 0 0
                 0 Iyy_s 0
                 0 0 Izz_s];
+ 
+Ixx_s2 = (1/12)*SC.mass.SA*(SC.dim.SA2(2)^2 + SC.dim.SA2(3)^2) + SC.mass.SA*(d1+1.4)^2;
+Iyy_s2 = (1/12)*SC.mass.SA*(SC.dim.SA2(1)^2 + SC.dim.SA2(3)^2); 
+Izz_s2 = (1/12)*SC.mass.SA*(SC.dim.SA2(1)^2 + SC.dim.SA2(2)^2) + SC.mass.SA*(d1+1.4)^2;
+          
+SC.I.I_solar2 = [Ixx_s2 0 0
+                0 Iyy_s2 0
+                0 0 Izz_s2];            
 
 SC.I.I_constant = SC.I.I_block + 2*SC.I.I_solar;  %SA inertia constant for now
+SC.I.I_constant2 = SC.I.I_block + 2*SC.I.I_solar2;
 
 SC.mass.m_i = SC.mass.wet * 2.718^(-SC.dv_i/SC.v_exh); %Mass of SC at insertion, kg
 
@@ -219,7 +265,9 @@ SC.I.I_tank = [(Ixx_p + Ixx_o) 0 0
  
 
 SC.I.I_total = SC.I.I_constant + SC.I.I_tank;
+SC.I.I_total2 = SC.I.I_constant2 + SC.I.I_tank;
 SC.mass.m_facet = [((SC.mass.m_i-2*SC.mass.SA)/12).*ones(12,1);(2*SC.mass.SA/20).*ones(20,1)];
+
 %% Reflectivity
 SC.a_r = [ones(12,1)*0.5; ones(20,1)*0.21];
 SC.a_d = [ones(12,1)*0.2; ones(20,1)*0.1];

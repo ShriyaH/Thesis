@@ -9,37 +9,42 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=1.7in,
-height=1.7in,
+width=6.028in,
+height=4.754in,
 at={(1.011in,0.642in)},
 scale only axis,
-xmin=1,
-xmax=10,
+xmin=0,
+xmax=15,
 xlabel style={font=\color{white!15!black}},
-xlabel={\footnotesize Iterations},
+xlabel={Iterations},
 ymin=0,
-ymax=45000,
+ymax=400,
 ylabel style={font=\color{white!15!black}},
-ylabel={\footnotesize Difference in Converged State},
+ylabel={Difference in Converged State},
 axis background/.style={fill=white},
 xmajorgrids,
 ymajorgrids,
 legend style={legend cell align=left, align=left, draw=white!15!black}
 ]
-\addplot [color=blue, mark=*, mark options={solid, blue}]
+\addplot [color=mycolor1, mark=o, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
-1	43749.1329001991\\
-2	5433.38528322566\\
-3	4657.53052555297\\
-4	4210.61704049625\\
-5	5160.8355224825\\
-6	4843.95136050672\\
-7	5685.85678163268\\
-8	5485.74150537804\\
-9	5062.00056430817\\
-10	4974.94875297998\\
+1	387.018046632855\\
+2	188.376998911869\\
+3	104.659467507311\\
+4	79.1108152172468\\
+5	60.647551983684\\
+6	53.311525005489\\
+7	48.1474638346026\\
+8	46.2322572020886\\
+9	47.6228604763963\\
+10	43.9951771881408\\
+11	40.3506794920511\\
+12	39.96320004436\\
+13	36.5531524848627\\
+14	39.6789439236053\\
+15	36.9501399180342\\
 };
-\addlegendentry{\footnotesize $\mathrm{SCvx_{dynamic}}$}
+\addlegendentry{data1}
 
 \end{axis}
 \end{tikzpicture}%

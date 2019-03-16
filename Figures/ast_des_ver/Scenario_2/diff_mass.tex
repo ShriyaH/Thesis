@@ -12,11 +12,11 @@ height=4.754in,
 at={(1.011in,0.642in)},
 scale only axis,
 xmin=1,
-xmax=10,
+xmax=15,
 xlabel style={font=\color{white!15!black}},
 xlabel={Iterations},
 ymode=log,
-ymin=1e-09,
+ymin=0.0001,
 ymax=10,
 yminorticks=true,
 ylabel style={font=\color{white!15!black}},
@@ -29,18 +29,23 @@ legend style={legend cell align=left, align=left, draw=white!15!black}
 ]
 \addplot [color=blue, mark=*, mark options={solid, blue}]
   table[row sep=crcr]{%
-1	123.881080233826\\
-2	27.0265187489923\\
-3	0.0682410475591837\\
-4	0.233829959632573\\
-5	0.163165037090437\\
-6	0.10420481880152\\
-7	0.0580949724173934\\
-8	0.00564884958396306\\
-9	0.0227055304002022\\
-10	0.0037630265478299\\
+1	123.943153840585\\
+2	40.9793283046891\\
+3	2.02920654093219\\
+4	0.106898810009483\\
+5	0.0335734554238911\\
+6	0.000209323890857149\\
+7	0.0165927038908649\\
+8	0.027962849410585\\
+9	0.0314540812854318\\
+10	0.0328489895032931\\
+11	0.0288175561275352\\
+12	0.0184623690205115\\
+13	0.0145372837097284\\
+14	0.00794858932118814\\
+15	0.00846551320066169\\
 };
-\addlegendentry{data1}
+\addlegendentry{$\text{Converged}_{\text{sol}}$}
 
 \end{axis}
 \end{tikzpicture}%

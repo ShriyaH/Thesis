@@ -7,38 +7,38 @@ clc
 global CONSTANTS PARAMS Switch ITR; 
 
 %% Successive Convexification
-CONSTANTS.g = [-0.075; 0; 0]';
-CONSTANTS.alpha0 = 0.001;
-CONSTANTS.m0 = 2000; %mass bounds
-CONSTANTS.mf = 750;
-CONSTANTS.J = 30*CONSTANTS.m0/12.*eye(3); %5 .* eye(3) 
+CONSTANTS.g = [-0.05; 0; 0]';
+CONSTANTS.alpha0 = 0.01;
+CONSTANTS.m0 = 200; %mass bounds
+CONSTANTS.mf = 75;
+CONSTANTS.J = 50*eye(3); %5 .* eye(3) 
 
-CONSTANTS.T1 = 500;
-CONSTANTS.T2 = 3000;
+CONSTANTS.T1 = 2;
+CONSTANTS.T2 = 30;
 
 CONSTANTS.r_T = [-1;0;0];
 
-CONSTANTS.x0 = [CONSTANTS.m0; 2000; 1000; 0; -100; 20; 0; 0; 0; 0; 1; 0; 0; 0; 2000; 0; 0; 0; 0; 0];  %state bounds
-CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.1; 0; 0; 0; 0; 0; 1; 0; 0; 0; 750; 0; 0; 0; 0; 0];
+CONSTANTS.x0 = [CONSTANTS.m0; 200; 100; 0; -30; 10; 0; 0; 0; 0; 1; 0; 0; 0; 10; 0; 0; 0; 0; 0];  %state bounds
+CONSTANTS.xf = [CONSTANTS.mf; 0; 0; 0; -0.01; 0; 0; 0; 0; 0; 1; 0; 0; 0; 3.75; 0; 0; 0; 0; 0];
 
 CONSTANTS.t0 = 0;  %initial time
-CONSTANTS.tf = 100;  %closed time
-CONSTANTS.nodes = 30;
+CONSTANTS.tf = 5;  %closed time
+CONSTANTS.nodes = 50;
 
-CONSTANTS.w_max = deg2rad(20);
+CONSTANTS.w_max = deg2rad(10);
 CONSTANTS.theta_gs = deg2rad(20);
 CONSTANTS.theta_tilt = deg2rad(10);
-CONSTANTS.theta_gm = deg2rad(10);
+CONSTANTS.theta_gm = deg2rad(20);
 
 %trust region cost change ratio constraints
 CONSTANTS.rho0 = 0;
 CONSTANTS.rho1 = 0.25;
 CONSTANTS.rho2 = 0.9;
 % CONSTANTS.Alpha = 1.02; %15 max itr
-CONSTANTS.Alpha = 1.255;  %10 max itr
+CONSTANTS.Alpha = 1.2;  %10 max itr
 % CONSTANTS.Alpha = 1.2;  %10 max iteration also for 15 %also for no angular constraints
 CONSTANTS.Beta = 2;
-CONSTANTS.i_max = 30;
+CONSTANTS.i_max = 15;
 CONSTANTS.tol = 0;
 
 %penalty weights

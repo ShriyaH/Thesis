@@ -53,8 +53,10 @@ function dY = orb_int(T,Y)
     C_AI = Q2DCM([0;0;sin((w_AI(3)*T)/2);cos((w_AI(3)*T)/2)]);
     rs_B = C_BA*C_AI*Sun.rs_I(1:3);
     e_B = rs_B./norm(rs_B);
+    r_A = C_BA' * r_B;
     
-    [F_D, T_D] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu);
+    [F_D,T_D] = Get_pertforces(SC.mass.m_i,C_BA,r_A,r_B,rs_B,e_B,mu,Kleopatra);
+    
     a_D = F_D./SC.mass.m_i;
     a_D = a_D(1:3);
     T_D = T_D(1:3);

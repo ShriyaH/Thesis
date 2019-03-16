@@ -43,8 +43,9 @@ function dY = orb_int(T,Y)
     
     r_B = C_BI*Y(1:3);
     C_BA = C_BI*C_AI';
+    r_A = C_BA' * r_B;
     
-    [F_D,T_D] = Get_pertforces(C_BA,r_B,rs_B,e_B,mu,Kleopatra);
+    [F_D,T_D] = Get_pertforces(SC.mass.m_i,C_BA,r_A,r_B,rs_B,e_B,mu,Kleopatra);
     
     a_D = F_D/SC.mass.m_i;
     wd = I_inv * (T_D(1:3) - cross(Y(7:9), (I*Y(7:9)))); %omega dot

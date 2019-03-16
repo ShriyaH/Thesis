@@ -7,20 +7,20 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=4.344in,
-height=1in,
+width=6.028in,
+height=4.754in,
 at={(1.011in,0.642in)},
 scale only axis,
 xmin=0,
-xmax=10,
+xmax=15,
 xlabel style={font=\color{white!15!black}},
-xlabel={\footnotesize Iterations},
+xlabel={Iterations},
 ymode=log,
 ymin=1e-09,
 ymax=100000000000,
 yminorticks=true,
 ylabel style={font=\color{white!15!black}},
-ylabel={\footnotesize Trust Region},
+ylabel={Trust Region},
 axis background/.style={fill=white},
 xmajorgrids,
 ymajorgrids,
@@ -30,18 +30,23 @@ legend style={legend cell align=left, align=left, draw=white!15!black}
 \addplot [color=blue, mark=*, mark options={solid, blue}]
   table[row sep=crcr]{%
 0	0\\
-1	5357.79537194215\\
-2	1.03995444496505e-05\\
-3	6.07857789675863e-06\\
-4	2.68158197866522e-06\\
-5	2.24582672176233e-06\\
-6	8.94633891501253e-07\\
-7	4.71987166318183e-07\\
-8	2.89480911236449e-07\\
-9	2.57438285755078e-07\\
-10	2.07957268502568e-07\\
+1	2217.66125201359\\
+2	1.35986304998475e-05\\
+3	2.72619116282707e-06\\
+4	1.62314383539267e-06\\
+5	2.36101247565074e-07\\
+6	2.90363204504597e-07\\
+7	3.87944861643673e-07\\
+8	3.04098570323352e-07\\
+9	1.80279121432593e-07\\
+10	1.3012893812005e-07\\
+11	1.72586072602282e-08\\
+12	3.06614575319351e-08\\
+13	3.29575322551348e-08\\
+14	3.3927037460611e-08\\
+15	2.41291777341528e-08\\
 };
-%\addlegendentry{$\text{Converged}_{\text{sol}}$}
+\addlegendentry{$\text{Converged}_{\text{sol}}$}
 
 \end{axis}
 \end{tikzpicture}%

@@ -11,19 +11,19 @@ ini_models_dyn;
 %% Select Integrator 
 Switch.Razgus = 0;
 Switch.poly_grav =0;
-Switch.GG =1;
+Switch.GG =0;
 Switch.Q = 0;
 Switch.Q_rel = 0;
-Switch.DQ = 1;
-Switch.DOF6 = 0;
-Switch.DOF6_lin = 0;
+Switch.DQ = 0;
+Switch.DOF6 = 1;
+Switch.DOF6_lin = 1;
 Switch.DOF6_lin_DQ = 0;
 Switch.SCvx.check = 0;
 
 %% Plot
-Switch.Q_plots = 0;
+Switch.Q_plots = 1;
 Switch.convert_q = 0;
-Switch.q_inert = 0;
+Switch.q_inert = 1;
 Switch.kepler_el = 0;
 Switch.kepler_n= 0;
 Switch.err = 0;
@@ -58,14 +58,14 @@ elseif Switch.DOF6 || Switch.DOF6_lin || Switch.DOF6_lin_DQ
     Switch.constant_grav_on =1;
 else
     %For dynamic block check
-%     x_I = [0 60e3 0];
-%     v_I = [53.947598031175893 0 0];
-%     w_BI = [6.28318e-4 0 0];
-%     w_AI = [0 0 3e-4];
-    x_I = [0 0 100e3];
-    v_I = [0 -55.64865 0];
-    w_BI = [4.381e-4 1.854e-4 0];
-    w_AI = [0 0 3.241e-4];
+    x_I = [0 60e3 0];
+    v_I = [53.947598031175893 0 0];
+    w_BI = [6.28318e-4 0 0];
+    w_AI = [0 0 3e-4];
+%     x_I = [0 0 100e3];
+%     v_I = [0 -55.64865 0];
+%     w_BI = [4.381e-4 1.854e-4 0];
+%     w_AI = [0 0 3.241e-4];
     q_BI = [0 0 0 1];
     q_AI = [0 0 0 1];
     C_AI = Q2DCM(q_AI);
@@ -100,7 +100,12 @@ if Switch.Q == 1
         Var.w_BA_a(:,i) = C_BAt(3*i-2:3*i,:)'*Var.w_BA_b(:,i);
         
         Var.w_AI_B(:,i) = C_BAt(3*i-2:3*i,:)*w_AI';
+        
+%         a(i) = norm(Var.r_Bt(:,i)); %semi-major axis
+%         E(i) = -mu/(2*a(i));        %total energy
+%         e(i) = -mu/(2*60e3) - E(i); %error from actual
     end
+%        f = norm(e); %accuracy of energy
 end
 
 %% Relative Dynamics and Kinematics: Dual Quaternions %%
@@ -182,4 +187,4 @@ if Switch.DOF6_lin_DQ
     [Var.t6,Var.y7] = test_lindq(I,m_sc,dq_I,dw_B,dF_B,dF_B_dot,g,Var.t5);
 end
 
-dyn_block_plots;
+% dyn_block_plots;

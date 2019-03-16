@@ -87,7 +87,7 @@ for k = 0:K-1
     q_k = x_k(8:11,1);
     w_k = x_k(12:14,1); 
     T_k = x_k(15:17,1);
-    J_k = (30*m_k/12).*eye(3);
+%     J_k = (30*m_k/12).*eye(3);
     if ii<K
         
         % construct linearisation point state differential
@@ -100,7 +100,7 @@ for k = 0:K-1
         Ac(2:4,5:7) = eye(3);
         Ac(5:7,:) = get_da_inertial(T_k,q_k,m_k,ns);
         Ac(8:11,:) = get_dqdot_inertial(w_k,q_k,ns); 
-        Ac(12:14,:) = get_dwdot_inertial(w_k,J_k,r_T,ns);
+        Ac(12:14,:) = get_dwdot_inertial(w_k,J,r_T,ns);
         Ac(15:17,18:20) = eye(3);
 
         ITR.Ac_k{i}{ii} = Ac;

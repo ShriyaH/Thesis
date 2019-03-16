@@ -13,7 +13,7 @@ ta = ones(1,length(t)).*rad2deg(ta);
 wm = CONSTANTS.w_max;
 wm = ones(1,length(t)).*rad2deg(wm);
 
-Legend = cell(i+2,1);
+% Legend = cell(i+2,1);
 
 for ii = 1:i
     for k = 1:length(t)
@@ -28,7 +28,7 @@ for ii = 1:i
         if x(16,k) < 0
             Gm(ii,k) = rad2deg(acos(d(k)));
         else
-            Gm(ii,k) = -rad2deg(acos(d(k)));
+            Gm(ii,k) = rad2deg(acos(d(k)));
         end
         
         %get tilt angle
@@ -37,7 +37,7 @@ for ii = 1:i
         if vec1(3) < 0 
             Ta(ii,k) = rad2deg(acos(Ta_norm(k))); 
         else
-            Ta(ii,k) = -rad2deg(acos(Ta_norm(k)));
+            Ta(ii,k) = rad2deg(acos(Ta_norm(k)));
         end
         
         %get all positions
@@ -46,12 +46,18 @@ for ii = 1:i
         %get glide-slope angle
         Gs(ii,k) = rad2deg(atan(x(2,k)/norm(x(3:4,k))));
         
+        %get velocities
+        vel(ii,k) = norm(x(5:7,k));
+        TX(ii,k) = x(16,k);
+        TY(ii,k) = x(17,k);
+        TZ(ii,k) = x(15,k);
+        
         %get angular rate
         vec2(3*ii-2:3*ii,k) = x(12:14,k);
         if vec2(3*ii,k) < 0 
             w(ii,k) = rad2deg(norm(x(12:14,k)));
         else
-            w(ii,k) = -rad2deg(norm(x(12:14,k)));
+            w(ii,k) = rad2deg(norm(x(12:14,k)));
         end
         
         if ii < i
@@ -114,6 +120,53 @@ ylabel('Virtual Controls')
 % axis([1 i-1 10e-10 10e0])
 grid on
 
+
+%plot velocities
+figure()
+hold on
+for j = 1:i 
+    plot(t,vel(j,:),'Marker','.');
+    Legend{j}=strcat('Itr', num2str(j));
+end
+xlabel('Time (s)');
+ylabel('Velocities (m/s)');
+legend(Legend,'Location','northeastoutside');
+grid on
+
+%individual thrust components
+figure()
+hold on
+for j = 1:i 
+    plot(t,TX(j,:),'Marker','.');
+    Legend{j}=strcat('Itr', num2str(j));
+end
+xlabel('Time (s)');
+ylabel('X-axis Thrust (m/s)');
+legend(Legend,'Location','northeastoutside');
+grid on
+
+figure()
+hold on
+for j = 1:i 
+    plot(t,TY(j,:),'Marker','.');
+    Legend{j}=strcat('Itr', num2str(j));
+end
+xlabel('Time (s)');
+ylabel('Y-axis Thrust (m/s)');
+legend(Legend,'Location','northeastoutside');
+grid on
+
+figure()
+hold on
+for j = 1:i 
+    plot(t,TZ(j,:),'Marker','.');
+    Legend{j}=strcat('Itr', num2str(j));
+end
+xlabel('Time (s)');
+ylabel('Z-axis Thrust (m/s)');
+legend(Legend,'Location','northeastoutside');
+grid on
+
 %plot thrusts
 figure()
 plot(t,T1,'LineWidth',2, 'Color', 'red');
@@ -146,6 +199,8 @@ xlabel('Time (s)');
 ylabel('Gimbal Angle (Deg)');
 legend(Legend,'Location','northeastoutside');
 grid on
+
+
 
 %plot tilt angles
 figure()

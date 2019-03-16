@@ -6,6 +6,7 @@ clc;
 close all; 
 
 global ITR PARAMS CONSTANTS;
+tic
 ini_models_acik;
 
 [xc1,uc1,xdotc1,cpu_time1,status1] = SCvx_transcription_acik();
@@ -14,5 +15,5 @@ m_spent = xc1(1,1)-xc1(1,end);
 disp(['mass spent: ',num2str(m_spent),' kg'])
 
 total_cpu_time1 = sum(cpu_time1);
-
+toc
 save('acik_CQ')

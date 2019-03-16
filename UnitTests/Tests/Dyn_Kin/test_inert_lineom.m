@@ -23,19 +23,20 @@ function dy = orb_int(t,y)
     tt = linspace(0,5,30);
     [ d, ix ] = min( abs( tt-t ) );
     k = t/dt;
-%     m_k = ((K-k-1)/(K-1))*yl(1,1) + (k/(K-1))*yl(end,1);
-%     r_k = ((K-k-1)/(K-1)).*yl(1,2:4)' + (k/(K-1))*yl(end,2:4)';
-%     v_k = ((K-k-1)/(K-1)).*yl(1,5:7)' + (k/(K-1))*yl(end,5:7)';
-    m_k = yl(ix,1);
-    r_k = yl(ix,2:4)';
-    v_k = yl(ix,5:7)';
+    m_k = ((K-k-1)/(K-1))*yl(1,1) + (k/(K-1))*yl(end,1);
+    r_k = ((K-k-1)/(K-1)).*yl(1,2:4)' + (k/(K-1))*yl(end,2:4)';
+    v_k = ((K-k-1)/(K-1)).*yl(1,5:7)' + (k/(K-1))*yl(end,5:7)';
+%     m_k = yl(ix,1);
+%     r_k = yl(ix,2:4)';
+%     v_k = yl(ix,5:7)';
     q_k = yl(ix,8:11)';
     w_k = yl(ix,12:14)';
     C_k =  Q2DCM(conj_quat(q_k)); 
-%     T_k = -(m_k*quat_trans(q_k,g,'vect'))';
-    T_k = yl(ix,15:17)';
+    T_k = -(m_k*quat_trans(q_k,g,'vect'))';
+%     T_k = yl(ix,15:17)';
 %     Tdot_k = [0;0;0];
-    Tdot_k = yl(ix,18:20)';
+    Tdot_k = y(18:20);
+%     Tdot_k = yl(ix,18:20)';
     
     x_k  = [m_k;r_k;v_k;q_k;w_k;T_k;Tdot_k];
     
@@ -63,7 +64,8 @@ function dy = orb_int(t,y)
     z_k = xdot_k - A_k*x_k - B_k*u_k;
    
     
-    dy = A_k*yl(ix+1,1:20)' + B_k*u_k + z_k;    
+%     dy = A_k*yl(ix+1,1:20)' + B_k*u_k + z_k;  
+dy = A_k*y(1:20) + B_k*u_k + z_k;  
     
 end
 

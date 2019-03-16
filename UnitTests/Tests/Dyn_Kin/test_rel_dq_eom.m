@@ -1,5 +1,5 @@
 function [t,y,r_At,r_Bt,T_g,TT] = test_rel_dq_eom(dI,w_AI,dq_rel,dw_rel)
-global Sun Kleopatra Switch Var
+global Sun Kleopatra Switch Var SC
 
 %% Initial Values
 if Switch.Razgus
@@ -54,8 +54,9 @@ function [dY] = orb_int_dqin(T,Y)
     C_AI = Q2DCM([0;0;sin((w_AI(3)*T)/2);cos((w_AI(3)*T)/2)]);
     rs_B = C_BA*C_AI*Sun.rs_I(1:3);
     e_B = rs_B./norm(rs_B);
+    r_A = C_BA' * r_B(1:3);
     
-    [F_D,T_D] = Get_pertforces(C_BA,r_B,e_B,rs_B,mu,Kleopatra);
+    [F_D,T_D] = Get_pertforces(SC.mass.m_i,C_BA,r_A,r_B,rs_B,e_B,mu,Kleopatra);
     dF_B = [F_D; T_D];
     T_g(:,i) =T_D;
     A = [zeros(4,1); r_B(1:4)];

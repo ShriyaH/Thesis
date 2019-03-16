@@ -9,38 +9,43 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=1.7in,
-height=1.7in,
+width=6.028in,
+height=4.754in,
 at={(1.011in,0.642in)},
 scale only axis,
-xmin=1,
-xmax=11,
+xmin=0,
+xmax=16,
 xlabel style={font=\color{white!15!black}},
-xlabel={\footnotesize Iterations},
+xlabel={Iterations},
 ymin=0,
 ymax=140,
 ylabel style={font=\color{white!15!black}},
-ylabel={\footnotesize Mass Spent},
+ylabel={Mass Spent},
 axis background/.style={fill=white},
 xmajorgrids,
 ymajorgrids,
 legend style={legend cell align=left, align=left, draw=white!15!black}
 ]
-\addplot [color=blue, mark=*, mark options={solid, blue}]
+\addplot [color=mycolor1, mark=o, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
 1	125\\
-2	28.1454382521532\\
-3	1.18716078069664\\
-4	0.885089775393141\\
-5	0.955754706209603\\
-6	1.01471491440975\\
-7	1.06082477224459\\
-8	1.11327088176861\\
-9	1.1416252637006\\
-10	1.12268277643588\\
-11	1.11891975182559\\
+2	42.0361743826766\\
+3	3.08605266478565\\
+4	0.949947327569362\\
+5	1.02327270175437\\
+6	1.05705548183153\\
+7	1.07343886105244\\
+8	1.08480900723535\\
+9	1.08830023894694\\
+10	1.08969514837477\\
+11	1.0856637161472\\
+12	1.07530852840631\\
+13	1.07138344350335\\
+14	1.06479474635708\\
+15	1.06531167183942\\
+16	1.05684615910309\\
 };
-%\addlegendentry{\footnotesize data1}
+\addlegendentry{data1}
 
 \end{axis}
 \end{tikzpicture}%

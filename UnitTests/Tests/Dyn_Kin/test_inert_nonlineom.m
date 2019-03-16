@@ -17,15 +17,14 @@ Y0 = [m;x;v;q;w;Th;Th_dot];
 T = [0 7];
 
 Opt = odeset('Events', @stopevent);
-tic
-Opt = odeset('RelTol',1e-10,'AbsTol',1e-12);
+% Opt = odeset('RelTol',1e-10,'AbsTol',1e-12);
 [t,y] = ode45(@orb_int, T, Y0,Opt); 
+% 
+% if Switch.SCvx.check
+%     tspan = linspace(0,5,30);
+%     y = ode4(@orb_int,tspan,Y0);  
+% end
 
-if Switch.SCvx.check
-    tspan = linspace(0,5,30);
-    y = ode4(@orb_int,tspan,Y0);  
-end
-toc
 
 %% Differential Function
 
@@ -39,15 +38,15 @@ function dY = orb_int(t,Y)
     C = Q2DCM(conj_quat(qq));
     ww = Y(12:14,1);
     W = omega_tensor(ww,2);
-    T = Y(15:17,1);
-%     Tdot_k = Y(18:20,1);
+    TT = Y(15:17,1);
+    Tdot_k = Y(18:20,1);
     
-    mdot_k = -alpha0.*norm(T);
+    mdot_k = -alpha0.*norm(TT);
     rdot_k = vv;
-    vdot_k = C*T./mm + g;
+    vdot_k = C*TT./mm + g;
     qdot_k = 0.5*W*qq;
-    wdot_k = I_inv*(cross(r_T',T)' - cross(ww, (I*ww)));
-    Tdot_k = -g.*mdot_k;
+    wdot_k = I_inv*(cross(r_T',TT)' - cross(ww, (I*ww)));
+%     Tdot_k = -g.*mdot_k;
     u_k = [0;0;0];
     
     dY = [mdot_k;rdot_k;vdot_k;qdot_k;wdot_k;Tdot_k;u_k]  ;  
